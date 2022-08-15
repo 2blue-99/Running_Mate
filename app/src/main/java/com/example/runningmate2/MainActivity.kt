@@ -5,15 +5,19 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainStartPage
+import com.example.runningmate2.viewModel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +26,9 @@ class MainActivity : AppCompatActivity() {
     var _nowLocation: Location? = null
     var myLatitude = 0.0
     var myLongitude = 0.0
+    private val model: MainViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.e(javaClass.simpleName, "onCreate: start", )
         super.onCreate(savedInstanceState)
@@ -45,7 +51,10 @@ class MainActivity : AppCompatActivity() {
                 myLongitude = _nowLocation?.longitude!!
                 Log.e(javaClass.simpleName, "myRealLocation: $myLatitude, $myLongitude", )
             }
-            // 값 가져와 넘기기
+
+            model.getWeatherData(model.createRequestParams(_nowLocation))
+
+            // 값 가져와 Main Fragment에 넘기기
             var mainStartPage = MainStartPage()
             var bundle = Bundle()
             bundle.putDouble("myLatitude",myLatitude)
