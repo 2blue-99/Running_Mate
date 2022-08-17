@@ -17,12 +17,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MainStartPage : Fragment(), OnMapReadyCallback {
 
-    lateinit var testBinding : FragmentMainStartPageBinding
     private lateinit var mMap: GoogleMap
     var myLatitude:Double = 0.0
     var myLongitude:Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e(javaClass.simpleName, "mainFrag: start", )
         super.onCreate(savedInstanceState)
 //        requireActivity().setTitle(R.string.app_name)
         arguments?.let {
@@ -48,6 +48,7 @@ class MainStartPage : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
         Log.e(javaClass.simpleName, "mainFrag: onMapReady", )
         val myLocation = LatLng(myLatitude, myLongitude)
         mMap = googleMap
