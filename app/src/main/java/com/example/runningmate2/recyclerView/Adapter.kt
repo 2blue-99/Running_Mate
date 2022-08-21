@@ -21,7 +21,6 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        Log.e(javaClass.simpleName, "adapter getItemCount: ", )
         return datalist.size
     }
 
@@ -42,12 +41,11 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 //        private var view: View = v
 //        fun bind(data:Data, listener: View.OnClickListener){
         fun bind(data:Data){
-            Log.e(javaClass.simpleName, "adapter MyViewHolder: ", )
-            //binding.dogPhotoImg.=dogData.dog_img
+            Log.e(javaClass.simpleName, "adapter MyViewHolder: $datalist", )
+
             binding.textView.text= data.A
             binding.textView2.text= data.B
             binding.textView3.text= data.C
-//            view.setOnClickListener(listener)
         }
     }
 }

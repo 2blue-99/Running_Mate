@@ -20,15 +20,12 @@ import java.time.LocalDateTime
 class MainViewModel : ViewModel() {
 
     private val _myValue = MutableLiveData<DomainWeather>()
-//    private val _myDateTime = MutableLiveData<DateTime>()
 
     lateinit var myDataList : DomainWeather
 
     val myValue : LiveData<DomainWeather>
         get() = _myValue
 
-//    val myDateTime : LiveData<DateTime>
-//        get() = _myDateTime
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createRequestParams(myLocation:Location?): HashMap<String, String> {
@@ -79,7 +76,6 @@ class MainViewModel : ViewModel() {
         Log.e(javaClass.simpleName, "locate?.nx: ${locate?.nx}, locate?.ny: ${locate?.ny}")
 
         return HashMap<String, String>().apply {
-
             put("serviceKey", BuildConfig.SERVICE_KEY)
             put("pageNo", "1")
             put("numOfRows", "10")
@@ -88,7 +84,6 @@ class MainViewModel : ViewModel() {
             put("base_time", baseTime)
             put("nx", locate?.nx?.toInt().toString() ?: "55" )
             put("ny", locate?.ny?.toInt().toString() ?: "127")
-
         }
     }
 

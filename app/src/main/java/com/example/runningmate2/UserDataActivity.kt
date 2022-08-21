@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.runningmate2.databinding.ActivityUserDataBinding
 
 private lateinit var binding : ActivityUserDataBinding
@@ -15,16 +16,15 @@ class UserDataActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.nextBtn.setOnClickListener {
-            if(binding.Height.text)
+            Log.e(javaClass.simpleName, "user data class : ${binding.Height.text}", )
 
-            Intent(this@UserDataActivity, MainActivity::class.java).also {
-                startActivity(it)
-                this@UserDataActivity.finish()
+            if(binding.Height.text.length == 3 && binding.weight.text.length >= 2 ){
+                Intent(this@UserDataActivity, MainActivity::class.java).also {
+                    startActivity(it)
+                    this@UserDataActivity.finish() }
+            }else{
+                Toast.makeText(this, "정확한 값을 입력해 주세요.", Toast.LENGTH_LONG).show()
             }
         }
-
-
-
-        //데이터 바인딩해서 넘기기
     }
 }

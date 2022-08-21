@@ -8,9 +8,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.service.autofill.UserData
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,11 +17,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.runningmate2.databinding.ActivityMainBinding
-import com.example.runningmate2.fragment.MainStartPage
+import com.example.runningmate2.fragment.MainStartFragment
 import com.example.runningmate2.fragment.RecordFragment
-import com.example.runningmate2.fragment.UserDataPage
-import com.example.runningmate2.recyclerView.Adapter
-import com.example.runningmate2.recyclerView.Data
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -31,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    lateinit var binding: com.example.runningmate2.databinding.ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     var _nowLocation: Location? = null
     var myLatitude = 0.0
     var myLongitude = 0.0
@@ -80,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             model.getWeatherData(model.createRequestParams(_nowLocation))
 
             // 값 가져와 Main Fragment에 넘기기 여기서 만든 객체를 replace쪽에도 사용해야함
-            var mainStartPage = MainStartPage()
+            var mainStartPage = MainStartFragment()
             var bundle = Bundle()
             bundle.putDouble("myLatitude", myLatitude)
             bundle.putDouble("myLongitude", myLongitude)

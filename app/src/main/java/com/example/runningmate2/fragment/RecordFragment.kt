@@ -29,10 +29,12 @@ class RecordFragment : Fragment() {
     ): View? {
 
         Log.e(javaClass.simpleName, "recordFragment start: ", )
-        //recyclerView 초기화
+
+        //recyclerView 초기값 넣기
         InitRecylcerViewData()
+
 //        recordBinding = FragmentRecordBinding.inflate(layoutInflater)
-        val recordBinding = inflater!!.inflate(R.layout.fragment_record, container, false)
+        val recordBinding = inflater.inflate(R.layout.fragment_record, container, false)
         val myRecylcer : RecyclerView = recordBinding.findViewById(R.id.myRecyclerView)
         val adapter = Adapter()
         adapter.datalist = mDatas

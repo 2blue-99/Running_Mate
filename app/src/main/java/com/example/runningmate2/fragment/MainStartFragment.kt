@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.runningmate2.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,7 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MainStartPage : Fragment(), OnMapReadyCallback {
+class MainStartFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     var myLatitude:Double = 0.0
@@ -47,6 +49,10 @@ class MainStartPage : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+
+        lifecycleScope.launchWhenCreated {
+
+        }
 
         Log.e(javaClass.simpleName, "mainFrag: onMapReady", )
         val myLocation = LatLng(myLatitude, myLongitude)
