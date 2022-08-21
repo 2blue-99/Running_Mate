@@ -69,5 +69,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 
-
+    //splash
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 }

@@ -43,13 +43,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //splash page다음에 나올 User data
-//        loadFragment(UserDataPage())
+        //위치 권한 관련 함수, 위도 경도 가져오고, API까지 호출.
+        LocationFun()
 
+        // 여기가 실질적 권한 받는곳, 이쪽으로 인해 폰 켰을 때 권한 유무 뜸
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun LocationFun(){
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
             // 값이 null값인 경우와 제대로 된 경우
+            // 해당 함수를 통해 위도 경도를 가져옴
             _nowLocation = NowLocation()
             if (_nowLocation?.latitude.toString() == "null") {
                 myLatitude = 36.79523646
@@ -61,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 myLongitude = _nowLocation?.longitude!!
                 Log.e(javaClass.simpleName, "myRealLocation: $myLatitude, $myLongitude")
             }
-
+            //가져온 위도경도를 해당 함수에 넣어 API를 통해 데이터 가져옴
             model.getWeatherData(model.createRequestParams(_nowLocation))
 
             // 값 가져와 Main Fragment에 넘기기 여기서 만든 객체를 replace쪽에도 사용해야함
@@ -73,12 +85,6 @@ class MainActivity : AppCompatActivity() {
             Log.e(javaClass.simpleName, "send Bundle : $myLatitude, $myLongitude")
 
             loadFragment(mainStartPage)
-//            val actionbar = this.supportActionBar
-//            actionbar?.hide()
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.myFragMent, mainStartPage)
-//                .addToBackStack(null)
-//                .commit()
 
             bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
             bottomNav.setOnItemSelectedListener {
@@ -99,51 +105,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        // 여기가 실질적 권한 받는곳, 이쪽으로 인해 폰 켰을 때 권한 유무 뜸
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
-
-//        val pureum = findViewById<Button>(R.id.next_btn)
-//        pureum.setOnClickListener{}
-//        loadFragment(MainStartPage())
-//        bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
-//        bottomNav.setOnItemSelectedListener {
-//            when (it.itemId) {
-//                R.id.home -> {
-//                    Log.e(javaClass.simpleName, "onCreate: Main")
-//                    loadFragment(MainStartPage())
-//                    true
-//                }
-//                R.id.recode -> {
-//                    Log.e(javaClass.simpleName, "onCreate: recode")
-//                    loadFragment(RecordFragment())
-//                    true
-//                }
-//                else -> {
-//                    false
-//                }
-//            }
-//        }
-//        val actionbar = this.supportActionBar
-//        actionbar?.hide()
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.myFragMent, mainStartPage)
-//            .addToBackStack(null)
-//            .commit()
-
-
-////        액션바 사라지기
-//        val actionbar = this.supportActionBar
-//        actionbar?.hide()
-//                    supportFragmentManager.beginTransaction()
-//                  .replace(R.id.myFragMent, MainStartPage())
-//                  .addToBackStack(null)
-//                  .commit()
     }
 
     private fun loadFragment(fragment: Fragment) {
