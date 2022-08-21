@@ -9,6 +9,7 @@
     <EditText
         android:id="@+id/Height"
         android:inputType="number"
+        android:minLines="3"
         android:maxLength="3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <EditText
         android:id="@+id/weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
