@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.service.autofill.UserData
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -21,6 +22,8 @@ import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainStartPage
 import com.example.runningmate2.fragment.RecordFragment
 import com.example.runningmate2.fragment.UserDataPage
+import com.example.runningmate2.recyclerView.Adapter
+import com.example.runningmate2.recyclerView.Data
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -28,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    lateinit var binding: ActivityMainBinding
+    lateinit var binding: com.example.runningmate2.databinding.ActivityMainBinding
     var _nowLocation: Location? = null
     var myLatitude = 0.0
     var myLongitude = 0.0
@@ -43,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //위치 권한 관련 함수, 위도 경도 가져오고, API까지 호출.
+        //위치 권한 관련 함수, 위도 경도 가져오고, API까지 호출, 화면 전환까지.
         LocationFun()
 
         // 여기가 실질적 권한 받는곳, 이쪽으로 인해 폰 켰을 때 권한 유무 뜸

@@ -1,60 +1,53 @@
 package com.example.runningmate2.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.runningmate2.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import com.example.runningmate2.recyclerView.Adapter
+import com.example.runningmate2.recyclerView.Data
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RecordFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class RecordFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    val mDatas=mutableListOf<Data>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        Log.e(javaClass.simpleName, "recordFragment start: ", )
+        //recyclerView 초기화
+        InitRecylcerViewData()
+//        recordBinding = FragmentRecordBinding.inflate(layoutInflater)
+        val recordBinding = inflater!!.inflate(R.layout.fragment_record, container, false)
+        val myRecylcer : RecyclerView = recordBinding.findViewById(R.id.myRecyclerView)
+        val adapter = Adapter()
+        adapter.datalist = mDatas
+        myRecylcer.adapter = adapter
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_record, container, false)
+//        return inflater.inflate(R.layout.fragment_record, container, false)
+        return recordBinding
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecordFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecordFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    fun InitRecylcerViewData() {
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        mDatas.add(Data("aaaa", "bb", "cc"))
+        }
     }
-}
