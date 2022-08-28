@@ -5,15 +5,17 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import com.example.runningmate2.databinding.ActivityMainBinding
-import com.example.runningmate2.fragment.MapsFragment
+import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.fragment.RecordFragment
-import com.example.runningmate2.fragment.viewModel.MainStartViewModel
+import com.example.runningmate2.fragment.ResultFragment
+import com.example.runningmate2.fragment.RunningFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -40,14 +42,14 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         ))
 
-        loadFragment(MapsFragment())
+        loadFragment(MainMapsFragment())
 
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
                     Log.e(javaClass.simpleName, "onCreate: Main")
-                    loadFragment(MapsFragment())
+                    loadFragment(MainMapsFragment())
                     true
                 }
                 R.id.recode -> {
@@ -68,5 +70,19 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.myFragMent, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    fun changeFragment(index: Int) {
+        when (index) {
+            1 -> {
+                binding.bottomNav.visibility = View.INVISIBLE
+            }
+            2 -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.myFragMent, ResultFragment())
+                    .commit()
+            }
+        }
     }
 }

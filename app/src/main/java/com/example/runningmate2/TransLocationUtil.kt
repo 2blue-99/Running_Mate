@@ -3,9 +3,6 @@ package com.example.runningmate2
 import android.location.Location
 import kotlin.math.*
 
-/**
- * Created by  on 2022/08/04.
- */
 object TransLocationUtil {
 
     data class TransLocation(

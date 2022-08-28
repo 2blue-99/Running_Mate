@@ -2,9 +2,6 @@ package com.jaehyeon.locationpolylinetest.utils
 
 import androidx.lifecycle.MutableLiveData
 
-/**
- * Created by Jaehyeon on 2022/08/16.
- */
 class ListLiveData<T>: MutableLiveData<ArrayList<T>>(){
     init {
         value = arrayListOf()
