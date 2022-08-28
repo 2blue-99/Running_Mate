@@ -40,6 +40,13 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
         binding.button.setOnClickListener{
             runningStart()
         }
+
+        binding.stopButton.setOnClickListener{
+            Log.e(javaClass.simpleName, " Running Stop ", )
+            (activity as MainActivity).changeFragment(2)
+            start = false
+        }
+
         return view
     }
 
@@ -52,6 +59,7 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
         mainStartViewModel.location.observe(viewLifecycleOwner){ locations ->
             Log.e(javaClass.simpleName, "locations: $locations", )
             if (locations.isNotEmpty()){
+                binding.log.text = "${locations.last().latitude} , ${locations.last().longitude}"
                 // 처음 그냥 고정
                 if(locations.size == 1) {
                     LatLng(locations.last().latitude, locations.last().longitude).also {
@@ -102,9 +110,8 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
         Log.e(javaClass.simpleName, " Running Start ", )
         (activity as MainActivity).changeFragment(1)
         binding.button.visibility = View.INVISIBLE
-        binding.startButton.visibility = View.VISIBLE
+        binding.stopButton.visibility = View.VISIBLE
         binding.textConstraint.visibility = View.VISIBLE
-
         mainStartViewModel.myTime()
         start = true
     }

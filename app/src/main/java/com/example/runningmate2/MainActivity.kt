@@ -83,6 +83,13 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.myFragMent, ResultFragment())
                     .commit()
             }
+            3 -> {
+                binding.bottomNav.visibility = View.VISIBLE
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.myFragMent, MainMapsFragment())
+                    .commit()
+            }
         }
     }
 }

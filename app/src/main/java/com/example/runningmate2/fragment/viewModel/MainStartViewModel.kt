@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Math.*
+import kotlin.math.pow
 
 class MainStartViewModel(
     application: Application,
@@ -28,8 +30,10 @@ class MainStartViewModel(
     private val _latLng = ListLiveData<LatLng>()
     val latLng: LiveData<ArrayList<LatLng>> get() = _latLng
 
-    val _time = ListLiveData<String>()
-    val time: LiveData<ArrayList<String>> get() = _time
+    var _time = ListLiveData<String>()
+
+//    var _distance = 0.0
+    var distance = ListLiveData<Double>()
 
     //위치 정보를 받는 interval
     private val interval = 1500L
@@ -56,6 +60,8 @@ class MainStartViewModel(
                             Log.e(javaClass.simpleName, "@@@@ location : $location", )
                         }
                     }
+                    Log.e(javaClass.simpleName, "beforeData: $beforeData", )
+                    Log.e(javaClass.simpleName, "location: $location", )
                 }
                 delay(interval)
             }
@@ -65,7 +71,26 @@ class MainStartViewModel(
     fun setLatLng(value: LatLng) {
         Log.e(javaClass.simpleName, "setLatLng: $value", )
         _latLng.add(value)
+//        myDistance(value)
+
+
     }
+
+//    fun myDistance(locate : LatLng){
+//        val R = 6372.8 * 1000
+//        Log.e(javaClass.simpleName, "latLng.value: ${latLng.value}")
+//
+//        if(latLng.value?.size!! > 1){
+//            latLng.value?.last()
+//            val dLat = Math.toRadians(locate.latitude - latLng.value?.last()!!.latitude)
+//            val dLon = Math.toRadians(locate.longitude - latLng.value?.last()!!.longitude)
+//            val a = sin(dLat / 2).pow(2.0) + sin(dLon / 2).pow(2.0) * cos(Math.toRadians(locate.latitude)) * cos(Math.toRadians(latLng.value?.last()!!.latitude))
+//            val c = 2 * asin(sqrt(a))
+//            Log.e(javaClass.simpleName, "myDistance result: ${(R * c)}")
+//            return (R * c)
+//        }
+//
+//    }
 
     fun myTime(){
         viewModelScope.launch {
@@ -104,6 +129,8 @@ class MainStartViewModel(
         }
 
     }
+
+
 }
 
 //while(true) {

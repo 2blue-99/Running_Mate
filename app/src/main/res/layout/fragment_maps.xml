@@ -83,7 +83,7 @@
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Distence" />
+                android:text="Distance" />
 
             <TextView
                 android:gravity="center"
@@ -147,7 +147,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/startButton"
+        android:id="@+id/stopButton"
         android:layout_width="350dp"
         android:layout_height="60dp"
         android:layout_marginBottom="45dp"
@@ -157,6 +157,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:background="@drawable/running_text_borderline"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:id="@+id/log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
