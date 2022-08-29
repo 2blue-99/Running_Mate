@@ -50,6 +50,9 @@ class MainStartViewModel(
         viewModelScope.launch {
             while(true) {
                 MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
+
+                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
+
                     withContext(Dispatchers.Main) {
                         if(beforeData == ""){
                             beforeData = location
@@ -57,11 +60,10 @@ class MainStartViewModel(
                         }else if(beforeData != location){
                             beforeData = location
                             _location.add(location)
-                            Log.e(javaClass.simpleName, "@@@@ location : $location", )
+
                         }
                     }
-                    Log.e(javaClass.simpleName, "beforeData: $beforeData", )
-                    Log.e(javaClass.simpleName, "location: $location", )
+
                 }
                 delay(interval)
             }
@@ -69,7 +71,7 @@ class MainStartViewModel(
     }
 
     fun setLatLng(value: LatLng) {
-        Log.e(javaClass.simpleName, "setLatLng: $value", )
+//        Log.e(javaClass.simpleName, "setLatLng: $value", )
         _latLng.add(value)
 //        myDistance(value)
 

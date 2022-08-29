@@ -21,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
+    // ActivityResultLauncher : 데이터를 받아옴, 이쪽ㅇ 페이지가 메모리 부족으로
+    // 소멸될 때 콜백을 분리하여 이 페이지가 사라져도 다시 호출 가능.
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     lateinit var binding: ActivityMainBinding
 
@@ -31,7 +33,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // registerForActivityResult() 는 ActivityResultContract와
+        // ActivityResultCallback을 가져와서 다른 activity를 실행하는 데 사용할
+        // ActivityResultLauncher를 반환하다.
 
+        // ActivityContract는 우리가 결과를 생성하는 데 필요한 입력의 형태와 결과를
+        // 출력하는 형태를 정의하고 우리가 intent를 사용하는 작업의 기본적인 계약을 제공한다.
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {

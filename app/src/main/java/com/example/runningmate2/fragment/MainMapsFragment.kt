@@ -77,6 +77,7 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
             }
         }
 
+
         mainStartViewModel._time.observe(viewLifecycleOwner){time ->
             if(time.isNotEmpty()){
                 Log.e(javaClass.simpleName, "MainMaps onViewCreated: ${time.last()}")
