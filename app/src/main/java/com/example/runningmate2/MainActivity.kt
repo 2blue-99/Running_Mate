@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     // ActivityResultLauncher : 데이터를 받아옴, 이쪽ㅇ 페이지가 메모리 부족으로
     // 소멸될 때 콜백을 분리하여 이 페이지가 사라져도 다시 호출 가능.
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {

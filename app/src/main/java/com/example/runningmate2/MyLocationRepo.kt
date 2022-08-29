@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.location.LocationRequest
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,11 +46,22 @@ object MyLocationRepo {
         // 클래스를 만들고 Application 클래스를 상속한 뒤, 매니페스트의 android:name 속성에 등록해서 사용한다
         // 어떤 값을 액티비티, 서비스 등 안드로이드 컴포넌트들 사이에서 공유해 사용할 수 있게 해준다
         // Application을 상속받은 클래스는 1번째 액티비티보다 먼저 인스턴스화된다
+        // 이쪽은 위치 정보 권한 여부 On/Off 여부를 알 수 있게 해줌.
+        // 하나라도 off라면 실행안됨.
         val locationManager = application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
             return null
+        }
+
+        locationClient.lastLocation.addOnSuccessListener { location : Location? ->
+            if (location != null) {
+                val latitude = location.latitude
+                val longitude = location.longitude
+                Log.e(javaClass.simpleName, "GPS Location Latitude: $latitude" +
+                        ", Longitude: $longitude", )
+            }
         }
 
         return suspendCancellableCoroutine { cont ->
