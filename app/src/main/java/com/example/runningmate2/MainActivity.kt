@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e(javaClass.simpleName, "onCreate : start")
+//        Log.e(javaClass.simpleName, "onCreate : start")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
-            Log.e(javaClass.simpleName, "model.getLocation() :", )
+//            Log.e(javaClass.simpleName, "model.getLocation() :", )
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -55,12 +55,12 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    Log.e(javaClass.simpleName, "onCreate: Main")
+//                    Log.e(javaClass.simpleName, "onCreate: Main")
                     loadFragment(MainMapsFragment())
                     true
                 }
                 R.id.recode -> {
-                    Log.e(javaClass.simpleName, "onCreate: recode")
+//                    Log.e(javaClass.simpleName, "onCreate: recode")
                     loadFragment(RecordFragment())
                     true
                 }
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
-        Log.e(javaClass.simpleName, "loadFragment : ")
+//        Log.e(javaClass.simpleName, "loadFragment : ")
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.myFragMent, fragment)
         transaction.addToBackStack(null)

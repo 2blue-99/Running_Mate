@@ -9,6 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.runningmate2.MyApplication
 import com.example.runningmate2.MyLocationRepo
+import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.jaehyeon.locationpolylinetest.utils.ListLiveData
 import kotlinx.coroutines.Dispatchers
@@ -23,14 +26,20 @@ class MainStartViewModel(
 ) : AndroidViewModel(application){
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
-    val _location = ListLiveData<Location>()
+    private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
+
+    private val _mainLocation = MutableLiveData<String>()
+    val mainLocation: LiveData<String> get() = _time
 
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
     val latLng: LiveData<ArrayList<LatLng>> get() = _latLng
 
-    var _time = ListLiveData<String>()
+    private val _time = MutableLiveData<String>()
+    val time: LiveData<String> get() = _time
+
+
 
 //    var _distance = 0.0
     var distance = ListLiveData<Double>()
@@ -47,52 +56,63 @@ class MainStartViewModel(
     private var hour = ""
 
     fun repeatCallLocation(){
-        viewModelScope.launch {
-            while(true) {
-                MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
-
-                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
-
-                    withContext(Dispatchers.Main) {
-                        if(beforeData == ""){
-                            beforeData = location
-                            _location.add(location)
-                        }else if(beforeData != location){
-                            beforeData = location
-                            _location.add(location)
-
-                        }
-                    }
-
-                }
-                delay(interval)
+        object: LocationCallback() {
+            override fun onLocationAvailability(p0: LocationAvailability) {
+                super.onLocationAvailability(p0)
             }
+
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+                p0.lastLocation?.let { location ->
+                    _location.add(location)
+                }
+            }
+        }.also {
+            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
         }
     }
 
-    fun setLatLng(value: LatLng) {
-//        Log.e(javaClass.simpleName, "setLatLng: $value", )
-        _latLng.add(value)
-//        myDistance(value)
+    fun mainLocation(){
+        object: LocationCallback() {
+            override fun onLocationAvailability(p0: LocationAvailability) {
+                super.onLocationAvailability(p0)
+            }
 
-
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+                p0.lastLocation?.let { location ->
+                    _location.add(location)
+                }
+            }
+        }.also {
+            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
+        }
+//        viewModelScope.launch {
+//            while(true) {
+//                MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
+//
+//                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
+//
+//                    withContext(Dispatchers.Main) {
+//                        if(beforeData == ""){
+//                            beforeData = location
+//                            _location.add(location)
+//                        }else if(beforeData != location){
+//                            beforeData = location
+//                            _location.add(location)
+//
+//                        }
+//                    }
+//
+//                }
+//                delay(interval)
+//            }
+//        }
     }
 
-//    fun myDistance(locate : LatLng){
-//        val R = 6372.8 * 1000
-//        Log.e(javaClass.simpleName, "latLng.value: ${latLng.value}")
-//
-//        if(latLng.value?.size!! > 1){
-//            latLng.value?.last()
-//            val dLat = Math.toRadians(locate.latitude - latLng.value?.last()!!.latitude)
-//            val dLon = Math.toRadians(locate.longitude - latLng.value?.last()!!.longitude)
-//            val a = sin(dLat / 2).pow(2.0) + sin(dLon / 2).pow(2.0) * cos(Math.toRadians(locate.latitude)) * cos(Math.toRadians(latLng.value?.last()!!.latitude))
-//            val c = 2 * asin(sqrt(a))
-//            Log.e(javaClass.simpleName, "myDistance result: ${(R * c)}")
-//            return (R * c)
-//        }
-//
-//    }
+    fun setLatLng(value: LatLng) {
+        _latLng.add(value)
+    }
 
     fun myTime(){
         viewModelScope.launch {
@@ -124,8 +144,8 @@ class MainStartViewModel(
                 }else{
                     hour = "$_hour"
                 }
-//                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
-                _time.add("$hour:$minute:$second")
+                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
+                _time.value = "$hour:$minute:$second"
 //                myTime = "$hour:$minute:$second"
             }
         }
@@ -134,15 +154,3 @@ class MainStartViewModel(
 
 
 }
-
-//while(true) {
-//    val nowLocation = MyLocation.nowLocation(MyApplication.getApplication())
-//    Log.e(
-//        javaClass.simpleName,
-//        "viewModel nowLocation : ${nowLocation!!.latitude}, ${nowLocation.longitude}"
-//    )
-//    val myLocation = LatLng(nowLocation.latitude, nowLocation.longitude)
-//    mMap = googleMap
-//    mMap.addMarker(MarkerOptions().position(myLocation).title("Marker in Sydney"))
-//    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation,18F))
-

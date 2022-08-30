@@ -7,16 +7,16 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.location.LocationRequest
+import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 object MyLocationRepo {
 
-    suspend fun nowLocation(application : Application): Location? {
+    fun nowLocation(application : Application, callback: LocationCallback) {
 
         // FusedLocationProvider : 개발자가 위치를 획득할 수 있음. Fused(결합된)
         // 안드로이드에서 위치정보를 얻기 위해  LocationManager와 FusedLocationProvider가 있음
@@ -52,42 +52,50 @@ object MyLocationRepo {
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
-            return null
+            return
         }
 
-        locationClient.lastLocation.addOnSuccessListener { location : Location? ->
-            if (location != null) {
-                val latitude = location.latitude
-                val longitude = location.longitude
-                Log.e(javaClass.simpleName, "GPS Location Latitude: $latitude" +
-                        ", Longitude: $longitude", )
-            }
+//        locationClient.lastLocation.addOnSuccessListener { location : Location? ->
+//            if (location != null) {
+//                val latitude = location.latitude
+//                val longitude = location.longitude
+//                Log.e(javaClass.simpleName, "GPS Location Latitude: $latitude" +
+//                        ", Longitude: $longitude", )
+//            }
+//        }
+
+        val request = com.google.android.gms.location.LocationRequest.create().apply {
+            this.priority = Priority.PRIORITY_HIGH_ACCURACY
+            this.interval = 750L
+            this.fastestInterval = 500L
+        }.also {
+            locationClient.requestLocationUpdates(it, callback, Looper.myLooper())
         }
 
-        return suspendCancellableCoroutine { cont ->
-            locationClient.lastLocation.apply {
-                if(isComplete) {
-                    if (isSuccessful) {
-                        cont.resume(result)
-                    }
-                    else {
-                        cont.resume(null)
-                    }
-                    return@suspendCancellableCoroutine
-                }
-
-                addOnSuccessListener {
-                    cont.resume(it)
-                }
-
-                addOnFailureListener {
-                    cont.resume(null)
-                }
-
-                addOnCanceledListener {
-                    cont.cancel()
-                }
-            }
-        }
+//        return suspendCancellableCoroutine { cont ->
+//            locationClient.lastLocation.apply {
+//                if(isComplete) {
+//                    if (isSuccessful) {
+//                        cont.resume(result)
+//                    }
+//                    else {
+//                        cont.resume(null)
+//                    }
+//                    return@suspendCancellableCoroutine
+//                }
+//
+//                addOnSuccessListener {
+//                    cont.resume(it)
+//                }
+//
+//                addOnFailureListener {
+//                    cont.resume(null)
+//                }
+//
+//                addOnCanceledListener {
+//                    cont.cancel()
+//                }
+//            }
+//        }
     }
 }

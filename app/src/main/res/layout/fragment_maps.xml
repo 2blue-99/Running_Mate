@@ -52,6 +52,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:id="@+id/textView5"
                 android:layout_width="110dp"
@@ -60,12 +61,13 @@
                 android:text="Time" />
 
             <TextView
-                android:gravity="center"
                 android:id="@+id/timeText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="00:00:00" />
+                android:gravity="center"
+                android:text="00:00:00"
+                android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -78,6 +80,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:id="@+id/textView7"
                 android:layout_width="110dp"
@@ -91,7 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="" />
+                android:text=""
+                android:textColor="@color/black"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -104,11 +109,12 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
             <TextView
-                android:gravity="center"
+                android:textColor="@color/black"
                 android:id="@+id/caloriText"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Kcal" />
 
             <TextView
@@ -117,7 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="" />
+                android:text=""
+                android:textColor="@color/black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -129,6 +136,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
             <TextView
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:id="@+id/textView11"
                 android:layout_width="110dp"
@@ -137,12 +145,13 @@
                 android:text="Step" />
 
             <TextView
-                android:gravity="center"
                 android:id="@+id/stepText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="" />
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/black" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -158,19 +167,17 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:background="@drawable/running_text_borderline"
-        android:textColor="@color/black"
-        android:textSize="25dp"
-        android:id="@+id/log"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/setBtn"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="TextView"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="300dp"
+        android:layout_marginBottom="100dp"
+        android:text="Set"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
