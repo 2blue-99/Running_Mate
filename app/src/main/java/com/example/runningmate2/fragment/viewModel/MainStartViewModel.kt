@@ -29,8 +29,8 @@ class MainStartViewModel(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
 
-    private val _mainLocation = MutableLiveData<String>()
-    val mainLocation: LiveData<String> get() = _time
+    private val _mainLocation = MutableLiveData<Location>()
+    val mainLocation: LiveData<Location> get() = _mainLocation
 
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
@@ -81,33 +81,13 @@ class MainStartViewModel(
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
-                    _location.add(location)
+                    _mainLocation.value = location
                 }
             }
         }.also {
             MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
         }
-//        viewModelScope.launch {
-//            while(true) {
-//                MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
-//
-//                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
-//
-//                    withContext(Dispatchers.Main) {
-//                        if(beforeData == ""){
-//                            beforeData = location
-//                            _location.add(location)
-//                        }else if(beforeData != location){
-//                            beforeData = location
-//                            _location.add(location)
-//
-//                        }
-//                    }
-//
-//                }
-//                delay(interval)
-//            }
-//        }
+
     }
 
     fun setLatLng(value: LatLng) {
@@ -151,6 +131,28 @@ class MainStartViewModel(
         }
 
     }
+
+    //        viewModelScope.launch {
+//            while(true) {
+//                MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
+//
+//                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
+//
+//                    withContext(Dispatchers.Main) {
+//                        if(beforeData == ""){
+//                            beforeData = location
+//                            _location.add(location)
+//                        }else if(beforeData != location){
+//                            beforeData = location
+//                            _location.add(location)
+//
+//                        }
+//                    }
+//
+//                }
+//                delay(interval)
+//            }
+//        }
 
 
 }

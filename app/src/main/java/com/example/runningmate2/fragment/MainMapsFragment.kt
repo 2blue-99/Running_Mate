@@ -68,11 +68,6 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
                 }
             }
         }
-
-        mainStartViewModel.time.observe(viewLifecycleOwner){time ->
-            binding.timeText.text = time
-        }
-
         return view
     }
 
@@ -108,31 +103,56 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mainStartViewModel.repeatCallLocation()
-        mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
-            Log.e(javaClass.simpleName, "latLng: $latlngs", )
+        mainStartViewModel.mainLocation()
+        mainStartViewModel.mainLocation.observe(viewLifecycleOwner) { mainLocation ->
+            Log.e(javaClass.simpleName, "latLng: $mainLocation", )
 
-            if (latlngs.size > 0) {
+            if (mainLocation) {
                 // polyline 에 대해 선언 할 코드.
                 if(start){
                     mMap.addPolyline {
-                        addAll(latlngs)
+                        addAll(mainLocation)
                         color(Color.RED)
                     }
                     mMap.addMarker {
-                        position(latlngs.last())
+                        position(mainLocation)
                     }
                 }else{
                     mMap.clear()
                     mMap.addMarker {
-                        position(latlngs.last())
+                        position(mainLocation)
 //                        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
                         icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
                         alpha(0.9F)
                     }
                 }
             }
-
         }
+//        mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
+//            Log.e(javaClass.simpleName, "latLng: $latlngs", )
+//
+//            if (latlngs.size > 0) {
+//                // polyline 에 대해 선언 할 코드.
+//                if(start){
+//                    mMap.addPolyline {
+//                        addAll(latlngs)
+//                        color(Color.RED)
+//                    }
+//                    mMap.addMarker {
+//                        position(latlngs.last())
+//                    }
+//                }else{
+//                    mMap.clear()
+//                    mMap.addMarker {
+//                        position(latlngs.last())
+////                        icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
+//                        icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
+//                        alpha(0.9F)
+//                    }
+//                }
+//            }
+//
+//        }
     }
 
     private fun runningStart(){
@@ -153,6 +173,10 @@ class MainMapsFragment : Fragment() , OnMapReadyCallback{
         binding.stopButton.visibility = View.VISIBLE
         binding.textConstraint.visibility = View.VISIBLE
         mainStartViewModel.myTime()
+        mainStartViewModel.time.observe(viewLifecycleOwner){time ->
+            binding.timeText.text = time
+        }
+
         start = true
     }
 
