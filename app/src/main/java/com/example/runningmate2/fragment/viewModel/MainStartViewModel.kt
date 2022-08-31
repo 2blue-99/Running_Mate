@@ -2,6 +2,7 @@ package com.example.runningmate2.fragment.viewModel
 
 import android.app.Application
 import android.location.Location
+import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -39,8 +40,6 @@ class MainStartViewModel(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
 
-
-
 //    var _distance = 0.0
     var distance = ListLiveData<Double>()
 
@@ -55,7 +54,9 @@ class MainStartViewModel(
     private var minute = ""
     private var hour = ""
 
+    // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation(){
+        Log.e(javaClass.simpleName, "repeatCallLocation")
         object: LocationCallback() {
             override fun onLocationAvailability(p0: LocationAvailability) {
                 super.onLocationAvailability(p0)
@@ -65,7 +66,6 @@ class MainStartViewModel(
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
                     _location.add(location)
-
                 }
             }
         }.also {
@@ -73,31 +73,21 @@ class MainStartViewModel(
         }
     }
 
-//    fun mainLocation(){
-//        object: LocationCallback() {
-//            override fun onLocationAvailability(p0: LocationAvailability) {
-//                super.onLocationAvailability(p0)
-//            }
-//
-//            override fun onLocationResult(p0: LocationResult) {
-//                super.onLocationResult(p0)
-//                p0.lastLocation?.let { location ->
-//                    _mainLocation.value = location
-//                }
-//            }
-//        }.also {
-//            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
-//        }
-//
-//    }
-
+    //
     fun setLatLng(value: LatLng) {
+        Log.e(javaClass.simpleName, "setLatLng")
         _latLng.add(value)
-        var now = LatLng(value.latitude, value.longitude)
+
+        val now = LatLng(value.latitude, value.longitude)
         _nowLocation.value = now
+
+        //시작시 계산하기 위해 가져감
+//        calculationDistance(value)
+
     }
 
     fun myTime(){
+        Log.e(javaClass.simpleName, "myTime")
         viewModelScope.launch {
             while(true){
                 delay(1000L)
@@ -128,35 +118,24 @@ class MainStartViewModel(
                     hour = "$_hour"
                 }
 
-                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
+//                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
                 _time.value = "$hour:$minute:$second"
-//                myTime = "$hour:$minute:$second"
             }
         }
-
     }
 
-    //        viewModelScope.launch {
-//            while(true) {
-//                MyLocationRepo.nowLocation(MyApplication.getApplication())?.let { location ->
+//    fun calculationDistance(my : LatLng){
 //
-//                    Log.e(javaClass.simpleName, "@@@@ location : $location", )
 //
-//                    withContext(Dispatchers.Main) {
-//                        if(beforeData == ""){
-//                            beforeData = location
-//                            _location.add(location)
-//                        }else if(beforeData != location){
-//                            beforeData = location
-//                            _location.add(location)
 //
-//                        }
-//                    }
+//        val myLoc = Location(LocationManager.NETWORK_PROVIDER)
+//        val targetLoc = Location(LocationManager.NETWORK_PROVIDER)
+//        myLoc.latitude= lat1
+//        myLoc.longitude = lng1
 //
-//                }
-//                delay(interval)
-//            }
-//        }
-
-
+//        targetLoc.latitude= lat2
+//        targetLoc.longitude = lng2
+//
+//        myLoc.distanceTo(targetLoc)
+//    }
 }

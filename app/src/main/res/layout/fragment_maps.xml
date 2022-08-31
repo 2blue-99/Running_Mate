@@ -89,8 +89,8 @@
                 android:text="Distance" />
 
             <TextView
-                android:gravity="center"
                 android:id="@+id/distenceText"
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
