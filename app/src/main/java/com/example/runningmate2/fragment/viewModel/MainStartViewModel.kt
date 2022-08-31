@@ -29,8 +29,8 @@ class MainStartViewModel(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
 
-    private val _mainLocation = MutableLiveData<Location>()
-    val mainLocation: LiveData<Location> get() = _mainLocation
+    private val _nowLocation = MutableLiveData<LatLng>()
+    val nowLocation: LiveData<LatLng> get() = _nowLocation
 
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
@@ -65,6 +65,7 @@ class MainStartViewModel(
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
                     _location.add(location)
+
                 }
             }
         }.also {
@@ -72,26 +73,28 @@ class MainStartViewModel(
         }
     }
 
-    fun mainLocation(){
-        object: LocationCallback() {
-            override fun onLocationAvailability(p0: LocationAvailability) {
-                super.onLocationAvailability(p0)
-            }
-
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                p0.lastLocation?.let { location ->
-                    _mainLocation.value = location
-                }
-            }
-        }.also {
-            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
-        }
-
-    }
+//    fun mainLocation(){
+//        object: LocationCallback() {
+//            override fun onLocationAvailability(p0: LocationAvailability) {
+//                super.onLocationAvailability(p0)
+//            }
+//
+//            override fun onLocationResult(p0: LocationResult) {
+//                super.onLocationResult(p0)
+//                p0.lastLocation?.let { location ->
+//                    _mainLocation.value = location
+//                }
+//            }
+//        }.also {
+//            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
+//        }
+//
+//    }
 
     fun setLatLng(value: LatLng) {
         _latLng.add(value)
+        var now = LatLng(value.latitude, value.longitude)
+        _nowLocation.value = now
     }
 
     fun myTime(){
@@ -124,6 +127,7 @@ class MainStartViewModel(
                 }else{
                     hour = "$_hour"
                 }
+
                 Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
                 _time.value = "$hour:$minute:$second"
 //                myTime = "$hour:$minute:$second"
