@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text=""
+                android:text="0.0 M"
                 android:textColor="@color/black"
                 />
         </LinearLayout>
@@ -110,7 +110,7 @@
 
             <TextView
                 android:textColor="@color/black"
-                android:id="@+id/caloriText"
+                android:id="@+id/text100"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -119,11 +119,11 @@
 
             <TextView
                 android:gravity="center"
-                android:id="@+id/textView10"
+                android:id="@+id/caloriText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text=""
+                android:text="0.0 Kcal"
                 android:textColor="@color/black"/>
         </LinearLayout>
 
@@ -150,7 +150,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text=""
+                android:text="0 걸음"
                 android:textColor="@color/black" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

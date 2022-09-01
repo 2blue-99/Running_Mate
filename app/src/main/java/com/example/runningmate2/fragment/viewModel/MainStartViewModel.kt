@@ -40,8 +40,8 @@ class MainStartViewModel(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
 
-//    var _distance = 0.0
-    var distance = ListLiveData<Double>()
+    private val _calorie = MutableLiveData<Double>()
+    val calorie: LiveData<Double> get() = _calorie
 
     //위치 정보를 받는 interval
     private val interval = 1500L
@@ -53,6 +53,7 @@ class MainStartViewModel(
     private var second = ""
     private var minute = ""
     private var hour = ""
+    private var calorieHap = 0.0
 
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation(){
@@ -120,22 +121,16 @@ class MainStartViewModel(
 
 //                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
                 _time.value = "$hour:$minute:$second"
+                myCalorie()
             }
         }
     }
 
-//    fun calculationDistance(my : LatLng){
-//
-//
-//
-//        val myLoc = Location(LocationManager.NETWORK_PROVIDER)
-//        val targetLoc = Location(LocationManager.NETWORK_PROVIDER)
-//        myLoc.latitude= lat1
-//        myLoc.longitude = lng1
-//
-//        targetLoc.latitude= lat2
-//        targetLoc.longitude = lng2
-//
-//        myLoc.distanceTo(targetLoc)
-//    }
+    fun myCalorie(){
+        var myWeight = 65
+        calorieHap += 0.14
+        Log.e(javaClass.simpleName, "myCalorie: ${calorieHap}")
+//        _calorie.value = round(calorieHap*100)/100
+        _calorie.value = calorieHap
+    }
 }

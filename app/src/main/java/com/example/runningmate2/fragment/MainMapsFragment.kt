@@ -1,5 +1,6 @@
 package com.example.runningmate2.fragment
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -22,7 +23,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.android.ktx.addMarker
 import com.google.maps.android.ktx.addPolyline
 import kotlin.math.round
 
@@ -38,6 +38,9 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var start: Boolean = false
     private var myNowLati : Double? = null
     private var myNowLong : Double? = null
+    private var distanceHap : Double = 0.0
+    private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
+    private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -189,22 +192,35 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             binding.timeText.text = time
         }
 
+        // 거리 계산
         mainStartViewModel.latLng.observe(viewLifecycleOwner){latLngs ->
             if (latLngs.size > 1){
-                Log.e(javaClass.simpleName, " distance ")
-                val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
-                val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
-
-                beforeLocate.latitude= latLngs.first().latitude
-                beforeLocate.longitude= latLngs.first().longitude
-
+                if(latLngs.size == 2) {
+                    beforeLocate.latitude = latLngs.first().latitude
+                    beforeLocate.longitude = latLngs.first().longitude
+                }
                 afterLocate.latitude= latLngs.last().latitude
                 afterLocate.longitude= latLngs.last().longitude
 
-                val result = beforeLocate.distanceTo(afterLocate).toDouble()
+                // 소숫점 1자리까지 반올림.
+                var result = round(beforeLocate.distanceTo(afterLocate).toDouble() * 10)/10
+                Log.e(javaClass.simpleName, "보정 전 result: $result", )
 
-                binding.distenceText.text = (round(result*10)/10).toString()
+                // 제자리 있을때 보정.
+                if(result < 1.2){
+                    result = 0.0
+                }
+                Log.e(javaClass.simpleName, "보정 후 result: $result", )
+                binding.distenceText.text = "${distanceHap + result} M"
+                distanceHap += result
+                beforeLocate.latitude = latLngs.last().latitude
+                beforeLocate.longitude = latLngs.last().longitude
             }
+        }
+
+        //칼로리 계산
+        mainStartViewModel.calorie.observe(viewLifecycleOwner){calorie ->
+            binding.caloriText.text = calorie.toString().substring(0..4)
 
         }
     }
