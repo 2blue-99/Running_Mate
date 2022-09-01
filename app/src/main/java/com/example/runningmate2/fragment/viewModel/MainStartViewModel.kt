@@ -1,9 +1,15 @@
 package com.example.runningmate2.fragment.viewModel
 
 import android.app.Application
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +30,7 @@ import kotlin.math.pow
 
 class MainStartViewModel(
     application: Application,
-) : AndroidViewModel(application){
+) : AndroidViewModel(application), SensorEventListener{
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
     private val _location = ListLiveData<Location>()
@@ -53,7 +59,11 @@ class MainStartViewModel(
     private var second = ""
     private var minute = ""
     private var hour = ""
-    private var calorieHap = 0.0
+    private var calorieHap:Float = 0.0F
+    private lateinit var sensorManager : SensorManager
+    private var accel: Float = 0.0f
+    private var accelCurrent: Float = 0.0f
+    private var accelLast: Float = 0.0f
 
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation(){
@@ -118,8 +128,6 @@ class MainStartViewModel(
                 }else{
                     hour = "$_hour"
                 }
-
-//                Log.e(javaClass.simpleName, "viewModel time {$hour:$minute:$second}", )
                 _time.value = "$hour:$minute:$second"
                 myCalorie()
             }
@@ -128,9 +136,40 @@ class MainStartViewModel(
 
     fun myCalorie(){
         var myWeight = 65
-        calorieHap += 0.14
+        calorieHap += 0.14F
         Log.e(javaClass.simpleName, "myCalorie: ${calorieHap}")
+//        Log.e(javaClass.simpleName, "myCalorie: ${(round(calorieHap*10)/10).toDouble()}")
 //        _calorie.value = round(calorieHap*100)/100
-        _calorie.value = calorieHap
+        if(calorieHap.toString().length > 3){
+//            _calorie.value = calorieHap
+        }else{
+            _calorie.value = (round(calorieHap*100)/100).toDouble()
+        }
+    }
+
+    fun stepCount(){
+//        this.sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        accel = 10f
+//        accelCurrent = SensorManager.GRAVITY_EARTH
+//        accelLast = SensorManager.GRAVITY_EARTH
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val x:Float = event?.values?.get(0) as Float
+        val y:Float = event?.values?.get(0) as Float
+        val z:Float = event?.values?.get(0) as Float
+
+        accelLast = accelCurrent
+        accelCurrent = sqrt((x*x + y*y + z*z).toDouble()).toFloat()
+        val delta:Float = accelCurrent - accelLast
+        accel = accel * 0.9f + delta
+
+        if(accel>30){
+            Log.e(javaClass.simpleName, "흔들림: ", )
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        Log.e(javaClass.simpleName, "onAccuracyChanged: ", )
     }
 }

@@ -194,6 +194,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // 거리 계산
         mainStartViewModel.latLng.observe(viewLifecycleOwner){latLngs ->
+
             if (latLngs.size > 1){
                 if(latLngs.size == 2) {
                     beforeLocate.latitude = latLngs.first().latitude
@@ -202,14 +203,17 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 afterLocate.latitude= latLngs.last().latitude
                 afterLocate.longitude= latLngs.last().longitude
 
+                Log.e(javaClass.simpleName, "거리 : ${beforeLocate.distanceTo(afterLocate)}")
                 // 소숫점 1자리까지 반올림.
-                var result = round(beforeLocate.distanceTo(afterLocate).toDouble() * 10)/10
-                Log.e(javaClass.simpleName, "보정 전 result: $result", )
+                var result = beforeLocate.distanceTo(afterLocate).toDouble()
 
-                // 제자리 있을때 보정.
-                if(result < 1.2){
-                    result = 0.0
+                if(beforeLocate.distanceTo(afterLocate).toString().length > 3){
+                    Log.e(javaClass.simpleName, "길이 3보다 큰 거리 result: $result", )
+                    result = round(result * 10 )/10
                 }
+                // 제자리 있을때 보정.
+                if(result <= 2.0){ result = 0.0 }
+
                 Log.e(javaClass.simpleName, "보정 후 result: $result", )
                 binding.distenceText.text = "${distanceHap + result} M"
                 distanceHap += result
@@ -220,8 +224,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         //칼로리 계산
         mainStartViewModel.calorie.observe(viewLifecycleOwner){calorie ->
-            binding.caloriText.text = calorie.toString().substring(0..4)
-
+//            Log.e(javaClass.simpleName, "calorie : $calorie", )
+            if(calorie.toString().length > 2) {
+                binding.caloriText.text = calorie.toString().substring(0 until 3)
+            }
         }
     }
 }
