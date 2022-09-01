@@ -228,7 +228,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 if (result != 0.0){
                     val myCalorie = Calorie().myCalorie()
                     calorieHap += myCalorie
-                    binding.caloriText.text = "${calorieHap}"
+                    binding.caloriText.text = "${calorieHap} Kcal"
                 }
             }
         }
