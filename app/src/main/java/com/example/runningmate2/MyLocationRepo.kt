@@ -55,15 +55,6 @@ object MyLocationRepo {
             return
         }
 
-//        locationClient.lastLocation.addOnSuccessListener { location : Location? ->
-//            if (location != null) {
-//                val latitude = location.latitude
-//                val longitude = location.longitude
-//                Log.e(javaClass.simpleName, "GPS Location Latitude: $latitude" +
-//                        ", Longitude: $longitude", )
-//            }
-//        }
-
         val request = com.google.android.gms.location.LocationRequest.create().apply {
             this.priority = Priority.PRIORITY_HIGH_ACCURACY
             this.interval = 750L
@@ -71,31 +62,5 @@ object MyLocationRepo {
         }.also {
             locationClient.requestLocationUpdates(it, callback, Looper.myLooper())
         }
-
-//        return suspendCancellableCoroutine { cont ->
-//            locationClient.lastLocation.apply {
-//                if(isComplete) {
-//                    if (isSuccessful) {
-//                        cont.resume(result)
-//                    }
-//                    else {
-//                        cont.resume(null)
-//                    }
-//                    return@suspendCancellableCoroutine
-//                }
-//
-//                addOnSuccessListener {
-//                    cont.resume(it)
-//                }
-//
-//                addOnFailureListener {
-//                    cont.resume(null)
-//                }
-//
-//                addOnCanceledListener {
-//                    cont.cancel()
-//                }
-//            }
-//        }
     }
 }

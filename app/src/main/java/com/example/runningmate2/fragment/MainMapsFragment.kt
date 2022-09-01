@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.example.runningmate2.Calorie
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.R
 import com.example.runningmate2.databinding.FragmentMapsBinding
@@ -41,6 +42,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var distanceHap : Double = 0.0
     private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
+    private var calorieHap = 0.0
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -164,11 +167,13 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun runningStart() {
         mMap.clear()
         Log.e(javaClass.simpleName, " Running Start ")
         (activity as MainActivity).changeFragment(1)
         mainStartViewModel.myTime()
+        mainStartViewModel.myStep()
 
         //빠르게 줌하기 위해 만듦
         if(myNowLong != null && myNowLong != null) {
@@ -203,31 +208,38 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 afterLocate.latitude= latLngs.last().latitude
                 afterLocate.longitude= latLngs.last().longitude
 
-                Log.e(javaClass.simpleName, "거리 : ${beforeLocate.distanceTo(afterLocate)}")
+//                Log.e(javaClass.simpleName, "거리 : ${beforeLocate.distanceTo(afterLocate)}")
                 // 소숫점 1자리까지 반올림.
                 var result = beforeLocate.distanceTo(afterLocate).toDouble()
 
                 if(beforeLocate.distanceTo(afterLocate).toString().length > 3){
-                    Log.e(javaClass.simpleName, "길이 3보다 큰 거리 result: $result", )
+//                    Log.e(javaClass.simpleName, "길이 3보다 큰 거리 result: $result", )
                     result = round(result * 10 )/10
                 }
                 // 제자리 있을때 보정.
                 if(result <= 2.0){ result = 0.0 }
 
-                Log.e(javaClass.simpleName, "보정 후 result: $result", )
+//                Log.e(javaClass.simpleName, "보정 후 result: $result", )
                 binding.distenceText.text = "${distanceHap + result} M"
                 distanceHap += result
                 beforeLocate.latitude = latLngs.last().latitude
                 beforeLocate.longitude = latLngs.last().longitude
+                // 칼로리 계산해주기
+                if (result != 0.0){
+                    val myCalorie = Calorie().myCalorie()
+                    calorieHap += myCalorie
+                    binding.caloriText.text = "${calorieHap}"
+                }
             }
         }
 
-        //칼로리 계산
-        mainStartViewModel.calorie.observe(viewLifecycleOwner){calorie ->
-//            Log.e(javaClass.simpleName, "calorie : $calorie", )
-            if(calorie.toString().length > 2) {
-                binding.caloriText.text = calorie.toString().substring(0 until 3)
-            }
-        }
+//        //칼로리 계산
+//        mainStartViewModel.calorie.observe(viewLifecycleOwner){calorie ->
+//            if(calorie.toString().length > 2) {
+//                binding.caloriText.text = "${calorie.toString().substring(0 until 3)} Kcal"
+//            }
+//        }
+
+
     }
 }

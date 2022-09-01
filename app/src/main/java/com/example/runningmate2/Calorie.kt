@@ -1,11 +1,28 @@
 package com.example.runningmate2
 
 class Calorie {
-    fun myCalorie(weight : Double, height : Double, distance : Double, time : String){
-        // 거리는 미터단위로 와야함
-        // 분당달리기속도(m/분)=4,800m/30분=160m/분
-        // 체중당 에너지 소비량 (0.170kcal/kg/min) → 160분 기준
-        // 운동 시 총에너지소비량 = 0.170 x 체중(70kg) x 운동시간(160분) = 0.170 x 70 x 30 = 357kcal
-        //
+    fun myCalorie() : Double{
+        val myWeight = 70
+        if(myWeight <= 50){
+            return 0.17
+        }else if(myWeight <= 55){
+            return 0.2
+        }else if(myWeight <= 60){
+            return 0.22
+        }else if(myWeight <= 65){
+            return 0.24
+        }else if(myWeight <= 70){
+            return 0.26
+        }else if(myWeight <= 75){
+            return 0.28
+        }else if(myWeight <= 80){
+            return 0.3
+        }else if(myWeight <= 85){
+            return 0.32
+        }else if(myWeight <= 90){
+            return 0.34
+        }else if(myWeight <= 95){
+            return 0.36
+        }else return 0.38
     }
 }
