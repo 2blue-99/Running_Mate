@@ -23,6 +23,8 @@ class MainViewModel : ViewModel() {
 
     lateinit var myDataList : DomainWeather
 
+    var pureum = "" +
+            ""
     val myValue : LiveData<DomainWeather>
         get() = _myValue
 
@@ -100,4 +102,8 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    ///데이터저장
+
+
 }

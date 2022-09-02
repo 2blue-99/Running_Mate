@@ -10,12 +10,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.runningmate2.Calorie
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.R
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
+import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -32,9 +35,9 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentMapsBinding? = null
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
-    private var startingPointMarker: Marker? = null
     private var nowPointMarker: Marker? = null
     private val mainStartViewModel: MainStartViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val binding get() = _binding!!
     private var start: Boolean = false
     private var myNowLati : Double? = null
@@ -43,30 +46,35 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private var calorieHap = 0.0
-
+    private var loading = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         Log.e(javaClass.simpleName, "onCreateView")
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        binding.loadingText.visibility = View.VISIBLE
+        binding.startButton.visibility = View.INVISIBLE
+        binding.setBtn.visibility = View.INVISIBLE
 
         //위치 집어넣기 시작.
         mainStartViewModel.repeatCallLocation()
 
         // start 버튼
-        binding.button.setOnClickListener {
+        binding.startButton.setOnClickListener {
             start = true
             runningStart()
         }
 
         // stop 버튼
         binding.stopButton.setOnClickListener {
+            mainViewModel.pureum = "pureum"
             (activity as MainActivity).changeFragment(2)
+
             start = false
         }
 
@@ -97,16 +105,25 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
+
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.e(javaClass.simpleName, "onMapReady")
         mMap = googleMap
 
+        Log.e(javaClass.simpleName, "mapFragment : $mMap$")
+
         // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
-
             if (locations.isNotEmpty()) {
+                binding.loadingText.visibility = View.INVISIBLE
+                if(!start){
+                    binding.startButton.visibility = View.VISIBLE
+                }
+                binding.setBtn.visibility = View.VISIBLE
+
                 myNowLati = locations.last().latitude
                 myNowLong = locations.last().longitude
 //                Log.e(javaClass.simpleName, "location.observe, locations : $locations ")
@@ -138,12 +155,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
 //            latlngs.first()
             if (latlngs.isNotEmpty()) {
-                // start시 화면 고정
-//                if (latlngs.size == 1){
-//                    var myLocation =
-//                        LatLng(latlngs.last().latitude - 0.0013, latlngs.last().longitude)
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
-//                }
                 mMap.addPolyline {
                     addAll(latlngs)
                     color(Color.RED)
@@ -177,8 +188,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         //빠르게 줌하기 위해 만듦
         if(myNowLong != null && myNowLong != null) {
-            var startZoom = LatLng(myNowLati!! - 0.0013, myNowLong!!)
-            var startLocate = LatLng(myNowLati!!, myNowLong!!)
+            val startZoom = LatLng(myNowLati!! - 0.0013, myNowLong!!)
+            val startLocate = LatLng(myNowLati!!, myNowLong!!)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(startZoom, 17F))
             nowPointMarker = mMap.addMarker(
                 MarkerOptions()
@@ -189,7 +200,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 //                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
             )
         }
-        binding.button.visibility = View.INVISIBLE
+        binding.startButton.visibility = View.INVISIBLE
         binding.stopButton.visibility = View.VISIBLE
         binding.textConstraint.visibility = View.VISIBLE
 
@@ -205,41 +216,27 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     beforeLocate.latitude = latLngs.first().latitude
                     beforeLocate.longitude = latLngs.first().longitude
                 }
+
                 afterLocate.latitude= latLngs.last().latitude
                 afterLocate.longitude= latLngs.last().longitude
 
-//                Log.e(javaClass.simpleName, "거리 : ${beforeLocate.distanceTo(afterLocate)}")
-                // 소숫점 1자리까지 반올림.
                 var result = beforeLocate.distanceTo(afterLocate).toDouble()
 
-                if(beforeLocate.distanceTo(afterLocate).toString().length > 3){
-//                    Log.e(javaClass.simpleName, "길이 3보다 큰 거리 result: $result", )
-                    result = round(result * 10 )/10
-                }
                 // 제자리 있을때 보정.
-                if(result <= 2.0){ result = 0.0 }
+                if(result <= 2.0) result = 0.0
 
-//                Log.e(javaClass.simpleName, "보정 후 result: $result", )
-                binding.distenceText.text = "${distanceHap + result} M"
+                binding.distenceText.text = "${String.format("%.2f",distanceHap + result)} M"
                 distanceHap += result
                 beforeLocate.latitude = latLngs.last().latitude
                 beforeLocate.longitude = latLngs.last().longitude
-                // 칼로리 계산해주기
+
+                // 거리가 올라갈때만 칼로리 계산해주기
                 if (result != 0.0){
                     val myCalorie = Calorie().myCalorie()
                     calorieHap += myCalorie
-                    binding.caloriText.text = "${calorieHap} Kcal"
+                    binding.caloriText.text = "${String.format("%.2f",calorieHap)} Kcal"
                 }
             }
         }
-
-//        //칼로리 계산
-//        mainStartViewModel.calorie.observe(viewLifecycleOwner){calorie ->
-//            if(calorie.toString().length > 2) {
-//                binding.caloriText.text = "${calorie.toString().substring(0 until 3)} Kcal"
-//            }
-//        }
-
-
     }
 }

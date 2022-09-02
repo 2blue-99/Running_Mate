@@ -8,14 +8,17 @@ import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.fragment.RecordFragment
 import com.example.runningmate2.fragment.ResultFragment
 import com.example.runningmate2.fragment.RunningFragment
+import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     // 소멸될 때 콜백을 분리하여 이 페이지가 사라져도 다시 호출 가능.
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: ActivityMainBinding
+    private val mainViewModel: MainViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
 //            Log.e(javaClass.simpleName, "model.getLocation() :", )
+            //권한을 받으면 돌아감
         }
         permissionLauncher.launch(arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,

@@ -49,8 +49,9 @@ object MySensorRepo : AppCompatActivity(), SensorEventListener {
 
         accel = accel * 0.9f + delta
 
-        if(accel>30){
-//            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.Se)
+        if(accel>50){
+//            sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.sensor)
+            Log.e(javaClass.simpleName, "흔들렸다: ", )
         }
     }
 

@@ -19,8 +19,23 @@
         app:layout_constraintVertical_bias="0.0"
         tools:context=".fragment.MainMapsFragment" />
 
+    <TextView
+        android:id="@+id/loadingText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0.7"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="Loading"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/map" />
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"

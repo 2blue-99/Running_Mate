@@ -37,20 +37,12 @@ class MainStartViewModel(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
 
-    private val _calorie = MutableLiveData<Double>()
-    val calorie: LiveData<Double> get() = _calorie
-
-    //위치 정보를 받는 interval
-    private val interval = 1500L
-    private var beforeData : Any = ""
-
     private var _second = 0
     private var _minute = 0
     private var _hour = 0
     private var second = ""
     private var minute = ""
     private var hour = ""
-    private var calorieHap:Float = 0.0F
 
 
     // 맨처음 위치 받아와서 넣기.
@@ -75,14 +67,11 @@ class MainStartViewModel(
     //
     fun setLatLng(value: LatLng) {
         Log.e(javaClass.simpleName, "setLatLng")
+
         _latLng.add(value)
 
         val now = LatLng(value.latitude, value.longitude)
         _nowLocation.value = now
-
-        //시작시 계산하기 위해 가져감
-//        calculationDistance(value)
-
     }
 
     fun myTime(){
@@ -120,19 +109,6 @@ class MainStartViewModel(
             }
         }
     }
-
-//    fun myCalorie(){
-//        var myWeight = 65
-//        calorieHap += 0.14F
-////        Log.e(javaClass.simpleName, "myCalorie: ${calorieHap}")
-////        Log.e(javaClass.simpleName, "myCalorie: ${(round(calorieHap*10)/10).toDouble()}")
-////        _calorie.value = round(calorieHap*100)/100
-//        if(calorieHap.toString().length > 3){
-////            _calorie.value = calorieHap
-//        }else{
-//            _calorie.value = (round(calorieHap*100)/100).toDouble()
-//        }
-//    }
 
     fun myStep(){
         Log.e(javaClass.simpleName, "myStep")
