@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.databinding.FragmentResultBinding
 import com.example.runningmate2.viewModel.MainViewModel
@@ -32,14 +33,18 @@ class ResultFragment : Fragment() {
         binding.backBtn.setOnClickListener{
             (activity as MainActivity).changeFragment(3)
             Log.e(javaClass.simpleName, "!! ResultFragment", )
-            mainViewModel.db.getDao().getData().observe(viewLifecycleOwner){datas ->
-                Log.e(javaClass.simpleName, "room: $datas", )
-                Log.e(javaClass.simpleName, "room: $datas", )
-                Log.e(javaClass.simpleName, "room: $datas", )
-                Log.e(javaClass.simpleName, "room: $datas", )
-                Log.e(javaClass.simpleName, "room: $datas", )
-                Log.e(javaClass.simpleName, "room: $datas", )
+
+            lifecycleScope.launchWhenCreated {
+                mainViewModel.db.getDao().getData().observe(viewLifecycleOwner){datas ->
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                    Log.e(javaClass.simpleName, "room: $datas", )
+                }
             }
+
         }
         binding.time.text = mainViewModel.runningData.time
         binding.distance.text = mainViewModel.runningData.distance
