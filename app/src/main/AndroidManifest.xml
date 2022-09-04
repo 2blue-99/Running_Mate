@@ -38,9 +38,6 @@
             android:value="AIzaSyAcwWIZajtXAJk5n-vcQXbrDympLgSpG6I" />
 
         <activity
-            android:name=".UserDataActivity"
-            android:exported="false" />
-        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>

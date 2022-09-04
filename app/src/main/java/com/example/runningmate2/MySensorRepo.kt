@@ -23,8 +23,6 @@ object MySensorRepo : AppCompatActivity(), SensorEventListener {
     @SuppressLint("ServiceCast")
     fun senSor(application : Application){
         Log.e(javaClass.simpleName, "senSor")
-//        val sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//        val sensor:Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         this.sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         accel = 10f

@@ -172,11 +172,12 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/stopButton"
-        android:layout_width="350dp"
+        android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginBottom="45dp"
+        android:background="@drawable/my_button"
         android:text="Stop"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -186,7 +187,7 @@
 
     <android.widget.Button
         android:paddingRight="12dp"
-        android:drawableRight="@drawable/jeahyon"
+        android:drawableRight="@drawable/ic_baseline_my_location_24"
         android:id="@+id/setBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"

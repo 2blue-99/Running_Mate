@@ -34,6 +34,11 @@ class ResultFragment : Fragment() {
             Log.e(javaClass.simpleName, "!! ResultFragment", )
             mainViewModel.db.getDao().getData().observe(viewLifecycleOwner){datas ->
                 Log.e(javaClass.simpleName, "room: $datas", )
+                Log.e(javaClass.simpleName, "room: $datas", )
+                Log.e(javaClass.simpleName, "room: $datas", )
+                Log.e(javaClass.simpleName, "room: $datas", )
+                Log.e(javaClass.simpleName, "room: $datas", )
+                Log.e(javaClass.simpleName, "room: $datas", )
             }
         }
         binding.time.text = mainViewModel.runningData.time
