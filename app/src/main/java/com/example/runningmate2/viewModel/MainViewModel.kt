@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.example.data.RepoImpl
 import com.example.domain.model.DomainWeather
 import com.example.runningmate2.BuildConfig
+import com.example.runningmate2.RunningData
 import com.example.runningmate2.TransLocationUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +24,7 @@ class MainViewModel : ViewModel() {
 
     lateinit var myDataList : DomainWeather
 
-    var pureum = "" +
-            ""
+    lateinit var runningData : RunningData
     val myValue : LiveData<DomainWeather>
         get() = _myValue
 

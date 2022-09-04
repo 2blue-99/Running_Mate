@@ -32,6 +32,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
+        //LocalDateTime 이 Api 26 이하 지원을 위해서 추가함.
+        coreLibraryDesugaringEnabled true
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -84,4 +87,7 @@ dependencies {
 
     //fragment
     implementation "androidx.fragment:fragment-ktx:1.5.2"
+
+    //시간
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }

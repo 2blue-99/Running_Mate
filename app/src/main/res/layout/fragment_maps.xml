@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"
-        android:alpha="0.7"
+        android:alpha="0.5"
         android:gravity="center"
         android:textColor="@color/white"
         android:text="Loading"

@@ -10,12 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.runningmate2.Calorie
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.R
+import com.example.runningmate2.RunningData
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
 import com.example.runningmate2.viewModel.MainViewModel
@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.addPolyline
-import kotlin.math.round
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -72,7 +71,12 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // stop 버튼
         binding.stopButton.setOnClickListener {
-            mainViewModel.pureum = "pureum"
+            mainViewModel.runningData = RunningData(
+                binding.timeText.text.toString(),
+                binding.timeText.text.toString(),
+                binding.timeText.text.toString(),
+                binding.timeText.text.toString())
+
             (activity as MainActivity).changeFragment(2)
 
             start = false

@@ -45,11 +45,7 @@ class RecordFragment : Fragment() {
     }
 
     fun InitRecylcerViewData() {
-        mDatas.add(Data("aaaa", "bb", "cc"))
-        mDatas.add(Data("aaaa", "bb", "cc"))
-        mDatas.add(Data("aaaa", "bb", "cc"))
-        mDatas.add(Data("aaaa", "bb", "cc"))
-        mDatas.add(Data("aaaa", "bb", "cc"))
+        // 룸에서 가져오는 코드.
         mDatas.add(Data("aaaa", "bb", "cc"))
         }
     }
