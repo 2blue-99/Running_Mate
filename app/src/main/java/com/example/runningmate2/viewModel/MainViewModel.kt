@@ -7,24 +7,27 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.room.Room
 import com.example.data.RepoImpl
 import com.example.domain.model.DomainWeather
-import com.example.runningmate2.BuildConfig
-import com.example.runningmate2.RunningData
-import com.example.runningmate2.TransLocationUtil
+import com.example.runningmate2.*
+import com.example.runningmate2.room.AppDataBase
+import com.example.runningmate2.room.Dao
+import com.example.runningmate2.room.Entity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDateTime
 
-class MainViewModel : ViewModel() {
-
+class MainViewModel : ViewModel(){
+    var db: AppDataBase = Room.databaseBuilder(MyApplication.getApplication(), AppDataBase::class.java, "UserDB").allowMainThreadQueries().build()
     private val _myValue = MutableLiveData<DomainWeather>()
 
     lateinit var myDataList : DomainWeather
 
     lateinit var runningData : RunningData
+
     val myValue : LiveData<DomainWeather>
         get() = _myValue
 
@@ -103,7 +106,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
+
     ///데이터저장
+    fun putData(runningData: RunningData){
+        db.getDao().putData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+    }
 
 
 }

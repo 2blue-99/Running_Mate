@@ -29,15 +29,20 @@ class ResultFragment : Fragment() {
     ): View? {
         _binding = FragmentResultBinding.inflate(inflater,container, false)
         val view = binding.root
-        binding.button2.setOnClickListener{
+        binding.backBtn.setOnClickListener{
             (activity as MainActivity).changeFragment(3)
+            Log.e(javaClass.simpleName, "!! ResultFragment", )
+            mainViewModel.db.getDao().getData().observe(viewLifecycleOwner){datas ->
+                Log.e(javaClass.simpleName, "room: $datas", )
+            }
         }
-        binding.textView2.text = mainViewModel.runningData.time
-        binding.textView2.text = mainViewModel.runningData.distance
-        binding.textView2.text = mainViewModel.runningData.calorie
-        binding.textView2.text = mainViewModel.runningData.step
+        binding.time.text = mainViewModel.runningData.time
+        binding.distance.text = mainViewModel.runningData.distance
+        binding.calorie.text = mainViewModel.runningData.calorie
+        binding.step.text = mainViewModel.runningData.step
 
-        Log.e(javaClass.simpleName, "onCreateView: $currentTime", )
+
+        Log.e(javaClass.simpleName, "time: $currentTime", )
 
         return view
     }

@@ -8,7 +8,7 @@
     tools:context=".fragment.ResultFragment">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
@@ -39,7 +39,7 @@
             android:text="Time" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -69,7 +69,7 @@
             android:text="Distance" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -99,7 +99,7 @@
             android:text="Kcal" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/calorie"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -129,7 +129,7 @@
             android:text="Step" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/step"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

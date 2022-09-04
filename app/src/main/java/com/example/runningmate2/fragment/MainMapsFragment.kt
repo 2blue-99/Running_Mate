@@ -12,12 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.example.runningmate2.Calorie
-import com.example.runningmate2.MainActivity
-import com.example.runningmate2.R
-import com.example.runningmate2.RunningData
+import androidx.room.Room
+import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
+import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -46,6 +45,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private var calorieHap = 0.0
     private var loading = false
+    lateinit var db: AppDataBase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +55,9 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         Log.e(javaClass.simpleName, "onCreateView")
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        //room 생성
+
 
         binding.loadingText.visibility = View.VISIBLE
         binding.startButton.visibility = View.INVISIBLE
@@ -71,11 +74,14 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // stop 버튼
         binding.stopButton.setOnClickListener {
-            mainViewModel.runningData = RunningData(
+            val datas =  RunningData(
                 binding.timeText.text.toString(),
-                binding.timeText.text.toString(),
-                binding.timeText.text.toString(),
-                binding.timeText.text.toString())
+                binding.distenceText.text.toString(),
+                binding.caloriText.text.toString(),
+                binding.stepText.text.toString())
+            Log.e(javaClass.simpleName, "stop btn : $datas")
+            mainViewModel.runningData = datas
+            mainViewModel.putData(datas)
 
             (activity as MainActivity).changeFragment(2)
 

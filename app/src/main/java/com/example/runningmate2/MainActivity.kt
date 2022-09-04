@@ -13,11 +13,13 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.room.Room
 import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.fragment.RecordFragment
 import com.example.runningmate2.fragment.ResultFragment
 import com.example.runningmate2.fragment.RunningFragment
+import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -30,12 +32,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 //        Log.e(javaClass.simpleName, "onCreate : start")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         // registerForActivityResult() 는 ActivityResultContract와
         // ActivityResultCallback을 가져와서 다른 activity를 실행하는 데 사용할
