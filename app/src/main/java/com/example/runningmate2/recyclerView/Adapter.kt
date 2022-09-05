@@ -8,10 +8,15 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningmate2.databinding.ItemListBinding
+import java.time.LocalDateTime
 
 class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
-    var datalist = mutableListOf<Data>()//리사이클러뷰에서 사용할 데이터 미리 정의 -> 나중에 MainActivity등에서 datalist에 실제 데이터 추가
+    var datalist = arrayListOf<Data>()//리사이클러뷰에서 사용할 데이터 미리 정의 -> 나중에 MainActivity등에서 datalist에 실제 데이터 추가
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     //만들어진 뷰홀더 없을때 뷰홀더(레이아웃) 생성하는 함수
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -41,11 +46,17 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 //        private var view: View = v
 //        fun bind(data:Data, listener: View.OnClickListener){
         fun bind(data:Data){
-            Log.e(javaClass.simpleName, "adapter MyViewHolder: $datalist", )
-
-            binding.textView.text= data.A
-            binding.textView2.text= data.B
-            binding.textView3.text= data.C
+//            val year = LocalDateTime.now().year.toString()
+//            val month = LocalDateTime.now().month.toString()
+//            val day = LocalDateTime.now().dayOfMonth.toString()
+//            val hour = LocalDateTime.now().hour.toString()
+//            val year = LocalDateTime.now().year.toString()
+//            val year = LocalDateTime.now().year.toString()
+            binding.nowTime.text =" LocalDateTime.now().year"
+            binding.recyclerTime .text= data.time
+            binding.recyclerDistance.text= data.distance
+            binding.recyclerCalorie.text= data.calorie
+            binding.recyclerStep.text= data.step
         }
     }
 }

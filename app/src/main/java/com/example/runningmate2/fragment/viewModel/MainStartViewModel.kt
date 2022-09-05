@@ -9,15 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.runningmate2.MyApplication
 import com.example.runningmate2.MyLocationRepo
-import com.example.runningmate2.MySensorRepo
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
-import com.jaehyeon.locationpolylinetest.utils.ListLiveData
+import com.example.runningmate2.utils.ListLiveData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Math.*
 
 class MainStartViewModel(
     application: Application,

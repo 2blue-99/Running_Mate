@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
 
+//    private val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
+        mainViewModel.getDao(db)
 
         // registerForActivityResult() 는 ActivityResultContract와
         // ActivityResultCallback을 가져와서 다른 activity를 실행하는 데 사용할
@@ -48,16 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         // ActivityContract는 우리가 결과를 생성하는 데 필요한 입력의 형태와 결과를
         // 출력하는 형태를 정의하고 우리가 intent를 사용하는 작업의 기본적인 계약을 제공한다.
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-//            Log.e(javaClass.simpleName, "model.getLocation() :", )
-            //권한을 받으면 돌아감
-        }
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+
 
         loadFragment(MainMapsFragment())
 

@@ -1,18 +1,26 @@
 package com.example.runningmate2.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
@@ -46,6 +54,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var calorieHap = 0.0
     private var loading = false
     lateinit var db: AppDataBase
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,15 +65,29 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         _binding = FragmentMapsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        //room 생성
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            Log.e("TAG", "onCreateView: ${it.keys}", )
+            if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
+                mainStartViewModel.repeatCallLocation()
 
+            else {
+                Toast.makeText(requireContext(), "위치 이용에 동의를 하셔야 이용 할 수 있다구 :)", Toast.LENGTH_SHORT).show()
+                requireActivity().finish()
+            }
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
 
         binding.loadingText.visibility = View.VISIBLE
         binding.startButton.visibility = View.INVISIBLE
         binding.setBtn.visibility = View.INVISIBLE
 
         //위치 집어넣기 시작.
-        mainStartViewModel.repeatCallLocation()
+//        mainStartViewModel.repeatCallLocation()
 
         // start 버튼
         binding.startButton.setOnClickListener {
@@ -74,18 +97,19 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // stop 버튼
         binding.stopButton.setOnClickListener {
-            val datas =  RunningData(
-                binding.timeText.text.toString(),
-                binding.distenceText.text.toString(),
-                binding.caloriText.text.toString(),
-                binding.stepText.text.toString())
-            Log.e(javaClass.simpleName, "stop btn : $datas")
-            mainViewModel.runningData = datas
-            mainViewModel.putData(datas)
-
-            (activity as MainActivity).changeFragment(2)
-
-            start = false
+            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                val datas =  RunningData(
+                    binding.timeText.text.toString(),
+                    binding.distenceText.text.toString(),
+                    binding.caloriText.text.toString(),
+                    binding.stepText.text.toString())
+                Log.e(javaClass.simpleName, "stop btn : $datas")
+//                mainViewModel.runningData = datas
+                mainViewModel.putData(datas)
+                (activity as MainActivity).changeFragment(2)
+                start = false
+                mainViewModel.clearWeatherData()
+            }
         }
 
         //현재 위치로 줌 해주는 버튼
@@ -109,6 +133,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.e(javaClass.simpleName, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
@@ -116,17 +141,17 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+        var weatherData: DomainWeather? = null
 
-    }
+        mainViewModel.myValue.observe(viewLifecycleOwner){weather->
+            Log.e(javaClass.simpleName, "@@@@@@@@$weather")
+            weatherData = weather
+        }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        Log.e(javaClass.simpleName, "onMapReady")
-        mMap = googleMap
-
-        Log.e(javaClass.simpleName, "mapFragment : $mMap$")
-
-        // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
+            if(locations.size > 0 && weatherData == null)
+                mainViewModel.getWeatherData(locations.first())
+
             if (locations.isNotEmpty()) {
                 binding.loadingText.visibility = View.INVISIBLE
                 if(!start){
@@ -160,6 +185,14 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
+
         // start이후 첫 지점 찍으려면 여기서 latlngs.first()라고 해서 마커 찍어야 할듯
         // 폴리라인 하는 곳
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->

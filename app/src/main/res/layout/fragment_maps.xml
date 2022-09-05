@@ -23,7 +23,7 @@
         android:id="@+id/loadingText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.5"
+        android:alpha="0.80"
         android:background="#000000"
         android:gravity="center"
         android:text="Loading"
@@ -33,6 +33,21 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/map" />
+
+    <LinearLayout
+        android:id="@+id/weatherView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <include
+            layout="@layout/weather_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
 
     <android.widget.Button
         android:id="@+id/startButton"
@@ -186,8 +201,8 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.widget.Button
-        android:paddingRight="12dp"
-        android:drawableRight="@drawable/ic_baseline_my_location_24"
+        android:paddingEnd="12dp"
+        android:drawableEnd="@drawable/ic_baseline_my_location_24"
         android:id="@+id/setBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -196,7 +211,8 @@
         android:background="@drawable/shape_set_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

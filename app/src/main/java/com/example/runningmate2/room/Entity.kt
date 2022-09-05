@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Entity (
-    @ColumnInfo val time:String?,
+    @ColumnInfo val time:String,
     @ColumnInfo val distance:String,
     @ColumnInfo val calorie:String,
     @ColumnInfo val step:String

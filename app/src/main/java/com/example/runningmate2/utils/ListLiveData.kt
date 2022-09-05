@@ -1,4 +1,4 @@
-package com.jaehyeon.locationpolylinetest.utils
+package com.example.runningmate2.utils
 
 import androidx.lifecycle.MutableLiveData
 

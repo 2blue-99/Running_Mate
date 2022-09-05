@@ -25,35 +25,38 @@ class ResultFragment : Fragment() {
     }
 
     override fun onCreateView(
+        //뷰 만들기/
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentResultBinding.inflate(inflater,container, false)
         val view = binding.root
+        mainViewModel.getData()
+//        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+//
+//        }
+
         binding.backBtn.setOnClickListener{
             (activity as MainActivity).changeFragment(3)
             Log.e(javaClass.simpleName, "!! ResultFragment", )
-
-            lifecycleScope.launchWhenCreated {
-                mainViewModel.db.getDao().getData().observe(viewLifecycleOwner){datas ->
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                    Log.e(javaClass.simpleName, "room: $datas", )
-                }
-            }
-
         }
-        binding.time.text = mainViewModel.runningData.time
-        binding.distance.text = mainViewModel.runningData.distance
-        binding.calorie.text = mainViewModel.runningData.calorie
-        binding.step.text = mainViewModel.runningData.step
-
 
         Log.e(javaClass.simpleName, "time: $currentTime", )
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //데이터 불러오기
+        super.onViewCreated(view, savedInstanceState)
+        mainViewModel.runningData.observe(viewLifecycleOwner){datas ->
+            if(datas.size>0){
+                binding.time.text = datas.last().time
+                binding.distance.text = datas.last().distance
+                binding.calorie.text = datas.last().calorie
+                binding.step.text = datas.last().step
+            }
+
+        }
     }
 }

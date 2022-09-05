@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.room.Database
 import androidx.room.Room
 import com.example.data.RepoImpl
 import com.example.domain.model.DomainWeather
@@ -14,23 +16,26 @@ import com.example.runningmate2.*
 import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.room.Dao
 import com.example.runningmate2.room.Entity
+import com.example.runningmate2.utils.ListLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDateTime
 
 class MainViewModel : ViewModel(){
-    var db: AppDataBase = Room.databaseBuilder(MyApplication.getApplication(), AppDataBase::class.java, "UserDB").allowMainThreadQueries().build()
-    private val _myValue = MutableLiveData<DomainWeather>()
+    private val _myValue = MutableLiveData<DomainWeather?>()
+    val myValue: LiveData<DomainWeather?> get() = _myValue
 
     lateinit var myDataList : DomainWeather
 
-    lateinit var runningData : RunningData
+    private var dao: Dao? = null
 
-    val myValue : LiveData<DomainWeather>
-        get() = _myValue
-
+    private val _runningData = ListLiveData<Entity>()
+    val runningData: LiveData<ArrayList<Entity>> get() = _runningData
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createRequestParams(myLocation:Location?): HashMap<String, String> {
@@ -92,25 +97,52 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    fun getWeatherData(data: HashMap<String, String>) {
-        Log.e(javaClass.simpleName, "startData: $data", )
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getWeatherData(location: Location) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                val data = createRequestParams(location)
                 myDataList = RepoImpl().RepoGetWeatherData(data)
                 Log.e(javaClass.simpleName, "get_Data: $myDataList", )
                 _myValue.postValue(myDataList)
 
             }catch (e:Exception){
-                Log.e(javaClass.simpleName, "@@@@@@ My Err: $e", )
+                Log.e(javaClass.simpleName, "@@@@@@ My Err: ${e.localizedMessage}", )
             }
         }
+    }
+
+    init {
+        getData()
     }
 
 
 
     ///데이터저장
-    fun putData(runningData: RunningData){
-        db.getDao().putData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+    suspend fun putData(runningData: RunningData){
+        if(dao == null){
+            return
+        }
+        dao?.putData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+    }
+
+    fun getData(){
+        if(dao == null){
+            return
+        }
+        _runningData.clear()
+        dao?.getData()?.onEach {
+            _runningData.clear()
+            _runningData.addAll(it)
+        }?.launchIn(viewModelScope)
+    }
+
+    fun getDao(db : AppDataBase){
+        dao = db.getDao()
+    }
+
+    fun clearWeatherData() {
+        _myValue.value = null
     }
 
 

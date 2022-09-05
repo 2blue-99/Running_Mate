@@ -2,7 +2,7 @@ package com.example.runningmate2.fragment.viewModel
 
 import android.location.Location
 import androidx.lifecycle.LiveData
-import com.jaehyeon.locationpolylinetest.utils.ListLiveData
+import com.example.runningmate2.utils.ListLiveData
 
 class RecordViewModel {
     //룸에서 데이터 가져와 리스트에 넣기.
