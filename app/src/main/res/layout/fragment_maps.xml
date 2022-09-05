@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@+id/map" />
 
     <LinearLayout
-        android:id="@+id/weatherView"
+        android:id="@+id/weatherLinearLayout"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
@@ -44,6 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <include
+            android:id="@+id/weatherView"
             layout="@layout/weather_view"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
@@ -56,7 +57,9 @@
         android:layout_marginBottom="100dp"
         android:background="@drawable/my_button"
         android:text="Start"
-        android:textColor="@color/white"
+        android:textSize="30dp"
+        style="@style/myEngFont"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -84,6 +87,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/myHanFont"
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:id="@+id/textView5"
@@ -93,6 +97,7 @@
                 android:text="Time" />
 
             <TextView
+                style="@style/myHanFont"
                 android:id="@+id/timeText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -112,15 +117,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:textColor="@color/black"
-                android:gravity="center"
+                style="@style/myHanFont"
                 android:id="@+id/textView7"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Distance" />
+                android:gravity="center"
+                android:text="Distance"
+                android:textColor="@color/black" />
 
             <TextView
+                style="@style/myHanFont"
                 android:id="@+id/distenceText"
                 android:gravity="center"
                 android:layout_width="match_parent"
@@ -132,6 +139,7 @@
         </LinearLayout>
 
         <LinearLayout
+
             android:id="@+id/linearLayout3"
             android:layout_width="175dp"
             android:layout_height="100dp"
@@ -141,6 +149,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
             <TextView
+                style="@style/myHanFont"
                 android:textColor="@color/black"
                 android:id="@+id/text100"
                 android:layout_width="110dp"
@@ -150,6 +159,7 @@
                 android:text="Kcal" />
 
             <TextView
+                style="@style/myHanFont"
                 android:gravity="center"
                 android:id="@+id/caloriText"
                 android:layout_width="match_parent"
@@ -168,6 +178,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
             <TextView
+                style="@style/myHanFont"
                 android:textColor="@color/black"
                 android:gravity="center"
                 android:id="@+id/textView11"
@@ -177,6 +188,7 @@
                 android:text="Step" />
 
             <TextView
+                style="@style/myHanFont"
                 android:id="@+id/stepText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -193,7 +205,7 @@
         android:layout_height="60dp"
         android:layout_marginBottom="45dp"
         android:background="@drawable/my_button"
-        android:text="Stop"
+        android:text="@string/stop"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -19,7 +19,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
@@ -35,6 +34,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.addPolyline
+import kotlinx.coroutines.delay
+import java.lang.Math.round
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -68,7 +69,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
-            Log.e("TAG", "onCreateView: ${it.keys}", )
+//            Log.e("TAG", "onCreateView: ${it.keys}", )
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
                 mainStartViewModel.repeatCallLocation()
 
@@ -143,14 +144,17 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         var weatherData: DomainWeather? = null
 
-        mainViewModel.myValue.observe(viewLifecycleOwner){weather->
-            Log.e(javaClass.simpleName, "@@@@@@@@$weather")
+        mainViewModel.getWeatherData.observe(viewLifecycleOwner){ weather->
+//            Log.e(javaClass.simpleName, "@@@@@@@@$weather")
             weatherData = weather
         }
 
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
-            if(locations.size > 0 && weatherData == null)
+            if(locations.size > 0 && weatherData == null) {
+                Log.e(javaClass.simpleName, "날씨 호출")
                 mainViewModel.getWeatherData(locations.first())
+                binding.weatherView.weatherTem
+            }
 
             if (locations.isNotEmpty()) {
                 binding.loadingText.visibility = View.INVISIBLE
@@ -184,6 +188,11 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
                 }
             }
+        }
+
+        mainViewModel.getWeatherData.observe(viewLifecycleOwner){myData->
+            binding.weatherView.weatherTem.text = "${round(myData?.temperatures!!.toDouble()).toString()} º"
+            Log.e(javaClass.simpleName, "옵져버 날씨 데이터 : $myData")
         }
 
     }

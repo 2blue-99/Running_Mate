@@ -13,4 +13,13 @@
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="myHanFont" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/purple_200</item>
+        <item name="android:fontFamily">@font/yoongodic</item>
+    </style>
+    <style name="myEngFont" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/brakshoo</item>
+    </style>
 </resources>

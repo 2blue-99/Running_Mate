@@ -52,7 +52,6 @@ object MyLocationRepo {
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
-            Log.e(javaClass.simpleName, "no 권한 ", )
             return
         }
 

@@ -8,8 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Database
-import androidx.room.Room
 import com.example.data.RepoImpl
 import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
@@ -20,15 +18,14 @@ import com.example.runningmate2.utils.ListLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDateTime
 
 class MainViewModel : ViewModel(){
-    private val _myValue = MutableLiveData<DomainWeather?>()
-    val myValue: LiveData<DomainWeather?> get() = _myValue
+    private val _getWeatherData = MutableLiveData<DomainWeather?>()
+    val getWeatherData: LiveData<DomainWeather?> get() = _getWeatherData
 
     lateinit var myDataList : DomainWeather
 
@@ -59,6 +56,7 @@ class MainViewModel : ViewModel(){
             }
             else -> "0000"
         }
+//        val baseTime2 = LocalDateTime
 
         val baseDate = if (now.hour != 0) {
             when {
@@ -102,12 +100,12 @@ class MainViewModel : ViewModel(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val data = createRequestParams(location)
+//                Log.e(javaClass.simpleName, "data: $data", )
                 myDataList = RepoImpl().RepoGetWeatherData(data)
-                Log.e(javaClass.simpleName, "get_Data: $myDataList", )
-                _myValue.postValue(myDataList)
-
+                _getWeatherData.postValue(myDataList)
+//                Log.e(javaClass.simpleName, "get_Data: $myDataList", )
             }catch (e:Exception){
-                Log.e(javaClass.simpleName, "@@@@@@ My Err: ${e.localizedMessage}", )
+                Log.e(javaClass.simpleName, "My Err: ${e.localizedMessage}", )
             }
         }
     }
@@ -141,8 +139,9 @@ class MainViewModel : ViewModel(){
         dao = db.getDao()
     }
 
+    // stop버튼을 눌렀을때 날씨정보를 새로 가져오기 위해 null로 지정
     fun clearWeatherData() {
-        _myValue.value = null
+        _getWeatherData.value = null
     }
 
 
