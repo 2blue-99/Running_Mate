@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -191,7 +192,21 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         }
 
         mainViewModel.getWeatherData.observe(viewLifecycleOwner){myData->
-            binding.weatherView.weatherTem.text = "${round(myData?.temperatures!!.toDouble()).toString()} º"
+            binding.weatherView.loadingIcon.visibility = View.INVISIBLE
+            binding.weatherView.weatherIcon.visibility = View.VISIBLE
+            binding.weatherView.weatherTem.text = "${round(myData?.temperatures!!.toDouble())} º"
+            binding.weatherView.humidity.text = myData.humidity
+            when(myData.rainType.toDouble().toInt()){
+                //0 없음, 1 장대비, 2367 눈, 5 비
+                0 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
+                1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather__strongrain)
+//                2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable)
+//                3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
+                5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_rain)
+//                6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
+//                7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
+                else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
+            }
             Log.e(javaClass.simpleName, "옵져버 날씨 데이터 : $myData")
         }
 
@@ -199,6 +214,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
+
+        binding.weatherView.loadingIcon.visibility = View.VISIBLE
+        binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+
         mMap = googleMap
         // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
 
