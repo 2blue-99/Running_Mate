@@ -13,13 +13,34 @@
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="myHanFont" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/white</item>
-        <item name="android:textColor">@color/purple_200</item>
+    <style name="myHanFont" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/yoongodic</item>
     </style>
     <style name="myEngFont" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/brakshoo</item>
+    </style>
+    <style name="border" parent="android:Theme.Holo.Dialog.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomRoundedBackgroundBottomSheet</item>
+    </style>
+    <style name="CustomRoundedBackgroundBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_borderline</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_borderline</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="base_background" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@drawable/base_back</item>
     </style>
 </resources>

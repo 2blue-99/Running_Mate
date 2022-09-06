@@ -104,5 +104,6 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
-
+    //bottom sheet dialog
+    implementation 'com.google.android.material:material:1.8.0-alpha01'
 }

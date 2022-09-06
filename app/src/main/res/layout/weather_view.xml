@@ -55,7 +55,7 @@
             android:gravity="right"
             android:text="습도 : "
             android:textColor="#ffff"
-            android:textSize="13dp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/humidity"
@@ -65,7 +65,7 @@
             android:gravity="left"
             android:text="loading.."
             android:textColor="#2196F3"
-            android:textSize="13dp"
+            android:textSize="14dp"
             android:textStyle="bold" />
     </LinearLayout>
 

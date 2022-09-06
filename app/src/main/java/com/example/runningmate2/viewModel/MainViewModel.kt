@@ -29,6 +29,8 @@ class MainViewModel : ViewModel(){
 
     lateinit var myDataList : DomainWeather
 
+    var finishBottomDialog = false
+
     private var dao: Dao? = null
 
     private val _runningData = ListLiveData<Entity>()

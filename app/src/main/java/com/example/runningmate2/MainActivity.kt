@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             1 -> {
                 binding.bottomNav.visibility = View.INVISIBLE
             }
+            //결과페이지로 이동
             2 -> {
                 supportFragmentManager
                     .beginTransaction()
@@ -99,6 +100,12 @@ class MainActivity : AppCompatActivity() {
                     .beginTransaction()
                     .replace(R.id.myFragMent, MainMapsFragment())
                     .commit()
+            }
+            4 -> {
+//                supportFragmentManager
+//                    .beginTransaction()
+//                    .replace(R.id.myFragMent, BottomSheet())
+//                    .commit()
             }
         }
     }

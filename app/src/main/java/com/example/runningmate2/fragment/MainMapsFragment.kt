@@ -2,6 +2,7 @@ package com.example.runningmate2.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -35,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.addPolyline
-import kotlinx.coroutines.delay
 import java.lang.Math.round
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
@@ -57,6 +57,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var loading = false
     lateinit var db: AppDataBase
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private var weatherData: DomainWeather? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,9 +94,20 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // start 버튼
         binding.startButton.setOnClickListener {
-            start = true
-            runningStart()
+//            start = true
+//            runningStart()
+//            (activity as MainActivity).changeFragment(4)
+            val bottomSheet = BottomSheet {
+                start = true
+                runningStart()
+            }
+
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+//            bottomSheet.onDismiss()
+//            Dialog.
         }
+
+
 
         // stop 버튼
         binding.stopButton.setOnClickListener {
@@ -135,6 +147,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         return view
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.e(javaClass.simpleName, "onViewCreated")
@@ -143,10 +156,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
-        var weatherData: DomainWeather? = null
-
         mainViewModel.getWeatherData.observe(viewLifecycleOwner){ weather->
-//            Log.e(javaClass.simpleName, "@@@@@@@@$weather")
             weatherData = weather
         }
 
@@ -194,26 +204,34 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         mainViewModel.getWeatherData.observe(viewLifecycleOwner){myData->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
-            binding.weatherView.weatherTem.text = "${round(myData?.temperatures!!.toDouble())} º"
-            binding.weatherView.humidity.text = myData.humidity
-            when(myData.rainType.toDouble().toInt()){
+            binding.weatherView.weatherTem.text = "${myData?.temperatures?.toDouble()?.let { round(it) }} º"
+            binding.weatherView.humidity.text = myData?.humidity
+            when(myData?.rainType?.toDouble()?.toInt()){
                 //0 없음, 1 장대비, 2367 눈, 5 비
                 0 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
                 1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather__strongrain)
-//                2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable)
-//                3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
-                5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_rain)
-//                6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
-//                7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.my_weather_icon_rain)
+                2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_rain)
+                6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
                 else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
             }
             Log.e(javaClass.simpleName, "옵져버 날씨 데이터 : $myData")
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
+        Log.e(javaClass.simpleName, "메인 재진입")
+
+        mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
+            if(locations.size > 0 && weatherData == null) {
+                Log.e(javaClass.simpleName, "날씨 호출")
+                mainViewModel.getWeatherData(locations.first())
+                binding.weatherView.weatherTem
+            }
+        }
 
         binding.weatherView.loadingIcon.visibility = View.VISIBLE
         binding.weatherView.weatherIcon.visibility = View.INVISIBLE
@@ -250,7 +268,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun runningStart() {
+    fun runningStart() {
         mMap.clear()
         Log.e(javaClass.simpleName, " Running Start ")
         (activity as MainActivity).changeFragment(1)
@@ -309,5 +327,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e(javaClass.simpleName, " 내가돌아왔다 ")
     }
 }
