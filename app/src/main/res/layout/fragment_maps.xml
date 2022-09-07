@@ -52,14 +52,14 @@
 
     <android.widget.Button
         android:id="@+id/startButton"
+        style="@style/myEngFont"
         android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="100dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="65dp"
         android:background="@drawable/my_button"
         android:text="Start"
-        android:textSize="30dp"
-        style="@style/myEngFont"
         android:textColor="#FFFFFF"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -68,159 +68,34 @@
         android:id="@+id/textConstraint"
         android:layout_width="350dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="135dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"
-        android:background="@drawable/running_text_borderline"
-        >
+        app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="175dp"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <include
+            android:id="@+id/runing_box"
+            layout="@layout/running_page_databox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-            <TextView
-                style="@style/myHanFont"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:id="@+id/textView5"
-                android:layout_width="110dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Time" />
 
-            <TextView
-                style="@style/myHanFont"
-                android:id="@+id/timeText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="00:00:00"
-                android:textColor="@color/black" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="175dp"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout4"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                style="@style/myHanFont"
-                android:id="@+id/textView7"
-                android:layout_width="110dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Distance"
-                android:textColor="@color/black" />
-
-            <TextView
-                style="@style/myHanFont"
-                android:id="@+id/distenceText"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="0.0 M"
-                android:textColor="@color/black"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-
-            android:id="@+id/linearLayout3"
-            android:layout_width="175dp"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
-
-            <TextView
-                style="@style/myHanFont"
-                android:textColor="@color/black"
-                android:id="@+id/text100"
-                android:layout_width="110dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Kcal" />
-
-            <TextView
-                style="@style/myHanFont"
-                android:gravity="center"
-                android:id="@+id/caloriText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="0.0 Kcal"
-                android:textColor="@color/black"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="175dp"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
-
-            <TextView
-                style="@style/myHanFont"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:id="@+id/textView11"
-                android:layout_width="110dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Step" />
-
-            <TextView
-                style="@style/myHanFont"
-                android:id="@+id/stepText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="0 걸음"
-                android:textColor="@color/black" />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <android.widget.Button
-        android:id="@+id/stopButton"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="45dp"
-        android:background="@drawable/my_button"
-        android:text="@string/stop"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <android.widget.Button
-        android:paddingEnd="12dp"
-        android:drawableEnd="@drawable/ic_baseline_my_location_24"
         android:id="@+id/setBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="300dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="70dp"
         android:background="@drawable/shape_set_btn"
+        android:drawableEnd="@drawable/ic_baseline_my_location_24"
+        android:paddingEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

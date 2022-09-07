@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import com.example.runningmate2.room.Entity
 
 data class Data(
+    val id : Int,
     val time : String,
     val distance : String,
     val calorie : String,
@@ -12,6 +13,6 @@ data class Data(
 
 fun Entity.toData(): Data {
     return Data(
-        time, distance, calorie, step
+        id, time, distance, calorie, step
     )
 }

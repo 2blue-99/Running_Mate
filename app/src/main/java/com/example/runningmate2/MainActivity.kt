@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
-//        Log.e(javaClass.simpleName, "loadFragment : ")
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.myFragMent, fragment)
         transaction.addToBackStack(null)

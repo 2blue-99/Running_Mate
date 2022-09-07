@@ -2,7 +2,6 @@ package com.example.runningmate2.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -71,7 +70,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
-//            Log.e("TAG", "onCreateView: ${it.keys}", )
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
                 mainStartViewModel.repeatCallLocation()
 
@@ -86,7 +84,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         ))
 
         binding.loadingText.visibility = View.VISIBLE
-        binding.startButton.visibility = View.INVISIBLE
         binding.setBtn.visibility = View.INVISIBLE
 
         //위치 집어넣기 시작.
@@ -94,35 +91,26 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // start 버튼
         binding.startButton.setOnClickListener {
-//            start = true
-//            runningStart()
-//            (activity as MainActivity).changeFragment(4)
-            val bottomSheet = BottomSheet {
-                start = true
-                runningStart()
-            }
-
-            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
-//            bottomSheet.onDismiss()
-//            Dialog.
-        }
-
-
-
-        // stop 버튼
-        binding.stopButton.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                val datas =  RunningData(
-                    binding.timeText.text.toString(),
-                    binding.distenceText.text.toString(),
-                    binding.caloriText.text.toString(),
-                    binding.stepText.text.toString())
-                Log.e(javaClass.simpleName, "stop btn : $datas")
-//                mainViewModel.runningData = datas
-                mainViewModel.putData(datas)
-                (activity as MainActivity).changeFragment(2)
-                start = false
-                mainViewModel.clearWeatherData()
+            if(binding.startButton.text == "Start"){
+                val bottomSheet = BottomSheet {
+                    start = true
+                    runningStart()
+                    binding.startButton.text = "Stop"
+                }
+                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+            }else{
+                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                    val datas =  RunningData(
+                        binding.runingBox.runTimeText.text.toString(),
+                        binding.runingBox.runDistanceText.text.toString(),
+                        binding.runingBox.runCaloreText.text.toString(),
+                        binding.runingBox.runStepText.text.toString())
+                    Log.e(javaClass.simpleName, "stop btn 토스 : $datas")
+                    mainViewModel.insertDB(datas)
+                    (activity as MainActivity).changeFragment(2)
+                    start = false
+                    mainViewModel.clearWeatherData()
+                }
             }
         }
 
@@ -203,20 +191,23 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         mainViewModel.getWeatherData.observe(viewLifecycleOwner){myData->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
+            binding.startButton.visibility = View.VISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
-            binding.weatherView.weatherTem.text = "${myData?.temperatures?.toDouble()?.let { round(it) }} º"
-            binding.weatherView.humidity.text = myData?.humidity
-            when(myData?.rainType?.toDouble()?.toInt()){
-                //0 없음, 1 장대비, 2367 눈, 5 비
-                0 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
-                1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather__strongrain)
-                2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
-                3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
-                5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_rain)
-                6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
-                7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
-                else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
-            }
+            binding.weatherView.weatherTem.text = "${myData?.temperatures?.toDouble()?.let { round(it) } ?: "loading.."} º"
+            binding.weatherView.humidity.text = myData?.humidity ?: "loading.."
+
+                when(myData?.rainType?.toDouble()?.toInt()){
+                    //0 없음, 1 장대비, 2367 눈, 5 비
+                    0 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
+                    1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather__strongrain)
+                    2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                    3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                    5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_rain)
+                    6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                    7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic__weather_snow)
+                    else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(MyApplication.getApplication(),R.drawable.ic___weather_suncloude)
+                }
+
             Log.e(javaClass.simpleName, "옵져버 날씨 데이터 : $myData")
         }
     }
@@ -224,17 +215,16 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
         Log.e(javaClass.simpleName, "메인 재진입")
-
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
             if(locations.size > 0 && weatherData == null) {
                 Log.e(javaClass.simpleName, "날씨 호출")
                 mainViewModel.getWeatherData(locations.first())
-                binding.weatherView.weatherTem
             }
         }
-
-        binding.weatherView.loadingIcon.visibility = View.VISIBLE
-        binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+        binding.startButton.visibility = View.INVISIBLE
+//        binding.weatherView.loadingIcon.visibility = View.VISIBLE
+//        binding.weatherView.loadingIcon.visibility = View.VISIBLE
+//        binding.weatherView.weatherIcon.visibility = View.INVISIBLE
 
         mMap = googleMap
         // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
@@ -242,7 +232,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         // start이후 첫 지점 찍으려면 여기서 latlngs.first()라고 해서 마커 찍어야 할듯
         // 폴리라인 하는 곳
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
-//            latlngs.first()
             if (latlngs.isNotEmpty()) {
                 mMap.addPolyline {
                     addAll(latlngs)
@@ -289,23 +278,20 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 //                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
             )
         }
-        binding.startButton.visibility = View.INVISIBLE
-        binding.stopButton.visibility = View.VISIBLE
         binding.textConstraint.visibility = View.VISIBLE
 
         mainStartViewModel.time.observe(viewLifecycleOwner) { time ->
-            binding.timeText.text = time
+            binding.runingBox.runTimeText.text = time
         }
 
         // 거리 계산
         mainStartViewModel.latLng.observe(viewLifecycleOwner){latLngs ->
-
+            Log.e("TAG", "runningStart: 들어왔다", )
             if (latLngs.size > 1){
                 if(latLngs.size == 2) {
                     beforeLocate.latitude = latLngs.first().latitude
                     beforeLocate.longitude = latLngs.first().longitude
                 }
-
                 afterLocate.latitude= latLngs.last().latitude
                 afterLocate.longitude= latLngs.last().longitude
 
@@ -314,7 +300,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 // 제자리 있을때 보정.
                 if(result <= 2.0) result = 0.0
 
-                binding.distenceText.text = "${String.format("%.2f",distanceHap + result)} M"
+                binding.runingBox.runDistanceText.text = "${String.format("%.2f",distanceHap + result)} M"
                 distanceHap += result
                 beforeLocate.latitude = latLngs.last().latitude
                 beforeLocate.longitude = latLngs.last().longitude
@@ -323,7 +309,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 if (result != 0.0){
                     val myCalorie = Calorie().myCalorie()
                     calorieHap += myCalorie
-                    binding.caloriText.text = "${String.format("%.2f",calorieHap)} Kcal"
+                    binding.runingBox.runCaloreText.text = "${String.format("%.2f",calorieHap)} Kcal"
                 }
             }
         }

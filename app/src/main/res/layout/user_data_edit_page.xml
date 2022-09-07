@@ -7,47 +7,48 @@
     android:background="@drawable/shape_set_userdata_view">
 
     <TextView
-        android:id="@+id/inputData"
-        style="@style/myHanFont"
+        android:textSize="15dp"
+        android:id="@+id/dataType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:background="@color/transparent"
-        android:text="입력하기"
         android:textColor="@color/white"
+        android:text="dsad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textSize="15dp"
         android:id="@+id/bottom_title"
         style="@style/myHanFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginStart="16dp"
         android:background="@color/transparent"
         android:gravity="left"
         android:text="TextView"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/input_edit"
+        android:id="@+id/inputEdit"
         style="@style/myHanFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="2dp"
-        android:background="@color/transparent"
-        android:hint="입력해주세요."
+        android:layout_marginTop="14dp"
+        android:backgroundTint="@color/white"
+        android:gravity="center"
         android:inputType="number"
         android:minEms="3"
+        android:maxLength="3"
         android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottom_title" />
+        app:layout_constraintEnd_toStartOf="@+id/dataType"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32" />
 </androidx.constraintlayout.widget.ConstraintLayout>

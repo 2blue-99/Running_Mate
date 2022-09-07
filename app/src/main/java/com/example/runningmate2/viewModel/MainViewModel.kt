@@ -33,6 +33,7 @@ class MainViewModel : ViewModel(){
 
     private var dao: Dao? = null
 
+    private var myCount = 0
     private val _runningData = ListLiveData<Entity>()
     val runningData: LiveData<ArrayList<Entity>> get() = _runningData
 
@@ -113,28 +114,42 @@ class MainViewModel : ViewModel(){
     }
 
     init {
-        getData()
+        readDB()
     }
 
 
 
     ///데이터저장
-    suspend fun putData(runningData: RunningData){
+    suspend fun insertDB(runningData: RunningData){
         if(dao == null){
             return
         }
-        dao?.putData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+        dao?.insertData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+//        myCount++
     }
 
-    fun getData(){
+    fun readDB(){
         if(dao == null){
             return
         }
         _runningData.clear()
-        dao?.getData()?.onEach {
+        dao?.readAllData()?.onEach {
+            Log.e(javaClass.simpleName, "여기는. read room : $it", )
             _runningData.clear()
             _runningData.addAll(it)
         }?.launchIn(viewModelScope)
+    }
+
+    suspend fun deletAllDB(){
+        if(dao == null){
+            return
+        }
+        dao?.deleteAllData()
+    }
+
+    suspend fun deleteDB(position: Int){
+//        dao?.deleteData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+        dao?.deleteData(position)
     }
 
     fun getDao(db : AppDataBase){

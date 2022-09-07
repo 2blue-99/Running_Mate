@@ -6,11 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Entity (
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo val time:String,
     @ColumnInfo val distance:String,
     @ColumnInfo val calorie:String,
     @ColumnInfo val step:String
-){
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+)
+//{
+//    @PrimaryKey(autoGenerate = true)
+//    var id: Int = 0
+//}

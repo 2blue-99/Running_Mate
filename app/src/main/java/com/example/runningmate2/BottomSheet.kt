@@ -35,6 +35,9 @@ class BottomSheet(
         binding.includedWeight.bottomTitle.text = "체중"
         binding.includedDistance.bottomTitle.text = "목표 거리"
         binding.includedStep.bottomTitle.text = "목표 걸음"
+        binding.includedWeight.dataType.text = "Kg"
+        binding.includedDistance.dataType.text = "Km"
+        binding.includedStep.dataType.text = "걸음"
 
         binding.BottomStartButton.setOnClickListener{
             if(binding.includedWeight.inputEdit.text.isNotEmpty()){
@@ -45,25 +48,25 @@ class BottomSheet(
             Toast.makeText(context, "몸무게는 필수 항목입니다.", Toast.LENGTH_SHORT).show()
         }
 
-        binding.includedWeight.inputData.setOnClickListener{
-            binding.includedWeight.inputEdit.setTextColor(Color.GRAY)
-        }
-        binding.includedDistance.inputData.setOnClickListener{
-            binding.includedDistance.inputEdit.setTextColor(Color.GRAY)
-        }
-        binding.includedStep.inputData.setOnClickListener{
-            binding.includedStep.inputEdit.setTextColor(Color.GRAY)
-        }
-
-        binding.includedWeight.inputEdit.setOnClickListener{
-            binding.includedWeight.inputEdit.setTextColor(Color.WHITE)
-        }
-        binding.includedDistance.inputEdit.setOnClickListener{
-            binding.includedDistance.inputEdit.setTextColor(Color.WHITE)
-        }
-        binding.includedStep.inputEdit.setOnClickListener{
-            binding.includedStep.inputEdit.setTextColor(Color.WHITE)
-        }
+//        binding.includedWeight.inputData.setOnClickListener{
+//            binding.includedWeight.inputEdit.setTextColor(Color.GRAY)
+//        }
+//        binding.includedDistance.inputData.setOnClickListener{
+//            binding.includedDistance.inputEdit.setTextColor(Color.GRAY)
+//        }
+//        binding.includedStep.inputData.setOnClickListener{
+//            binding.includedStep.inputEdit.setTextColor(Color.GRAY)
+//        }
+//
+//        binding.includedWeight.inputEdit.setOnClickListener{
+//            binding.includedWeight.inputEdit.setTextColor(Color.WHITE)
+//        }
+//        binding.includedDistance.inputEdit.setOnClickListener{
+//            binding.includedDistance.inputEdit.setTextColor(Color.WHITE)
+//        }
+//        binding.includedStep.inputEdit.setOnClickListener{
+//            binding.includedStep.inputEdit.setTextColor(Color.WHITE)
+//        }
 
         return binding.root
     }

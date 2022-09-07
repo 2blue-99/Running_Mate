@@ -35,7 +35,6 @@ object MySensorRepo : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-//        Log.e(javaClass.simpleName, "onSensorChanged")
         val x:Float = event?.values?.get(0) as Float
         val y:Float = event?.values?.get(0) as Float
         val z:Float = event?.values?.get(0) as Float

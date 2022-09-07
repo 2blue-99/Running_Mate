@@ -17,12 +17,14 @@
         style="@style/myEngFont"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
         android:background="#00FFFFFF"
         android:gravity="right"
         android:padding="5dp"
         android:text="Running \n Mate"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

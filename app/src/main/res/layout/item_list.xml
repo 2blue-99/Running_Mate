@@ -8,33 +8,46 @@
     android:background="@drawable/recyclerview_borderline"
     android:orientation="vertical"
     android:padding="5dp"
+    android:id="@+id/itemListLayout"
     >
 
     <TextView
+        android:textColor="#00000000"
+        android:id="@+id/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
+        android:textColor="@color/black"
         android:id="@+id/nowTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
 
     <TextView
+        android:textColor="@color/black"
         android:id="@+id/recyclerTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
 
     <TextView
+        android:textColor="@color/black"
         android:id="@+id/recyclerDistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
 
     <TextView
+        android:textColor="@color/black"
         android:id="@+id/recyclerCalorie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
 
     <TextView
+        android:textColor="@color/black"
         android:id="@+id/recyclerStep"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
