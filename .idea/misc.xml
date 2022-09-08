@@ -59,6 +59,19 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/nav_menu.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable-v24/ic_baseline_home_24.xml" value="0.1435" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_recode_view.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_recycler_view.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_running_view.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_set_btn.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_set_userdata_view.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/drawable/shape_weather_view.xml" value="0.1655" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/fragment_record.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/item_list.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/recode_page_box.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/running_page_databox.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/user_data_edit_page.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/lpm08/Desktop/pureum/app/src/main/res/layout/weather_view.xml" value="0.24947916666666667" />
       </map>
     </option>
   </component>

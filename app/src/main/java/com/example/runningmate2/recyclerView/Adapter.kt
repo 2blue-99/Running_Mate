@@ -51,12 +51,8 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 //        fun bind(data:Data, listener: View.OnClickListener){
         fun bind(data:Data){
 //            Log.e("TAG", "뷰홀더입니다.: $data", )
-            binding.nowTime.text= data.now
-            binding.recyclerTime.text= data.time
-            binding.recyclerDistance.text= data.distance
-            binding.recyclerCalorie.text= data.calorie
-            binding.recyclerStep.text= data.step
-
+            binding.dayCountTxt.text= data.now
+            binding.dateTxt.text= data.now
         }
     }
 
