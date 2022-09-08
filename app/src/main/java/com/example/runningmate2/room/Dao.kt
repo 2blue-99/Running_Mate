@@ -23,8 +23,8 @@ interface Dao {
     @Query("DELETE FROM Entity")
     suspend fun deleteAllData()
 
-    @Query("Delete from Entity Where now = :nowTime")
-    suspend fun deleteData(nowTime : String)
+    @Query("Delete from Entity Where id = :id")
+    suspend fun deleteData(id : Int)
 
     @Delete
     suspend fun delete(userData : Entity)

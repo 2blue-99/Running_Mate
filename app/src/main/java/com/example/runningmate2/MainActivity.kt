@@ -44,14 +44,6 @@ class MainActivity : AppCompatActivity() {
         val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
         mainViewModel.getDao(db)
 
-        // registerForActivityResult() 는 ActivityResultContract와
-        // ActivityResultCallback을 가져와서 다른 activity를 실행하는 데 사용할
-        // ActivityResultLauncher를 반환하다.
-
-        // ActivityContract는 우리가 결과를 생성하는 데 필요한 입력의 형태와 결과를
-        // 출력하는 형태를 정의하고 우리가 intent를 사용하는 작업의 기본적인 계약을 제공한다.
-
-
         loadFragment(MainMapsFragment())
 
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView

@@ -83,11 +83,9 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <android.widget.Button
-
         android:id="@+id/setBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -102,5 +100,3 @@
         tools:ignore="RtlSymmetry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--    android:background="#D9ffffff"-->

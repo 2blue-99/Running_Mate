@@ -15,6 +15,7 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
     var datalist = arrayListOf<Data>()//리사이클러뷰에서 사용할 데이터 미리 정의 -> 나중에 MainActivity등에서 datalist에 실제 데이터 추가
     @SuppressLint("NotifyDataSetChanged")
+
     set(value) {
             field = value
             notifyDataSetChanged()
@@ -52,7 +53,8 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
         fun bind(data:Data){
 //            Log.e("TAG", "뷰홀더입니다.: $data", )
             binding.dayCountTxt.text= data.now
-            binding.dateTxt.text= data.now
+//            binding.dateTxt.text= data.now
+
         }
     }
 
@@ -64,6 +66,5 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {
         this.itemClickListener = onItemClickListener
     }
-    // (4) setItemClickListener로 설정한 함수 실행
-
+    // (4) setItemClickListener로 설
 }

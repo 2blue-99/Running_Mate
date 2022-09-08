@@ -7,13 +7,10 @@ import java.time.LocalDateTime
 
 @Entity
 data class Entity (
-    @PrimaryKey var now: String,
+    @PrimaryKey(autoGenerate = true) var id: Int,
+    @ColumnInfo var now: String,
     @ColumnInfo val time:String,
     @ColumnInfo val distance:String,
     @ColumnInfo val calorie:String,
     @ColumnInfo val step:String
 )
-//{
-//    @PrimaryKey(autoGenerate = true)
-//    var id: Int = 0
-//}

@@ -6,6 +6,7 @@ import com.example.runningmate2.room.Entity
 import java.time.LocalDateTime
 
 data class Data(
+    val id : Int,
     val now : String,
     val time : String,
     val distance : String,
@@ -15,6 +16,6 @@ data class Data(
 
 fun Entity.toData(): Data {
     return Data(
-        now, time, distance, calorie, step
+        id, now, time, distance, calorie, step
     )
 }

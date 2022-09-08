@@ -36,7 +36,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ktx.addPolyline
 import java.lang.Math.round
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -102,8 +104,11 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             //stop버튼
             }else{
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+
+                    var nowTime = "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
+
                     val datas =  RunningData(
-                        LocalDateTime.now().toString(),
+                        nowTime,
                         binding.runingBox.runTimeText.text.toString(),
                         binding.runingBox.runDistanceText.text.toString(),
                         binding.runingBox.runCaloreText.text.toString(),
