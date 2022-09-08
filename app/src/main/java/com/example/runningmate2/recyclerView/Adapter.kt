@@ -38,9 +38,7 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     //recyclerview가 viewholder를 가져와 데이터 연결할때 호출
     //적절한 데이터를 가져와서 그 데이터를 사용하여 뷰홀더의 레이아웃 채움
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-//        Log.d(javaClass.simpleName, "holder : $holder ")
         holder.bind(datalist[position])
-
         holder.itemView.setOnClickListener{
             itemClickListener?.onClick(position)
         }
@@ -53,9 +51,8 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 //        fun bind(data:Data, listener: View.OnClickListener){
         fun bind(data:Data){
 //            Log.e("TAG", "뷰홀더입니다.: $data", )
-            binding.id.text = data.id.toString()
-            binding.nowTime.text = LocalTime.now().toString()
-            binding.recyclerTime .text= data.time
+            binding.nowTime.text= data.now
+            binding.recyclerTime.text= data.time
             binding.recyclerDistance.text= data.distance
             binding.recyclerCalorie.text= data.calorie
             binding.recyclerStep.text= data.step

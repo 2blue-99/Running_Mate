@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.runningmate2.RunningData
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 @Dao
 interface Dao {
@@ -22,8 +23,8 @@ interface Dao {
     @Query("DELETE FROM Entity")
     suspend fun deleteAllData()
 
-    @Query("Delete from Entity Where id = :position")
-    suspend fun deleteData(position : Int)
+    @Query("Delete from Entity Where now = :nowTime")
+    suspend fun deleteData(nowTime : String)
 
     @Delete
     suspend fun delete(userData : Entity)

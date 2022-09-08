@@ -124,7 +124,11 @@ class MainViewModel : ViewModel(){
         if(dao == null){
             return
         }
-        dao?.insertData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
+//        Log.e(
+//            javaClass.simpleName,
+//            "insertDB: ${Entity(LocalDateTime.now(),runningData.time,runningData.distance,runningData.calorie,runningData.step)}"
+//        )
+        dao?.insertData(Entity(runningData.now,runningData.time,runningData.distance,runningData.calorie,runningData.step))
 //        myCount++
     }
 
@@ -147,9 +151,9 @@ class MainViewModel : ViewModel(){
         dao?.deleteAllData()
     }
 
-    suspend fun deleteDB(position: Int){
+    suspend fun deleteDB(now: String){
 //        dao?.deleteData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
-        dao?.deleteData(position)
+        dao?.deleteData(now)
     }
 
     fun getDao(db : AppDataBase){

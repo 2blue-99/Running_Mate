@@ -26,6 +26,7 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/recyclerview_borderline.xml" value="0.182" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/running_text_borderline.xml" value="0.2285" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/running_text_bordertline.xml" value="0.2285" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_recode_view.xml" value="0.2245" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_running_view.xml" value="0.226" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_set_btn.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_set_userdata_view.xml" value="0.226" />
@@ -48,6 +49,7 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_running.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_user_data_page.xml" value="0.3515625" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/item_list.xml" value="0.3605128205128205" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/recode_page_box.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/running_page.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/running_page_databox.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/user_data_edit_page.xml" value="0.3605128205128205" />

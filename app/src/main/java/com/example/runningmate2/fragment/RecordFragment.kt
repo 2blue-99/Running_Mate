@@ -39,11 +39,7 @@ class RecordFragment : Fragment() {
             this.adapter = this@RecordFragment.adapter
             this.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
-        binding.deleteAllButton.setOnClickListener{
-            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                mainViewModel.deletAllDB()
-            }
-        }
+
 
         adapter.setItemClickListener(object: Adapter.OnItemClickListener{
             override fun onClick(position: Int) {
@@ -52,18 +48,18 @@ class RecordFragment : Fragment() {
                 Log.e(javaClass.simpleName, "fragment onClick: ${adapter.datalist[position]}")
                 Log.e(javaClass.simpleName, "fragment onClick position: $position")
                 viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                    mainViewModel.deleteDB(data.id)
+                    mainViewModel.deleteDB(adapter.datalist[position].now)
                     mainViewModel.readDB()
                 }
             }
         })
 
-        binding.deleteButton.setOnClickListener{
-            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                mainViewModel.deleteDB(9)
-                mainViewModel.readDB()
-            }
-        }
+//        binding.deleteButton.setOnClickListener{
+//            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+//                mainViewModel.deleteDB()
+//                mainViewModel.readDB()
+//            }
+//        }
 
         return binding.root
     }

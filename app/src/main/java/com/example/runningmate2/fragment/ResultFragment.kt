@@ -46,7 +46,7 @@ class ResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.runningData.observe(viewLifecycleOwner){datas ->
             if(datas.size>0){
-                binding.todayData.text = LocalDate.now().toString()
+                binding.todayData.text = datas.last().now.toString()
                 binding.timeData.text = datas.last().time
                 binding.distanceData.text = datas.last().distance
                 binding.calorieData.text = datas.last().calorie

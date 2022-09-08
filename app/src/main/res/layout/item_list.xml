@@ -12,13 +12,6 @@
     >
 
     <TextView
-        android:textColor="#00000000"
-        android:id="@+id/id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <TextView
         android:textColor="@color/black"
         android:id="@+id/nowTime"
         android:layout_width="match_parent"
