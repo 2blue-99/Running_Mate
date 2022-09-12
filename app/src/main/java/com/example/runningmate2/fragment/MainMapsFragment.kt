@@ -25,6 +25,7 @@ import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
 import com.example.runningmate2.room.AppDataBase
+import com.example.runningmate2.utils.EventObserver
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,6 +35,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.maps.android.ktx.addPolyline
 import java.lang.Math.round
 import java.time.LocalDate
@@ -56,8 +58,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private var calorieHap = 0.0
-    private var loading = false
-    lateinit var db: AppDataBase
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var weatherData: DomainWeather? = null
 
@@ -95,10 +95,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         // start 버튼
         binding.startButton.setOnClickListener {
             if(binding.startButton.text == "Start"){
-                val bottomSheet = BottomSheet {
-                    start = true
-                    runningStart()
-                    binding.startButton.text = "Stop"
+                val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
+                    mainViewModel.setData(it)
                 }
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
             //stop버튼
@@ -148,6 +146,19 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.e(javaClass.simpleName, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
+
+        mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
+            //에러 띄우기
+//            Toast.make(binding.root, it, Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            })
+
+        mainViewModel.success.observe(viewLifecycleOwner, EventObserver{
+            start = true
+            runningStart()
+            binding.startButton.text = "Stop"
+        })
+
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
@@ -222,6 +233,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
+
         Log.e(javaClass.simpleName, "메인 재진입")
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
             if(locations.size > 0 && weatherData == null) {
@@ -230,10 +242,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
         binding.startButton.visibility = View.INVISIBLE
-//        binding.weatherView.loadingIcon.visibility = View.VISIBLE
-//        binding.weatherView.loadingIcon.visibility = View.VISIBLE
-//        binding.weatherView.weatherIcon.visibility = View.INVISIBLE
-
         mMap = googleMap
         // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
 
@@ -267,7 +275,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("SetTextI18n")
     fun runningStart() {
         mMap.clear()
-        Log.e(javaClass.simpleName, " Running Start ")
         (activity as MainActivity).changeFragment(1)
         mainStartViewModel.myTime()
         mainStartViewModel.myStep()
@@ -294,7 +301,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // 거리 계산
         mainStartViewModel.latLng.observe(viewLifecycleOwner){latLngs ->
-            Log.e("TAG", "runningStart: 들어왔다", )
             if (latLngs.size > 1){
                 if(latLngs.size == 2) {
                     beforeLocate.latitude = latLngs.first().latitude
@@ -306,7 +312,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 var result = beforeLocate.distanceTo(afterLocate).toDouble()
 
                 // 제자리 있을때 보정.
-                if(result <= 2.0) result = 0.0
+                if(result <= 1.5) result = 0.0
 
                 binding.runingBox.runDistanceText.text = "${String.format("%.2f",distanceHap + result)} M"
                 distanceHap += result
@@ -319,6 +325,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     calorieHap += myCalorie
                     binding.runingBox.runCaloreText.text = "${String.format("%.2f",calorieHap)} Kcal"
                 }
+            }
+
+            mainStartViewModel.step.observe(viewLifecycleOwner) {
+                binding.runingBox.runStepText.text = "$it 걸음"
             }
         }
     }

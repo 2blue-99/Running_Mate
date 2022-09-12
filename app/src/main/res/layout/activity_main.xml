@@ -6,6 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white"
+        android:gravity="center"
+        app:menu="@menu/toolbar_nav_menu">
+        <TextView
+            android:id="@+id/adasdasdadad"
+            android:textSize="18dp"
+            android:gravity="center"
+            style="@style/myEngFont"
+            android:background="#00FFFFFF"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:text="Rinning Mate"
+            android:textColor="@color/white"/>
+    </androidx.appcompat.widget.Toolbar>
+
+
+
+
+
+
     <FrameLayout
         android:id="@+id/myFragMent"
         android:layout_width="match_parent"
@@ -15,7 +45,9 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0">
+
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
@@ -32,6 +64,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/nav_menu"
         android:visibility="visible"
-        />
+        >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

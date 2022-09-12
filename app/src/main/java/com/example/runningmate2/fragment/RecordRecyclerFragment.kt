@@ -7,17 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.runningmate2.R
+import com.example.runningmate2.DetailBottomsheet
 import com.example.runningmate2.databinding.FragmentRecordRecyclerBinding
 import com.example.runningmate2.recyclerView.Adapter
 import com.example.runningmate2.recyclerView.Data
 import com.example.runningmate2.recyclerView.toData
 import com.example.runningmate2.viewModel.MainViewModel
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class RecordRecyclerFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -37,16 +33,11 @@ class RecordRecyclerFragment : Fragment() {
         }
 
         adapter.setItemClickListener(object: Adapter.OnItemClickListener{
-            override fun onClick(position: Int) {
-                Log.e(javaClass.simpleName, "fragment onClick: ${adapter.datalist[position]}")
-                Log.e(javaClass.simpleName, "fragment onClick position: $position")
-                viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                    mainViewModel.deleteDB(adapter.datalist[position].id)
-                    mainViewModel.readDB()
-                }
+            override fun onClick(data: Data) {
+                val bottomDialogSheet = DetailBottomsheet(data)
+                bottomDialogSheet.show(parentFragmentManager, bottomDialogSheet.tag)
             }
         })
-
         return binding.root
     }
 
@@ -57,5 +48,4 @@ class RecordRecyclerFragment : Fragment() {
             adapter.datalist = data.map { it.toData() } as ArrayList<Data>
         }
     }
-
 }

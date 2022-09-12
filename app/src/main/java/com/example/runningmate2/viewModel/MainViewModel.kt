@@ -11,10 +11,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.RepoImpl
 import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
+import com.example.runningmate2.recyclerView.Data
+import com.example.runningmate2.repo.SharedPreferenceHelper
+import com.example.runningmate2.repo.SharedPreferenceHelperImpl
 import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.room.Dao
 import com.example.runningmate2.room.Entity
+import com.example.runningmate2.utils.Event
 import com.example.runningmate2.utils.ListLiveData
+//import com.jaehyeon.sharedpreferencehelpertest.repository.SharedPreferenceHelper
+//import com.jaehyeon.sharedpreferencehelpertest.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -29,13 +35,19 @@ class MainViewModel : ViewModel(){
 
     lateinit var myDataList : DomainWeather
 
-    var finishBottomDialog = false
-
     private var dao: Dao? = null
 
-    private var myCount = 0
     private val _runningData = ListLiveData<Entity>()
     val runningData: LiveData<ArrayList<Entity>> get() = _runningData
+
+    private val _error = MutableLiveData<Event<String>>()
+    val error: LiveData<Event<String>> get() = _error
+
+    private val _success = MutableLiveData<Event<Unit>>()
+    val success: LiveData<Event<Unit>> get() = _success
+
+    private val helper: SharedPreferenceHelper = SharedPreferenceHelperImpl()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createRequestParams(myLocation:Location?): HashMap<String, String> {
@@ -144,9 +156,9 @@ class MainViewModel : ViewModel(){
         }?.launchIn(viewModelScope)
     }
 
-    suspend fun deleteDB(id: Int){
+    suspend fun deleteDB(data: Data){
 //        dao?.deleteData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
-        dao?.deleteData(id)
+        dao?.deleteData(data.id)
     }
 
     fun getDao(db : AppDataBase){
@@ -158,5 +170,32 @@ class MainViewModel : ViewModel(){
         _getWeatherData.value = null
     }
 
+    /**
+     * SharedPreference 에 저장할 함수.
+     * Float 형태가 아니면 터지기 때문에 try-catch 로 안정성 확보.
+     */
+    fun setData(weight: String) {
+        try {
+            helper.weight = weight.toInt()
+            _success.value = Event(Unit)
+        } catch (t: Throwable) {
+            Log.e(javaClass.simpleName, "setWeightLocalStorage: ${t.localizedMessage}", )
+            _error.value = Event("실수 형태로 입력 해라...")
+        }
+    }
+    /**
+     * SharedPreference 에서 몸무게를 가져 오는 함수.
+     */
+    fun getWeight(): Int {
+        return helper.weight
+    }
+
+    /**
+     * Test 용도.
+     * SharedPreference Clear
+     */
+    fun clearLocalStorage() {
+        helper.clear()
+    }
 
 }

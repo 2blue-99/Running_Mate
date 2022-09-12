@@ -1,8 +1,12 @@
 package com.example.runningmate2
 
+import android.util.Log
+import com.example.runningmate2.repo.SharedPreferenceHelperImpl
+
 class Calorie {
     fun myCalorie() : Double{
-        val myWeight = 70
+        Log.e("TAG", "칼로리 알고리즘 weight : ${SharedPreferenceHelperImpl().weight}")
+        val myWeight = SharedPreferenceHelperImpl().weight
         if(myWeight <= 50){
             return 0.17
         }else if(myWeight <= 55){

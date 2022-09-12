@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.databinding.FragmentResultBinding
+import com.example.runningmate2.repo.SharedPreferenceHelperImpl
 import com.example.runningmate2.viewModel.MainViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime

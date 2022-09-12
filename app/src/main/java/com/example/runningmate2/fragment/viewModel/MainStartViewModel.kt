@@ -8,7 +8,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.runningmate2.MyApplication
-import com.example.runningmate2.MyLocationRepo
+import com.example.runningmate2.repo.MyLocationRepo
+import com.example.runningmate2.repo.MySensorRepo
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -34,6 +35,9 @@ class MainStartViewModel(
 
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
+
+    private val _step = MutableLiveData<Int>(0)
+    val step: LiveData<Int> get() = _step
 
     private var _second = 0
     private var _minute = 0
@@ -110,7 +114,19 @@ class MainStartViewModel(
 
     fun myStep(){
         Log.e(javaClass.simpleName, "myStep")
-//        return MySensorRepo.senSor(MyApplication.getApplication())
+        MySensorRepo.senSor(MyApplication.getApplication())
+        MySensorRepo.notify.observeForever {
+            _step.value?.let {
+                _step.value = it + 1
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        MySensorRepo.notify.removeObserver {
+
+        }
     }
 
 }

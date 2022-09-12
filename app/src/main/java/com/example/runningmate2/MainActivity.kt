@@ -1,10 +1,13 @@
 package com.example.runningmate2
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +24,7 @@ import com.example.runningmate2.fragment.ResultFragment
 import com.example.runningmate2.fragment.RunningFragment
 import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.viewModel.MainViewModel
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +49,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getDao(db)
 
         loadFragment(MainMapsFragment())
+
+        binding.customToolbar.bringToFront()
+        binding.customToolbar.menu.getItem(0).setOnMenuItemClickListener {
+            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+            return@setOnMenuItemClickListener true
+        }
 
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {

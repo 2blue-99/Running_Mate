@@ -64,7 +64,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/my_button"
-        android:text="기록 보기"
+        android:text="기록보기"
         android:textColor="@color/white"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
     <FrameLayout
         android:id="@+id/recordeFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="350dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"

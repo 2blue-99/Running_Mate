@@ -11,13 +11,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.dynamicanimation.animation.FlingAnimation
 import com.example.runningmate2.databinding.DialogBottomSheetBinding
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheet(
-   val onClick: () -> Unit
+    val weight:Int,
+   val onClick: (String) -> Unit,
 ) : BottomSheetDialogFragment() {
 
     private lateinit var dlg : BottomSheetDialog
@@ -39,35 +41,16 @@ class BottomSheet(
         binding.includedDistance.dataType.text = "Km"
         binding.includedStep.dataType.text = "걸음"
 
+        if(weight != 0) binding.includedWeight.inputEdit.setText("$weight")
+
         binding.BottomStartButton.setOnClickListener{
             if(binding.includedWeight.inputEdit.text.isNotEmpty()){
-                onClick()
+                onClick(binding.includedWeight.inputEdit.text.toString())
                 dismiss()
                 return@setOnClickListener
             }
             Toast.makeText(context, "몸무게는 필수 항목입니다.", Toast.LENGTH_SHORT).show()
         }
-
-//        binding.includedWeight.inputData.setOnClickListener{
-//            binding.includedWeight.inputEdit.setTextColor(Color.GRAY)
-//        }
-//        binding.includedDistance.inputData.setOnClickListener{
-//            binding.includedDistance.inputEdit.setTextColor(Color.GRAY)
-//        }
-//        binding.includedStep.inputData.setOnClickListener{
-//            binding.includedStep.inputEdit.setTextColor(Color.GRAY)
-//        }
-//
-//        binding.includedWeight.inputEdit.setOnClickListener{
-//            binding.includedWeight.inputEdit.setTextColor(Color.WHITE)
-//        }
-//        binding.includedDistance.inputEdit.setOnClickListener{
-//            binding.includedDistance.inputEdit.setTextColor(Color.WHITE)
-//        }
-//        binding.includedStep.inputEdit.setOnClickListener{
-//            binding.includedStep.inputEdit.setTextColor(Color.WHITE)
-//        }
-
         return binding.root
     }
 

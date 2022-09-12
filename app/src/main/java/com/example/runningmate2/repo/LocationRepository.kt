@@ -1,4 +1,4 @@
-package com.example.runningmate2
+package com.example.runningmate2.repo
 
 import android.location.Location
 

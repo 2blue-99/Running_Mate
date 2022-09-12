@@ -4,6 +4,7 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -44,6 +45,12 @@ android {
     buildFeatures{
         viewBinding true
         dataBinding true
+    }
+
+    buildscript {
+        dependencies {
+            classpath "com.google.android.gms:oss-licenses-plugin:0.10.5"
+        }
     }
 }
 
@@ -106,4 +113,7 @@ dependencies {
 
     //bottom sheet dialog
     implementation 'com.google.android.material:material:1.8.0-alpha01'
+
+    //구글오픈라이선스
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 }
