@@ -84,6 +84,7 @@ class RecordFragment : Fragment() {
                         Log.e("TAG", "err : $e")
                     }
                 }
+                binding.include.recodeDistance.text = "${distance} M"
                 binding.include.recodeTime.text = "${hour}시간 ${minute}분 ${seconde}초"
                 binding.include.recodeCalorie.text = "$calorie"
                 binding.include.recodeDay.text = "${day}일"

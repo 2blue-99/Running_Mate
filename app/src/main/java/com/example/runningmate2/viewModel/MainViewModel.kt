@@ -140,7 +140,7 @@ class MainViewModel : ViewModel(){
 //            javaClass.simpleName,
 //            "insertDB: ${Entity(LocalDateTime.now(),runningData.time,runningData.distance,runningData.calorie,runningData.step)}"
 //        )
-        dao?.insertData(Entity(0,runningData.now,runningData.time,runningData.distance,runningData.calorie,runningData.step))
+        dao?.insertData(Entity(0,runningData.dayOfWeek,runningData.now,runningData.time,runningData.distance,runningData.calorie,runningData.step))
 //        myCount++
     }
 

@@ -71,6 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <FrameLayout
+        android:padding="8dp"
         android:id="@+id/recordeFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="350dp"

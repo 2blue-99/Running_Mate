@@ -68,8 +68,6 @@ dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':data')
 
-
-
     implementation 'androidx.activity:activity-ktx:1.5.1'
     implementation 'androidx.fragment:fragment-ktx:1.5.2'
 
@@ -116,4 +114,7 @@ dependencies {
 
     //구글오픈라이선스
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
+    //그래프
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

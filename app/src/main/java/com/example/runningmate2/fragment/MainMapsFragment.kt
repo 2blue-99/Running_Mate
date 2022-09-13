@@ -41,6 +41,7 @@ import java.lang.Math.round
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.*
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
@@ -103,9 +104,18 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }else{
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
 
-                    var nowTime = "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
-
+                    val nowTime = "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
+                    var dayOfWeek = when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK).toString()) {
+                            "1" -> "일"
+                            "2" -> "월"
+                            "3" -> "화"
+                            "4" -> "수"
+                            "5" -> "목"
+                            "6" -> "금"
+                            else -> "토"
+                        }
                     val datas =  RunningData(
+                        dayOfWeek,
                         nowTime,
                         binding.runingBox.runTimeText.text.toString(),
                         binding.runingBox.runDistanceText.text.toString(),
