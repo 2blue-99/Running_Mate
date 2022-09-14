@@ -64,16 +64,16 @@ class RecordGraphFragment : Fragment() {
                     entries.add(BarEntry(1F,monday))
                     entries.add(BarEntry(2F,tuesday))
 
-//                    entries.add(BarEntry(3F,wednesday))
-                    entries.add(BarEntry(3F,0.2F))
+                    entries.add(BarEntry(3F,wednesday))
+//                    entries.add(BarEntry(3F,0.2F))
 
-//                    entries.add(BarEntry(4F,thursday))
-                    entries.add(BarEntry(4F,0.3F))
+                    entries.add(BarEntry(4F,thursday))
+//                    entries.add(BarEntry(4F,0.3F))
 
-//                    entries.add(BarEntry(5F,friday))
-                    entries.add(BarEntry(5F,0.1F))
-                    entries.add(BarEntry(6F,0.5F))
-                    entries.add(BarEntry(7F,0.7F))
+                    entries.add(BarEntry(5F,friday))
+//                    entries.add(BarEntry(5F,0.1F))
+                    entries.add(BarEntry(6F,saturday))
+                    entries.add(BarEntry(7F,sunday))
 
                     val myChart = binding.chart
                     myChart.run {
@@ -83,9 +83,9 @@ class RecordGraphFragment : Fragment() {
                         setDrawBarShadow(false) //그래프의 그림자
                         setDrawGridBackground(false)//격자구조 넣을건지
                         axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
-                            axisMaximum = maxOf(monday,tuesday,wednesday,thursday,friday,saturday,sunday) //100 위치에 선을 그리기 위해 101f로 맥시멈값 설정
+                            axisMaximum = maxOf(monday,tuesday,wednesday,thursday,friday,saturday,sunday)+1 //100 위치에 선을 그리기 위해 101f로 맥시멈값 설정
                             axisMinimum = 0f // 최소값 0
-                            granularity = 1f // 50 단위마다 선을 그리려고 설정.
+                            granularity = 1f //  단위마다 선을 그리려고 설정.
                             setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
                             setDrawGridLines(true) //격자 라인 활용
                             setDrawAxisLine(false) // 축 그리기 설정

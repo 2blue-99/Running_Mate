@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0.0 M" />
+                android:text="0.00 M" />
 
         </LinearLayout>
     </LinearLayout>

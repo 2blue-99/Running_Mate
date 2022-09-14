@@ -3,6 +3,7 @@ package com.example.runningmate2.fragment
 import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -42,25 +43,31 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
-    private var _binding: FragmentMapsBinding? = null
+//    private var _binding: FragmentMapsBinding? = null
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
     private var nowPointMarker: Marker? = null
     private val mainStartViewModel: MainStartViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val binding get() = _binding!!
+    private val binding : FragmentMapsBinding by lazy {
+        FragmentMapsBinding.inflate(layoutInflater)
+    }
     private var start: Boolean = false
     private var myNowLati : Double? = null
     private var myNowLong : Double? = null
     private var distanceHap : Double = 0.0
     private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
+    private val firstLocate = Location(LocationManager.NETWORK_PROVIDER)
     private var calorieHap = 0.0
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var weatherData: DomainWeather? = null
+    private var static = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,8 +75,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         Log.e(javaClass.simpleName, "onCreateView")
-        _binding = FragmentMapsBinding.inflate(inflater, container, false)
-        val view = binding.root
+//        _binding = FragmentMapsBinding.inflate(inflater, container, false)
+//        val view = binding.root
 
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -115,6 +122,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                             else -> "토"
                         }
                     val datas =  RunningData(
+//                        {String.format("%.2f",distanceHap + result)}
                         dayOfWeek,
                         nowTime,
                         binding.runingBox.runTimeText.text.toString(),
@@ -148,7 +156,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        return view
+        return binding.root
     }
 
     @SuppressLint("SetTextI18n")
@@ -210,7 +218,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                                 .position(it)
                                 .title("pureum")
                                 .alpha(0.9F)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
+//                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
                         )
                     }
 
@@ -243,8 +251,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
+        static = false
 
-        Log.e(javaClass.simpleName, "메인 재진입")
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
             if(locations.size > 0 && weatherData == null) {
                 Log.e(javaClass.simpleName, "날씨 호출")
@@ -252,6 +260,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
         binding.startButton.visibility = View.INVISIBLE
+        binding.followBtn.visibility = View.INVISIBLE
         mMap = googleMap
         // 맨 처음 시작, onCreateView에서 위치를 넣은 후, 이곳에서 위치를 옵져버 함.
 
@@ -259,6 +268,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         // 폴리라인 하는 곳
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
             if (latlngs.isNotEmpty()) {
+                if (static){
+                    var locate = LatLng(latlngs.last().latitude-0.0013,latlngs.last().longitude)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locate, 17F))
+                }
                 mMap.addPolyline {
                     addAll(latlngs)
                     color(Color.RED)
@@ -270,6 +283,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             if (nowLocations != null) {
                 Log.e(javaClass.simpleName, "nowLocation start: $nowLocations")
                 nowPointMarker?.remove()
+
                 nowPointMarker = mMap.addMarker(
                     MarkerOptions()
                         .position(nowLocations)
@@ -288,6 +302,18 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         (activity as MainActivity).changeFragment(1)
         mainStartViewModel.myTime()
         mainStartViewModel.myStep()
+
+        binding.followBtn.visibility = View.VISIBLE
+        binding.followBtn.setOnClickListener{
+            if(static){
+                binding.followBtn.background = ContextCompat.getDrawable(requireContext(),R.drawable.shape_set_btn)
+                static = false
+            }else{
+                binding.followBtn.background = ContextCompat.getDrawable(requireContext(),R.drawable.shape_click_btn)
+                static = true
+            }
+
+        }
 
         //빠르게 줌하기 위해 만듦
         if(myNowLong != null && myNowLong != null) {
@@ -312,6 +338,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         // 거리 계산
         mainStartViewModel.latLng.observe(viewLifecycleOwner){latLngs ->
             if (latLngs.size > 1){
+
+                firstLocate.latitude = latLngs.first().latitude
+                firstLocate.longitude = latLngs.first().longitude
+
                 if(latLngs.size == 2) {
                     beforeLocate.latitude = latLngs.first().latitude
                     beforeLocate.longitude = latLngs.first().longitude
@@ -320,12 +350,17 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 afterLocate.longitude= latLngs.last().longitude
 
                 var result = beforeLocate.distanceTo(afterLocate).toDouble()
-
+                var startToEndResult = firstLocate.distanceTo(afterLocate).toDouble()
+                Log.e("TAG", "result : $result", )
+                Log.e("TAG", "startToEndResult : $startToEndResult", )
+//                binding.testing.text = result.toString()
                 // 제자리 있을때 보정.
-                if(result <= 1.5) result = 0.0
+                if(result <= 1.0) result = 0.0
+                if(startToEndResult <= 1.5) result = 0.0
 
                 binding.runingBox.runDistanceText.text = "${String.format("%.2f",distanceHap + result)} M"
                 distanceHap += result
+
                 beforeLocate.latitude = latLngs.last().latitude
                 beforeLocate.longitude = latLngs.last().longitude
 

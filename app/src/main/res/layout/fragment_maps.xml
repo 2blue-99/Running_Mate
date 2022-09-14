@@ -102,4 +102,18 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="RtlSymmetry" />
 
+    <android.widget.Button
+        android:id="@+id/followBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/shape_set_btn"
+        android:drawableEnd="@drawable/ic_baseline_control_camera_24"
+        android:paddingEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

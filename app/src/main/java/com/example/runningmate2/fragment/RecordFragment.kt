@@ -14,6 +14,7 @@ import com.example.runningmate2.recyclerView.Data
 import com.example.runningmate2.recyclerView.toData
 import com.example.runningmate2.viewModel.MainViewModel
 import java.lang.Exception
+import kotlin.math.min
 
 class RecordFragment : Fragment() {
 
@@ -67,35 +68,47 @@ class RecordFragment : Fragment() {
                 var minute = 0
                 var hour = 0
                 var calorie = 0.0
-                var day = 0
                 var step = 0
                 var distance = 0.0
+                var firstDate = datas.first().now.split(" ")[0]
+                var date = 1
+                var nowDate = ""
+
                 for(data in datas){
                     try {
+                        nowDate = data.now.split(" ")[0]
                         seconde += data.time.split(":")[2].toInt()
+                        if(seconde>=60){
+                            minute += seconde/60
+                            seconde = seconde - (60 * minute)
+                        }
                         minute += data.time.split(":")[1].toInt()
+                        if(minute>=60){
+                            hour += minute/60
+                            minute -= 60 * hour
+                        }
                         hour += data.time.split(":")[0].toInt()
                         calorie += data.calorie.split(" ")[0].toDouble()
-                        day++
                         step += data.step.split(" ")[0].toInt()
                         distance += data.distance.split(" ")[0].toDouble()
+
+                        if(firstDate != nowDate){
+                            date++
+                            firstDate = nowDate
+                        }
 
                     }catch (e:Exception){
                         Log.e("TAG", "err : $e")
                     }
                 }
-                binding.include.recodeDistance.text = "${distance} M"
+//                {String.format("%.2f",distanceHap + result)}
+                binding.include.recodeDistance.text = "${String.format("%.2f",distance)} M"
                 binding.include.recodeTime.text = "${hour}시간 ${minute}분 ${seconde}초"
-                binding.include.recodeCalorie.text = "$calorie"
-                binding.include.recodeDay.text = "${day}일"
+                binding.include.recodeCalorie.text = "${String.format("%.2f",calorie)} Kcal"
+                binding.include.recodeDay.text = "${date}일"
                 binding.include.recodeStep.text = "${step}걸음"
             }
         }
 
-    }
-
-    override fun onResume() {
-        Log.e("TAG", "리줌리줌리줌리줌리줌리줌리줌 ")
-        super.onResume()
     }
 }
