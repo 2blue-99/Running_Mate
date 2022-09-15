@@ -6,9 +6,11 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
-
+    private var backPressTime:Long = 0
 //    private val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -109,5 +111,16 @@ class MainActivity : AppCompatActivity() {
 //                    .commit()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if(backPressTime + 2000 > System.currentTimeMillis()){
+            super.onBackPressed()
+            finish()//액티비티 종료
+        }else{
+            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+
+        backPressTime = System.currentTimeMillis()
     }
 }

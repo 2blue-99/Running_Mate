@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:gravity="left"
                 android:paddingLeft="15dp"
-                android:text="오늘도 수고했어요! \n기모띠!"
+                android:text="오늘도 수고했어요!"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 

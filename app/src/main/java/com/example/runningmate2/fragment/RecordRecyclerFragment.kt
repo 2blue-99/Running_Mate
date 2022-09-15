@@ -44,8 +44,20 @@ class RecordRecyclerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.runningData.observe(viewLifecycleOwner) { data ->
-            Log.e("TAG", "데이터 넘어온거: $data", )
-            adapter.datalist = data.map { it.toData() } as ArrayList<Data>
+            if(data.size > 0){
+                binding.myRecyclerView.minimumHeight = 875
+                binding.noData.visibility=View.INVISIBLE
+                Log.e("TAG", "데이터 넘어온거: $data", )
+                adapter.datalist = data.map { it.toData() } as ArrayList<Data>
+
+            }
+            else{
+                binding.myRecyclerView.minimumHeight = 875
+                adapter.datalist = data.map { it.toData() } as ArrayList<Data>
+                binding.noData.visibility=View.VISIBLE
+                binding.noData.text = "달린 기록이 없어요.."
+            }
+
         }
     }
 }

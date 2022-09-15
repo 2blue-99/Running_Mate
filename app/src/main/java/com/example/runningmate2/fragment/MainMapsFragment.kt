@@ -9,15 +9,18 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.fragment.app.Fragment
 import android.os.Bundle
+import android.print.PrintAttributes
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.ViewFlipper
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginBottom
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -122,7 +125,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                             else -> "토"
                         }
                     val datas =  RunningData(
-//                        {String.format("%.2f",distanceHap + result)}
                         dayOfWeek,
                         nowTime,
                         binding.runingBox.runTimeText.text.toString(),
@@ -175,6 +177,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             start = true
             runningStart()
             binding.startButton.text = "Stop"
+            binding.fake.text = "\n"
         })
 
         val mapFragment =
@@ -230,8 +233,15 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
             binding.startButton.visibility = View.VISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
-            binding.weatherView.weatherTem.text = "${myData?.temperatures?.toDouble()?.let { round(it) } ?: "loading.."} º"
-            binding.weatherView.humidity.text = myData?.humidity ?: "loading.."
+            if(myData?.temperatures == null){
+                binding.weatherView.weatherTem.text = "loading.."
+            }else
+                binding.weatherView.weatherTem.text = "${myData?.temperatures?.toDouble()?.let {round(it)}} ºc"
+
+            if(myData?.humidity == null){
+                binding.weatherView.humidity.text = "loading.."
+            }else
+                binding.weatherView.humidity.text = "${myData?.humidity} %"
 
                 when(myData?.rainType?.toDouble()?.toInt()){
                     //0 없음, 1 장대비, 2367 눈, 5 비
@@ -253,6 +263,8 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         static = false
 
+        binding.fake.text = "\n\n\n\n"
+
         mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
             if(locations.size > 0 && weatherData == null) {
                 Log.e(javaClass.simpleName, "날씨 호출")
@@ -270,8 +282,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             if (latlngs.isNotEmpty()) {
                 if (static){
                     var locate = LatLng(latlngs.last().latitude-0.0013,latlngs.last().longitude)
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(locate, 17F))
-                }
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locate, 17F)) }
                 mMap.addPolyline {
                     addAll(latlngs)
                     color(Color.RED)
@@ -312,7 +323,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 binding.followBtn.background = ContextCompat.getDrawable(requireContext(),R.drawable.shape_click_btn)
                 static = true
             }
-
         }
 
         //빠르게 줌하기 위해 만듦
@@ -355,8 +365,9 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 Log.e("TAG", "startToEndResult : $startToEndResult", )
 //                binding.testing.text = result.toString()
                 // 제자리 있을때 보정.
-                if(result <= 1.0) result = 0.0
+                if(result <= 1.5) result = 0.0
                 if(startToEndResult <= 1.5) result = 0.0
+
 
                 binding.runingBox.runDistanceText.text = "${String.format("%.2f",distanceHap + result)} M"
                 distanceHap += result
@@ -376,10 +387,5 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 binding.runingBox.runStepText.text = "$it 걸음"
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.e(javaClass.simpleName, " 내가돌아왔다 ")
     }
 }

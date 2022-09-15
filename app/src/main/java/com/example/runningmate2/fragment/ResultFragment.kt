@@ -20,10 +20,6 @@ class ResultFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     val currentTime = LocalDateTime.now()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         //뷰 만들기/
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +32,7 @@ class ResultFragment : Fragment() {
             (activity as MainActivity).changeFragment(3)
             Log.e(javaClass.simpleName, "!! ResultFragment", )
         }
-
         Log.e(javaClass.simpleName, "time: $currentTime", )
-
         return view
     }
 

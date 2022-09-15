@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.RecordRecyclerFragment"
     android:background="#4DFFFFFF"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     >
 
         <androidx.recyclerview.widget.RecyclerView
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:id="@+id/myRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,5 +19,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_list" />
+
+        <TextView
+            android:id="@+id/noData"
+            style="@style/myHanFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00ffffff"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

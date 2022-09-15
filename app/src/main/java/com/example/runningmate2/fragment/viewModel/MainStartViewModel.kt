@@ -46,11 +46,13 @@ class MainStartViewModel(
     private var minute = ""
     private var hour = ""
 
+    private var locationCallback: LocationCallback? = null
+
 
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation(){
         Log.e(javaClass.simpleName, "repeatCallLocation")
-        object: LocationCallback() {
+        locationCallback = object: LocationCallback() {
             override fun onLocationAvailability(p0: LocationAvailability) {
                 super.onLocationAvailability(p0)
             }
@@ -61,9 +63,16 @@ class MainStartViewModel(
                     _location.add(location)
                 }
             }
-        }.also {
-            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
         }
+
+        if (locationCallback != null)
+            MyLocationRepo.nowLocation(MyApplication.getApplication(),
+                locationCallback as LocationCallback
+            )
+    }
+
+    fun removeLocationCallback() {
+        if (locationCallback != null) locationCallback = null
     }
 
     //
