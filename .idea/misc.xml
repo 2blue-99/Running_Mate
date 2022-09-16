@@ -18,15 +18,22 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_base_background.xml" value="0.2215" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_360_24.xml" value="0.2295" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_cloud_24.xml" value="0.2235" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_control_camera_24.xml" value="0.223" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_directions_run_24.xml" value="0.223" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_emoji_flags_24.xml" value="0.226" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_my_location_24.xml" value="0.2295" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.229" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_recodeicon.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/my_button.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/recyclerview_borderline.xml" value="0.182" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/running_text_borderline.xml" value="0.2285" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/running_text_bordertline.xml" value="0.2285" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shap_dialog.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_change_btn.xml" value="0.2245" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_click_btn.xml" value="0.223" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_dialog.xml" value="0.223" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_recode_view.xml" value="0.2245" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_recycler_view.xml" value="0.2665" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/shape_running_view.xml" value="0.226" />
@@ -41,19 +48,20 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/activity_main.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/activity_user_data.xml" value="0.1" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/dialog.xml" value="0.29662447257383967" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.37864583333333335" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_loading_page.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_main_start_page.xml" value="0.3393316195372751" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_map.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_maps.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_record.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_record_graph.xml" value="0.16458333333333333" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_record_graph.xml" value="0.32390745501285345" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_record_recycler.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_result.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_running.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/fragment_user_data_page.xml" value="0.3515625" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/item_list.xml" value="0.3605128205128205" />
-        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/recode_page_box.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/recode_page_box.xml" value="0.5" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/running_page.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/running_page_databox.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/user_data_edit_page.xml" value="0.3605128205128205" />
@@ -61,6 +69,7 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/layout/weather_view.xml" value="0.5" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/menu.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/nav_menu.xml" value="0.3605128205128205" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/toolbar_nav_menu.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
       </map>

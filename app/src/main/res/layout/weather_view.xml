@@ -8,6 +8,7 @@
     >
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/weatherIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -63,7 +64,7 @@
             android:layout_weight="1"
             android:gravity="left"
             android:text="loading.."
-            android:textColor="#2196F3"
+            android:textColor="#BAD1FF"
             android:textSize="14dp"
             android:textStyle="bold" />
     </LinearLayout>

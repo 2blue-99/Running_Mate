@@ -39,9 +39,9 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     //recyclerview가 viewholder를 가져와 데이터 연결할때 호출
     //적절한 데이터를 가져와서 그 데이터를 사용하여 뷰홀더의 레이아웃 채움
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(datalist[position])
+        holder.bind(datalist[position],position)
         holder.itemView.setOnClickListener{
-            itemClickListener?.onClick(position)
+            itemClickListener?.onClick(datalist[position])
         }
     }
 
@@ -50,17 +50,16 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
         //binding전달받았기 때문에 홀더 내부 어디에서나 binding 사용가능
 //        private var view: View = v
 //        fun bind(data:Data, listener: View.OnClickListener){
-        fun bind(data:Data){
-//            Log.e("TAG", "뷰홀더입니다.: $data", )
-            binding.dayCountTxt.text= data.now
-//            binding.dateTxt.text= data.now
-
+        fun bind(data:Data,position:Int){
+            Log.e("TAG", "뷰홀더입니다.: $data", )
+            binding.dateTxt.text= data.now
+            binding.dayCountTxt.text= "No.${position + 1}"
         }
     }
 
     // (2) 리스너 인터페이스
     interface OnItemClickListener {
-        fun onClick(position: Int)
+        fun onClick(data: Data)
     }
     // (3) 외부에서 클릭 시 이벤트 설정
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {

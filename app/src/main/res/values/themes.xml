@@ -40,7 +40,7 @@
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="base_background" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@drawable/base_back</item>
-    </style>
+<!--    <style name="base_background" parent="Theme.MaterialComponents.Light.BottomSheetDialog">-->
+<!--        <item name="bottomSheetStyle">@drawable/base_back</item>-->
+<!--    </style>-->
 </resources>

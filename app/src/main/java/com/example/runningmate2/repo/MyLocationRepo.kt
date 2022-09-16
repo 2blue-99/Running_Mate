@@ -1,18 +1,14 @@
-package com.example.runningmate2
+package com.example.runningmate2.repo
 
 import android.Manifest
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
-import android.location.LocationRequest
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 
 object MyLocationRepo {
 
@@ -56,9 +52,10 @@ object MyLocationRepo {
         }
 
         val request = com.google.android.gms.location.LocationRequest.create().apply {
+            Log.e("TAG", "이상한 곳에 들어왔다.: ", )
             this.priority = Priority.PRIORITY_HIGH_ACCURACY
-            this.interval = 750L
-            this.fastestInterval = 500L
+            this.interval = 2000L
+            this.fastestInterval = 2000L
         }.also {
             locationClient.requestLocationUpdates(it, callback, Looper.myLooper())
         }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.runningmate2.MainActivity
 import com.example.runningmate2.databinding.FragmentResultBinding
+import com.example.runningmate2.repo.SharedPreferenceHelperImpl
 import com.example.runningmate2.viewModel.MainViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -18,10 +19,6 @@ class ResultFragment : Fragment() {
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
     val currentTime = LocalDateTime.now()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         //뷰 만들기/
@@ -35,9 +32,7 @@ class ResultFragment : Fragment() {
             (activity as MainActivity).changeFragment(3)
             Log.e(javaClass.simpleName, "!! ResultFragment", )
         }
-
         Log.e(javaClass.simpleName, "time: $currentTime", )
-
         return view
     }
 
@@ -46,7 +41,6 @@ class ResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.runningData.observe(viewLifecycleOwner){datas ->
             if(datas.size>0){
-                binding.todayData.text = datas.last().id.toString()
                 binding.todayData.text = datas.last().now
                 binding.timeData.text = datas.last().time
                 binding.distanceData.text = datas.last().distance

@@ -1,11 +1,16 @@
 package com.example.runningmate2
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -18,9 +23,9 @@ import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.fragment.RecordFragment
 import com.example.runningmate2.fragment.ResultFragment
-import com.example.runningmate2.fragment.RunningFragment
 import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.viewModel.MainViewModel
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
-
+    private var backPressTime:Long = 0
 //    private val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -45,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.getDao(db)
 
         loadFragment(MainMapsFragment())
+
+        binding.customToolbar.bringToFront()
+        binding.customToolbar.menu.getItem(0).setOnMenuItemClickListener {
+            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+            return@setOnMenuItemClickListener true
+        }
 
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
@@ -99,5 +110,16 @@ class MainActivity : AppCompatActivity() {
 //                    .commit()
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if(backPressTime + 2000 > System.currentTimeMillis()){
+            super.onBackPressed()
+            finish()//액티비티 종료
+        }else{
+            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+
+        backPressTime = System.currentTimeMillis()
     }
 }

@@ -2,13 +2,16 @@ package com.example.runningmate2.fragment.viewModel
 
 import android.app.Application
 import android.location.Location
+import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.runningmate2.Calorie
 import com.example.runningmate2.MyApplication
-import com.example.runningmate2.MyLocationRepo
+import com.example.runningmate2.repo.MyLocationRepo
+import com.example.runningmate2.repo.MySensorRepo
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -25,8 +28,20 @@ class MainStartViewModel(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
 
+    private val _distance = MutableLiveData<Double>()
+    val distance: LiveData<Double> get() = _distance
+
+    private val _calorie = MutableLiveData<Double>()
+    val calorie: LiveData<Double> get() = _calorie
+
     private val _nowLocation = MutableLiveData<LatLng>()
     val nowLocation: LiveData<LatLng> get() = _nowLocation
+
+    private val _fixDisplayBtn = MutableLiveData<LatLng>()
+    val fixDisplayBtn: LiveData<LatLng> get() = _fixDisplayBtn
+
+    private val _setNowBtn = MutableLiveData<Location>()
+    val setNowBtn: LiveData<Location> get() = _setNowBtn
 
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
@@ -35,18 +50,25 @@ class MainStartViewModel(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
 
+    private val _step = MutableLiveData<Int>(0)
+    val step: LiveData<Int> get() = _step
+
     private var _second = 0
     private var _minute = 0
     private var _hour = 0
     private var second = ""
     private var minute = ""
     private var hour = ""
+    private var calorieHap = 0.0
+    private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
+    private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
+    private val locationData = ArrayList<LatLng>()
+    private var distanceHap : Double = 0.0
 
 
     // 맨처음 위치 받아와서 넣기.
-    fun repeatCallLocation(){
-        Log.e(javaClass.simpleName, "repeatCallLocation")
-        object: LocationCallback() {
+    fun repeatCallLocation() {
+        object : LocationCallback() {
             override fun onLocationAvailability(p0: LocationAvailability) {
                 super.onLocationAvailability(p0)
             }
@@ -54,7 +76,9 @@ class MainStartViewModel(
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
+                    Log.e(javaClass.simpleName, "location : $location")
                     _location.add(location)
+                    _setNowBtn.value = location
                 }
             }
         }.also {
@@ -62,14 +86,12 @@ class MainStartViewModel(
         }
     }
 
-    //
+
     fun setLatLng(value: LatLng) {
-        Log.e(javaClass.simpleName, "setLatLng")
-
         _latLng.add(value)
-
         val now = LatLng(value.latitude, value.longitude)
-        _nowLocation.value = now
+        _fixDisplayBtn.value = now
+        calculatorDistance(value)
     }
 
     fun myTime(){
@@ -110,7 +132,43 @@ class MainStartViewModel(
 
     fun myStep(){
         Log.e(javaClass.simpleName, "myStep")
-//        return MySensorRepo.senSor(MyApplication.getApplication())
+        MySensorRepo.senSor(MyApplication.getApplication())
+        MySensorRepo.notify.observeForever {
+            _step.value?.let {
+                _step.value = it + 1
+            }
+        }
+    }
+
+
+    fun calculatorDistance(value:LatLng){
+        locationData.add(value)
+        if(locationData.size > 1){
+            if(locationData.size == 2) {
+                beforeLocate.latitude = locationData.first().latitude
+                beforeLocate.longitude = locationData.first().longitude
+            }
+            afterLocate.latitude= locationData.last().latitude
+            afterLocate.longitude= locationData.last().longitude
+
+            var result = beforeLocate.distanceTo(afterLocate).toDouble()
+
+            if(result <= 2) result = 0.0
+            Log.e("TAG", " 거리 result : $result", )
+
+            distanceHap += result
+            _distance.value = distanceHap
+
+            beforeLocate.latitude = locationData.last().latitude
+            beforeLocate.longitude = locationData.last().longitude
+
+            if (result != 0.0){
+                Log.e("TAG", " 칼로리 호출", )
+                val myCalorie = Calorie().myCalorie()
+                calorieHap += myCalorie
+                _calorie.value = calorieHap
+            }
+        }
     }
 
 }
