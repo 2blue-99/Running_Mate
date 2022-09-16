@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 
@@ -51,9 +52,10 @@ object MyLocationRepo {
         }
 
         val request = com.google.android.gms.location.LocationRequest.create().apply {
+            Log.e("TAG", "이상한 곳에 들어왔다.: ", )
             this.priority = Priority.PRIORITY_HIGH_ACCURACY
-            this.interval = 750L
-            this.fastestInterval = 500L
+            this.interval = 2000L
+            this.fastestInterval = 2000L
         }.also {
             locationClient.requestLocationUpdates(it, callback, Looper.myLooper())
         }

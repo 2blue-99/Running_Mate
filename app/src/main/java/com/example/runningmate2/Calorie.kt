@@ -5,7 +5,7 @@ import com.example.runningmate2.repo.SharedPreferenceHelperImpl
 
 class Calorie {
     fun myCalorie() : Double{
-        Log.e("TAG", "칼로리 알고리즘 weight : ${SharedPreferenceHelperImpl().weight}")
+//        Log.e("TAG", "칼로리 알고리즘 weight : ${SharedPreferenceHelperImpl().weight}")
         val myWeight = SharedPreferenceHelperImpl().weight
         if(myWeight <= 50){
             return 0.17

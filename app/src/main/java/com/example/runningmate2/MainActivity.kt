@@ -23,7 +23,6 @@ import com.example.runningmate2.databinding.ActivityMainBinding
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.fragment.RecordFragment
 import com.example.runningmate2.fragment.ResultFragment
-import com.example.runningmate2.fragment.RunningFragment
 import com.example.runningmate2.room.AppDataBase
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity

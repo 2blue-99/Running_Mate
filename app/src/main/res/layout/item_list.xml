@@ -8,6 +8,7 @@
     android:layout_margin="3dp">
 
     <LinearLayout
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
@@ -29,7 +30,7 @@
             android:textSize="15dp" />
 
         <LinearLayout
-            android:layout_width="140dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:orientation="horizontal" />
 
