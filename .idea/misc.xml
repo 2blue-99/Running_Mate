@@ -24,8 +24,11 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_baseline_my_location_24.xml" value="0.2295" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_locateicon.xml" value="0.226" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.229" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_recodeicon.xml" value="0.1" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_twotone_location_on_24.xml" value="0.17" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/icon.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/my_button.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/recyclerview_borderline.xml" value="0.182" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/running_text_borderline.xml" value="0.2285" />
@@ -70,8 +73,12 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/menu.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/nav_menu.xml" value="0.3605128205128205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/menu/toolbar_nav_menu.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/appicon.xml" value="0.231" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/myIconicon.xml" value="0.231" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/myIconicon_round.xml" value="0.231" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/mymyicon.xml" value="0.231" />
       </map>
     </option>
   </component>

@@ -52,7 +52,7 @@ object MySensorRepo: SensorEventListener {
         accel = accel * 0.9f + delta
 
         System.currentTimeMillis()
-        if(accel > 20){
+        if(accel > 15){
             var currentTime = System.currentTimeMillis()
             if(myShakeTime + skip > currentTime){
                 return
