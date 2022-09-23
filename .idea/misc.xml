@@ -25,9 +25,12 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_locateicon.xml" value="0.226" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_nownow.xml" value="0.2205" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_nownownow.xml" value="0.2205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.229" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_recodeicon.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_twotone_location_on_24.xml" value="0.17" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/ic_twotone_mylocate.xml" value="0.2205" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/icon.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/my_button.xml" value="0.1" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/drawable/recyclerview_borderline.xml" value="0.182" />
@@ -79,6 +82,7 @@
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/myIconicon.xml" value="0.231" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/myIconicon_round.xml" value="0.231" />
         <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/mymyicon.xml" value="0.231" />
+        <entry key="..\:/Users/PC01/Desktop/RunningMate2/app/src/main/res/mipmap-anydpi-v26/mymymymy.xml" value="0.1955" />
       </map>
     </option>
   </component>

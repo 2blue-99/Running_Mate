@@ -69,6 +69,5 @@ object MySensorRepo: SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        Log.e(javaClass.simpleName, "onAccuracyChanged: 정확도 변경 ", )
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.blue
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -41,6 +42,7 @@ class RecordGraphFragment : Fragment() {
         Log.e("TAG", "그래프 뷰 진입")
         mainViewModel.runningData.observe(viewLifecycleOwner){datas->
             if(datas.size>0){
+                binding.graphFrame.setBackgroundColor(Color.WHITE)
                 binding.noData.visibility = View.INVISIBLE
                 binding.chart.visibility = View.VISIBLE
                 var monday = 0F
@@ -124,8 +126,10 @@ class RecordGraphFragment : Fragment() {
                     Log.e("TAG", "Err")
                 }
             }else{
+//                binding.myConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
+                binding.graphFrame.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
                 binding.noData.visibility = View.VISIBLE
-                binding.noData.text = "달린 기록이 없어요.."
+                binding.noData.text = "통계 데이터가 없어요.."
                 binding.chart.visibility = View.INVISIBLE
             }
         }

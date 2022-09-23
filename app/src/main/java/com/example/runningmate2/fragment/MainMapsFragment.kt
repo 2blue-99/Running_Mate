@@ -2,6 +2,9 @@ package com.example.runningmate2.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -50,10 +53,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var start: Boolean = false
     private var myNowLati: Double? = null
     private var myNowLong: Double? = null
-    private var calorieHap = 0.0
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var weatherData: DomainWeather? = null
     private var static = false
+//    var end:Int = 0
 
 
     override fun onCreateView(
@@ -61,6 +64,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mainStartViewModel.end = 0
         Log.e(javaClass.simpleName, "onCreateView")
 //        _binding = FragmentMapsBinding.inflate(inflater, container, false)
 //        val view = binding.root
@@ -71,7 +75,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
                 mainStartViewModel.repeatCallLocation()
             else {
-                Toast.makeText(requireContext(), "위치 이용에 동의를 하셔야 이용 할 수 있다구 :)", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "위치 이용에 동의를 하셔야 이용 할 수 있습니다. :)", Toast.LENGTH_SHORT)
                     .show()
                 requireActivity().finish()
             }
@@ -88,6 +92,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         // start 버튼
         binding.startButton.setOnClickListener {
+//            mainStartViewModel.test()
             if (binding.startButton.text == "Start") {
                 Log.e(javaClass.simpleName, "Start 버튼 눌려짐")
                 val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
@@ -96,11 +101,12 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
                 //stop버튼
             } else {
+
                 Log.e(javaClass.simpleName, "stop 버튼 눌려짐")
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     val nowTime =
                         "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
-                    var dayOfWeek =
+                    val dayOfWeek =
                         when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK).toString()) {
                             "1" -> "일"
                             "2" -> "월"
@@ -120,9 +126,11 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     )
                     Log.e(javaClass.simpleName, "stop btn 토스 : $datas")
                     mainViewModel.insertDB(datas)
+                    mainStartViewModel.end = 1
                     (activity as MainActivity).changeFragment(2)
+//                    Log.e("TAG", "바꼈어요!! end: $end", )
                     start = false
-                    mainViewModel.clearWeatherData()
+
                 }
             }
         }
@@ -239,12 +247,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
-            if (locations.size > 0 && weatherData == null) {
-                Log.e(javaClass.simpleName, "날씨 호출")
-                mainViewModel.getWeatherData(locations.first())
-            }
-        }
         binding.startButton.visibility = View.INVISIBLE
         binding.followBtn.visibility = View.INVISIBLE
         mMap = googleMap
@@ -281,14 +283,15 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                         mMap.clear()
                         mainMarker = mMap.addMarker(
                             MarkerOptions()
-                                .position(it)
+                                .position(LatLng(it.latitude, it.longitude))
                                 .title("pureum")
                                 .alpha(0.9F)
-                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.mymyicon_foreground))
+                                .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
                         )
                     }
                 }
             }
+            if(!start){}
         }
 
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
@@ -301,7 +304,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                         .title("pureum")
                         .alpha(0.9F)
                     //여기에 내위치 마커 만들기
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.myicon))
+                        .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
                 )
                 if (latlngs.size > 1) {
                     val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
@@ -315,14 +318,23 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     if(result >= 0) {
                         mMap.addPolyline {
                             add(latlngs[latlngs.lastIndex - 1], latlngs[latlngs.lastIndex])
-                            width(30F)
+                            width(20F)
                             startCap(RoundCap())
                             endCap(RoundCap())
-                            color(Color.BLUE)
+                            color(Color.parseColor("#FA785F"))
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        return ContextCompat.getDrawable(context, vectorResId)?.run {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            draw(Canvas(bitmap))
+            BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
@@ -372,10 +384,11 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             nowPointMarker = mMap.addMarker(
                 MarkerOptions()
                     .position(startLocate)
-                    .title("pureum")
+                    .title("현재 위치")
                     .alpha(0.9F)
                 //여기에 내위치 마커 만들기
-//                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.jeahyon))
+//                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.newicon))
+                    .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
             )
         }
         binding.textConstraint.visibility = View.VISIBLE
@@ -389,7 +402,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         mainStartViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
             Log.e("TAG", "칼로리들어옴 $calorie")
             if (calorie.toString().length > 4)
-                binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorieHap)} Kcal"
+                binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
             else
                 binding.runingBox.runCaloreText.text = "$calorie Kcal"
 

@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:gravity="center"
-            android:text="Kcal"
+            android:text="Calorie"
             android:textColor="@color/white"
             android:textSize="17dp" />
 

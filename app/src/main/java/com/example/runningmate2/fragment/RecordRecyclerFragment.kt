@@ -1,5 +1,6 @@
 package com.example.runningmate2.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -52,10 +53,11 @@ class RecordRecyclerFragment : Fragment() {
 
             }
             else{
+                binding.recyclerConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
                 binding.myRecyclerView.minimumHeight = 875
                 adapter.datalist = data.map { it.toData() } as ArrayList<Data>
                 binding.noData.visibility=View.VISIBLE
-                binding.noData.text = "달린 기록이 없어요.."
+                binding.noData.text = "기록 데이터가 없어요.."
             }
 
         }

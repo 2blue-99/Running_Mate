@@ -12,6 +12,9 @@ import com.google.android.gms.location.*
 
 object MyLocationRepo {
 
+
+    var locationCallback : LocationCallback? = null
+
     fun nowLocation(application : Application, callback: LocationCallback) {
 
         // FusedLocationProvider : 개발자가 위치를 획득할 수 있음. Fused(결합된)
@@ -51,13 +54,12 @@ object MyLocationRepo {
             return
         }
 
+//        locationCallback?:return
+
         val request = com.google.android.gms.location.LocationRequest.create().apply {
-            Log.e("TAG", "이상한 곳에 들어왔다.: ", )
             this.priority = Priority.PRIORITY_HIGH_ACCURACY
-            this.interval = 2000L
-            this.fastestInterval = 2000L
-        }.also {
-            locationClient.requestLocationUpdates(it, callback, Looper.myLooper())
-        }
+            this.interval = 1500L
+            this.fastestInterval = 1500L
+        }.also {locationClient.requestLocationUpdates(it, callback, Looper.myLooper())}
     }
 }

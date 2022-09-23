@@ -8,9 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.runningmate2.MainActivity
+import com.example.runningmate2.MyApplication
 import com.example.runningmate2.databinding.FragmentResultBinding
+import com.example.runningmate2.repo.MyLocationRepo
 import com.example.runningmate2.repo.SharedPreferenceHelperImpl
 import com.example.runningmate2.viewModel.MainViewModel
+import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -49,5 +54,24 @@ class ResultFragment : Fragment() {
             }
 
         }
+
+//        object : LocationCallback() {
+//            override fun onLocationAvailability(p0: LocationAvailability) {
+//                super.onLocationAvailability(p0)
+//            }
+//
+//            override fun onLocationResult(p0: LocationResult) {
+//                super.onLocationResult(p0)
+//                p0.lastLocation?.let { location ->
+//                    Log.e(javaClass.simpleName, "result 로케이션! : $location")
+////                    _location.add(location)
+////                    _setNowBtn.value = location
+//                }
+//            }
+//        }.also {
+//            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
+//        }
+
+
     }
 }

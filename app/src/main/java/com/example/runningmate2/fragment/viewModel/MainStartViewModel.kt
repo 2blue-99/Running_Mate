@@ -8,8 +8,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.runningmate2.Calorie
 import com.example.runningmate2.MyApplication
+import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.repo.MyLocationRepo
 import com.example.runningmate2.repo.MySensorRepo
 import com.google.android.gms.location.LocationAvailability
@@ -33,9 +37,6 @@ class MainStartViewModel(
 
     private val _calorie = MutableLiveData<Double>()
     val calorie: LiveData<Double> get() = _calorie
-
-    private val _nowLocation = MutableLiveData<LatLng>()
-    val nowLocation: LiveData<LatLng> get() = _nowLocation
 
     private val _fixDisplayBtn = MutableLiveData<LatLng>()
     val fixDisplayBtn: LiveData<LatLng> get() = _fixDisplayBtn
@@ -64,6 +65,9 @@ class MainStartViewModel(
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val locationData = ArrayList<LatLng>()
     private var distanceHap : Double = 0.0
+//    private val workManager = WorkManager.getInstance(MyApplication.getApplication())
+//    private val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>().build()
+    var end = 0
 
 
     // 맨처음 위치 받아와서 넣기.
@@ -76,14 +80,15 @@ class MainStartViewModel(
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
-                    Log.e(javaClass.simpleName, "location : $location")
-                    _location.add(location)
-                    _setNowBtn.value = location
+                    if(end != 1) {
+                        Log.e("TAG", "end : $end")
+                        Log.e(javaClass.simpleName, "location : $location")
+                        _location.add(location)
+                        _setNowBtn.value = location
+                    }
                 }
             }
-        }.also {
-            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
-        }
+        }.also { MyLocationRepo.nowLocation(MyApplication.getApplication(), it) }
     }
 
 
@@ -140,7 +145,6 @@ class MainStartViewModel(
         }
     }
 
-
     fun calculatorDistance(value:LatLng){
         locationData.add(value)
         if(locationData.size > 1){
@@ -170,5 +174,14 @@ class MainStartViewModel(
             }
         }
     }
-
+//    fun test(){
+//        Log.e("TAG", " text호출!", )
+//        workManager
+//            .beginUniqueWork(
+//                "download",
+//                ExistingWorkPolicy.KEEP,
+//                downloadRequest
+//            )
+//            .enqueue()
+//    }
 }
