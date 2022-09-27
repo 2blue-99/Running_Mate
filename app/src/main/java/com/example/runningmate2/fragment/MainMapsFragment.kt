@@ -28,6 +28,7 @@ import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
+import com.example.runningmate2.repo.MySensorRepo
 import com.example.runningmate2.utils.EventObserver
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -341,6 +342,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("SetTextI18n")
     fun runningStart() {
+        mainStartViewModel.stepInit()
         start = true
         mMap.clear()
         (activity as MainActivity).changeFragment(1)

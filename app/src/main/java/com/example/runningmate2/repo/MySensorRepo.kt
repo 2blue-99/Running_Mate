@@ -18,12 +18,11 @@ object MySensorRepo: SensorEventListener {
     private var accel: Float = 0.0f
     private var accelCurrent: Float = 0.0f
     private var accelLast: Float = 0.0f
-    private lateinit var sensorManager: SensorManager
+    lateinit var sensorManager: SensorManager
     private var skip = 300L
     private var myShakeTime = 0L
     private val _notify =  MutableLiveData<Unit>()
     val notify: LiveData<Unit> get() = _notify
-    private var count = 0
 
     @SuppressLint("ServiceCast")
     fun senSor(application : Application){
@@ -53,12 +52,11 @@ object MySensorRepo: SensorEventListener {
 
         System.currentTimeMillis()
         if(accel > 15){
-            var currentTime = System.currentTimeMillis()
+            val currentTime = System.currentTimeMillis()
             if(myShakeTime + skip > currentTime){
                 return
             }
             myShakeTime = currentTime
-            count++
             notifySensorChange()
 
         }
@@ -69,5 +67,12 @@ object MySensorRepo: SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    fun kill(){
+        if(sensorManager != null){
+
+        }
+        sensorManager.unregisterListener(this)
     }
 }

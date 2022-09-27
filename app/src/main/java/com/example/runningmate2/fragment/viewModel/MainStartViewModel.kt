@@ -70,6 +70,10 @@ class MainStartViewModel(
     var end = 0
 
 
+    fun stepInit(){
+        MySensorRepo.kill()
+    }
+
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation() {
         object : LocationCallback() {
@@ -136,7 +140,6 @@ class MainStartViewModel(
     }
 
     fun myStep(){
-        Log.e(javaClass.simpleName, "myStep")
         MySensorRepo.senSor(MyApplication.getApplication())
         MySensorRepo.notify.observeForever {
             _step.value?.let {
