@@ -28,7 +28,6 @@ import com.example.domain.model.DomainWeather
 import com.example.runningmate2.*
 import com.example.runningmate2.databinding.FragmentMapsBinding
 import com.example.runningmate2.fragment.viewModel.MainStartViewModel
-import com.example.runningmate2.repo.MySensorRepo
 import com.example.runningmate2.utils.EventObserver
 import com.example.runningmate2.viewModel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -102,7 +101,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
                 //stop버튼
             } else {
-
                 Log.e(javaClass.simpleName, "stop 버튼 눌려짐")
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     val nowTime =
@@ -131,7 +129,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     (activity as MainActivity).changeFragment(2)
 //                    Log.e("TAG", "바꼈어요!! end: $end", )
                     start = false
-
+                    mainStartViewModel.stepInit()
                 }
             }
         }
@@ -342,7 +340,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("SetTextI18n")
     fun runningStart() {
-        mainStartViewModel.stepInit()
         start = true
         mMap.clear()
         (activity as MainActivity).changeFragment(1)

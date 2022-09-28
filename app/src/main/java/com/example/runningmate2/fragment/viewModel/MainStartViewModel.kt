@@ -1,12 +1,20 @@
 package com.example.runningmate2.fragment.viewModel
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -15,7 +23,6 @@ import com.example.runningmate2.Calorie
 import com.example.runningmate2.MyApplication
 import com.example.runningmate2.fragment.MainMapsFragment
 import com.example.runningmate2.repo.MyLocationRepo
-import com.example.runningmate2.repo.MySensorRepo
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -26,7 +33,7 @@ import kotlinx.coroutines.launch
 
 class MainStartViewModel(
     application: Application,
-) : AndroidViewModel(application){
+) : AndroidViewModel(application), SensorEventListener{
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
     private val _location = ListLiveData<Location>()
@@ -69,10 +76,15 @@ class MainStartViewModel(
 //    private val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>().build()
     var end = 0
 
+    private var accel: Float = 0.0f
+    private var accelCurrent: Float = 0.0f
+    private var accelLast: Float = 0.0f
+    lateinit var sensorManager: SensorManager
+    private var skip = 300L
+    private var myShakeTime = 0L
+    private val _notify =  MutableLiveData<Unit>()
+    val notify: LiveData<Unit> get() = _notify
 
-    fun stepInit(){
-        MySensorRepo.kill()
-    }
 
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation() {
@@ -140,12 +152,18 @@ class MainStartViewModel(
     }
 
     fun myStep(){
-        MySensorRepo.senSor(MyApplication.getApplication())
-        MySensorRepo.notify.observeForever {
+        senSor(MyApplication.getApplication())
+        notify.observeForever {
+            Log.e("TAG", "viewModel count: $it", )
             _step.value?.let {
-                _step.value = it + 1
+                Log.e("TAG", " _step.value : $it", )
+                _step.value = it+1
             }
         }
+    }
+
+    fun stepInit(){
+        killSensor()
     }
 
     fun calculatorDistance(value:LatLng){
@@ -177,14 +195,54 @@ class MainStartViewModel(
             }
         }
     }
-//    fun test(){
-//        Log.e("TAG", " text호출!", )
-//        workManager
-//            .beginUniqueWork(
-//                "download",
-//                ExistingWorkPolicy.KEEP,
-//                downloadRequest
-//            )
-//            .enqueue()
-//    }
+
+    @SuppressLint("ServiceCast")
+    fun senSor(application : Application){
+        Log.e(javaClass.simpleName, "senSor")
+        sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        accel = 10f
+        accelCurrent = SensorManager.GRAVITY_EARTH
+        accelLast = SensorManager.GRAVITY_EARTH
+
+        sensorManager.registerListener(this, sensorManager
+            .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
+
+    }
+
+
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val x:Float = event?.values?.get(0) as Float
+        val y:Float = event?.values?.get(1) as Float
+        val z:Float = event?.values?.get(2) as Float
+
+        accelLast = accelCurrent
+        accelCurrent = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+
+        val delta:Float = accelCurrent - accelLast
+
+        accel = accel * 0.9f + delta
+
+        System.currentTimeMillis()
+        if(accel > 15){
+            val currentTime = System.currentTimeMillis()
+            if(myShakeTime + skip > currentTime){
+                return
+            }
+            myShakeTime = currentTime
+            notifySensorChange()
+
+        }
+    }
+
+    private fun notifySensorChange() {
+        _notify.value = Unit
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    fun killSensor(){
+        sensorManager.unregisterListener(this)
+    }
 }
