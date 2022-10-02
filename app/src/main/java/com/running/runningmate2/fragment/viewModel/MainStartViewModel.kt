@@ -140,6 +140,7 @@ class MainStartViewModel(
                 }else{
                     hour = "$_hour"
                 }
+//                Log.e("TAG", "myTime: ${_time.value}")
                 _time.value = "$hour:$minute:$second"
             }
         }

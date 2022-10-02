@@ -1,5 +1,7 @@
 package com.running.runningmate2.viewModel
 
+import android.annotation.SuppressLint
+import android.icu.util.LocaleData
 import android.location.Location
 import android.os.Build
 import android.util.Log
@@ -26,7 +28,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MainViewModel : ViewModel(){
     private val _getWeatherData = MutableLiveData<DomainWeather?>()
@@ -48,9 +55,11 @@ class MainViewModel : ViewModel(){
     private val helper: SharedPreferenceHelper = SharedPreferenceHelperImpl()
 
 
+    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     fun createRequestParams(myLocation:Location?): HashMap<String, String> {
         val now = LocalDateTime.now()
+        Log.e("TAG", "now : $now", )
         val baseTime = when {
             now.hour > 11 -> {
                 if (now.minute < 40) "${now.hour - 1}00"
@@ -70,30 +79,37 @@ class MainViewModel : ViewModel(){
             }
             else -> "0000"
         }
-//        val baseTime2 = LocalDateTime
 
         val baseDate = if (now.hour != 0) {
-            when {
-                now.monthValue > 10 && now.dayOfMonth > 10 -> "${now.year}${now.monthValue}${now.dayOfMonth}"
-                now.monthValue > 10 && now.dayOfMonth < 10 -> "${now.year}${now.monthValue}0${now.dayOfMonth}"
-                now.monthValue < 10 && now.dayOfMonth > 10 -> "${now.year}0${now.monthValue}${now.dayOfMonth}"
-                now.monthValue < 10 && now.dayOfMonth < 10 -> "${now.year}0${now.monthValue}0${now.dayOfMonth}"
-                else -> "20220801"
-            }
+            LocalDate.now().toString().replace("-","")
+//            when {
+//
+//                now.monthValue > 10 && now.dayOfMonth > 10 -> "${now.year}${now.monthValue}${now.dayOfMonth}"
+//                now.monthValue > 10 && now.dayOfMonth < 10 -> "${now.year}${now.monthValue}0${now.dayOfMonth}"
+//                now.monthValue < 10 && now.dayOfMonth > 10 -> "${now.year}0${now.monthValue}${now.dayOfMonth}"
+//                now.monthValue < 10 && now.dayOfMonth < 10 -> "${now.year}0${now.monthValue}0${now.dayOfMonth}"
+//                else -> "20220801"
+//            }
         } else {
-            val date =
-                if (baseTime != "0000") now.minusDays(1)
-                else now
-
-            when {
-                date.monthValue > 10 && date.dayOfMonth > 10 -> "${date.year}${date.monthValue}${date.dayOfMonth}"
-                date.monthValue > 10 && date.dayOfMonth < 10 -> "${date.year}${date.monthValue}0${date.dayOfMonth}"
-                date.monthValue < 10 && date.dayOfMonth > 10 -> "${date.year}0${date.monthValue}${date.dayOfMonth}"
-                date.monthValue < 10 && date.dayOfMonth < 10 -> "${date.year}0${date.monthValue}0${date.dayOfMonth}"
-                else -> "20220801"
-            }
+            val myDate = SimpleDateFormat("yyyy/MM/dd")
+            val calendar = Calendar.getInstance()
+            val today = Date()
+            calendar.time = today
+            calendar.add(Calendar.DATE, -1)
+            myDate.format(calendar.time).replace("/","")
+//            val date =
+//                if (baseTime != "0000") now.minusDays(1)
+//                else now
+//
+//            when {
+//                date.monthValue > 10 && date.dayOfMonth > 10 -> "${date.year}${date.monthValue}${date.dayOfMonth}"
+//                date.monthValue > 10 && date.dayOfMonth < 10 -> "${date.year}${date.monthValue}0${date.dayOfMonth}"
+//                date.monthValue < 10 && date.dayOfMonth > 10 -> "${date.year}0${date.monthValue}${date.dayOfMonth}"
+//                date.monthValue < 10 && date.dayOfMonth < 10 -> "${date.year}0${date.monthValue}0${date.dayOfMonth}"
+//                else -> "20220801"
+//            }
         }
-
+        Log.e("TAG", "baseDate: $baseDate", )
         val locate = myLocation?.let { TransLocationUtil.convertLocation(it) }
         Log.e(javaClass.simpleName, "locate?.nx: ${locate?.nx}, locate?.ny: ${locate?.ny}")
 
@@ -127,8 +143,6 @@ class MainViewModel : ViewModel(){
     init {
         readDB()
     }
-
-
 
     ///데이터저장
     suspend fun insertDB(runningData: RunningData){
