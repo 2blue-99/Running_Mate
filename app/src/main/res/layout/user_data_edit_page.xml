@@ -44,7 +44,7 @@
         android:gravity="center"
         android:inputType="number"
         android:minEms="3"
-        android:maxLength="3"
+        android:maxLength="5"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
