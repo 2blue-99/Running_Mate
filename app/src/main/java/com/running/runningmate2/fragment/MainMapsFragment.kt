@@ -289,7 +289,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
-            if(!start){}
         }
 
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->

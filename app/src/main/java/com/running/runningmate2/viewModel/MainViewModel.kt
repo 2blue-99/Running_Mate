@@ -5,6 +5,7 @@ import android.icu.util.LocaleData
 import android.location.Location
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.running.data.RepoImpl
 import com.running.domain.model.DomainWeather
+import com.running.runningmate2.MyApplication
 import com.running.runningmate2.RunningData
 import com.running.runningmate2.TransLocationUtil
 import com.running.runningmate2.recyclerView.Data
@@ -82,14 +84,6 @@ class MainViewModel : ViewModel(){
 
         val baseDate = if (now.hour != 0) {
             LocalDate.now().toString().replace("-","")
-//            when {
-//
-//                now.monthValue > 10 && now.dayOfMonth > 10 -> "${now.year}${now.monthValue}${now.dayOfMonth}"
-//                now.monthValue > 10 && now.dayOfMonth < 10 -> "${now.year}${now.monthValue}0${now.dayOfMonth}"
-//                now.monthValue < 10 && now.dayOfMonth > 10 -> "${now.year}0${now.monthValue}${now.dayOfMonth}"
-//                now.monthValue < 10 && now.dayOfMonth < 10 -> "${now.year}0${now.monthValue}0${now.dayOfMonth}"
-//                else -> "20220801"
-//            }
         } else {
             val myDate = SimpleDateFormat("yyyy/MM/dd")
             val calendar = Calendar.getInstance()
@@ -97,17 +91,6 @@ class MainViewModel : ViewModel(){
             calendar.time = today
             calendar.add(Calendar.DATE, -1)
             myDate.format(calendar.time).replace("/","")
-//            val date =
-//                if (baseTime != "0000") now.minusDays(1)
-//                else now
-//
-//            when {
-//                date.monthValue > 10 && date.dayOfMonth > 10 -> "${date.year}${date.monthValue}${date.dayOfMonth}"
-//                date.monthValue > 10 && date.dayOfMonth < 10 -> "${date.year}${date.monthValue}0${date.dayOfMonth}"
-//                date.monthValue < 10 && date.dayOfMonth > 10 -> "${date.year}0${date.monthValue}${date.dayOfMonth}"
-//                date.monthValue < 10 && date.dayOfMonth < 10 -> "${date.year}0${date.monthValue}0${date.dayOfMonth}"
-//                else -> "20220801"
-//            }
         }
         Log.e("TAG", "baseDate: $baseDate", )
         val locate = myLocation?.let { TransLocationUtil.convertLocation(it) }
@@ -129,13 +112,16 @@ class MainViewModel : ViewModel(){
     fun getWeatherData(location: Location) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
+//                throw Exception("강제 에러")
                 val data = createRequestParams(location)
-//                Log.e(javaClass.simpleName, "data: $data", )
                 myDataList = RepoImpl().RepoGetWeatherData(data)
                 _getWeatherData.postValue(myDataList)
-//                Log.e(javaClass.simpleName, "get_Data: $myDataList", )
+
             }catch (e:Exception){
                 Log.e(javaClass.simpleName, "My Err: ${e.localizedMessage}", )
+                val fakeData = DomainWeather(temperatures=0.0.toString(), rn1=0.0.toString(), eastWestWind=0.0.toString(), southNorthWind=0.0.toString(), humidity=0.0.toString(), rainType=0.0.toString(), windDirection=0.0.toString(), windSpeed=0.0.toString())
+                _getWeatherData.postValue(fakeData)
+//                _error.value = Event("현재 날씨 데이터를 이용하실 수 없습니다.")
             }
         }
     }
