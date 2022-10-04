@@ -249,48 +249,56 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         binding.followBtn.visibility = View.INVISIBLE
         mMap = googleMap
 
-        mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
-            if (locations.size > 0 && weatherData == null) {
-                Log.e(javaClass.simpleName, "날씨 호출")
-                mainViewModel.getWeatherData(locations.first())
-                binding.weatherView.weatherTem
-            }
-
-            if (locations.isNotEmpty()) {
-                binding.loadingText.visibility = View.INVISIBLE
-
-                if (!start) {
-                    binding.startButton.visibility = View.VISIBLE
+        if (view != null) {
+            mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
+                if (locations.size > 0 && weatherData == null) {
+                    Log.e(javaClass.simpleName, "날씨 호출")
+                    mainViewModel.getWeatherData(locations.first())
+                    binding.weatherView.weatherTem
                 }
 
-                binding.setBtn.visibility = View.VISIBLE
+                if (locations.isNotEmpty()) {
+                    binding.loadingText.visibility = View.INVISIBLE
 
-                myNowLati = locations.last().latitude
-                myNowLong = locations.last().longitude
+                    if (!start) {
+                        binding.startButton.visibility = View.VISIBLE
+                    }
 
-                LatLng(locations.last().latitude, locations.last().longitude).also {
-                    // start됐을때 setLatLng함수에 값 넣고 이쪽 함수는 끝
-                    if (start) {
-                        Log.e(javaClass.simpleName, "observe setLatLng start")
-                        mainStartViewModel.setLatLng(it)
-                    } else {
-                        // 첫번쨰 값만 카메라 이동
-                        if (locations.size == 1) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
+                    binding.setBtn.visibility = View.VISIBLE
+
+                    myNowLati = locations.last().latitude
+                    myNowLong = locations.last().longitude
+
+                    LatLng(locations.last().latitude, locations.last().longitude).also {
+                        // start됐을때 setLatLng함수에 값 넣고 이쪽 함수는 끝
+                        if (start) {
+                            Log.e(javaClass.simpleName, "observe setLatLng start")
+                            mainStartViewModel.setLatLng(it)
+                        } else {
+                            // 첫번쨰 값만 카메라 이동
+                            if (locations.size == 1) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
+                            }
+                            mMap.clear()
+                            mainMarker = mMap.addMarker(
+                                MarkerOptions()
+                                    .position(LatLng(it.latitude, it.longitude))
+                                    .title("pureum")
+                                    .alpha(0.9F)
+                                    .icon(
+                                        bitmapDescriptorFromVector(
+                                            requireContext(),
+                                            R.drawable.ic_twotone_mylocate
+                                        )
+                                    )
+                            )
                         }
-                        mMap.clear()
-                        mainMarker = mMap.addMarker(
-                            MarkerOptions()
-                                .position(LatLng(it.latitude, it.longitude))
-                                .title("pureum")
-                                .alpha(0.9F)
-                                .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
-                        )
                     }
                 }
             }
         }
 
+        if(view!=null){
         mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
             if (latlngs.isNotEmpty()) {
 //                nowPointMarker?.remove()
@@ -323,6 +331,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+        }
         }
     }
 
