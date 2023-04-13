@@ -48,7 +48,6 @@ class RecordRecyclerFragment : Fragment() {
             if(data.size > 0){
                 binding.myRecyclerView.minimumHeight = 875
                 binding.noData.visibility=View.INVISIBLE
-                Log.e("TAG", "데이터 넘어온거: $data", )
                 adapter.datalist = data.map { it.toData() } as ArrayList<Data>
 
             }

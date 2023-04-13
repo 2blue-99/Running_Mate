@@ -33,7 +33,6 @@ class RecordGraphFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("TAG", "그래프 뷰 진입")
         mainViewModel.runningData.observe(viewLifecycleOwner){datas->
             if(datas.size>0){
                 binding.graphFrame.setBackgroundColor(Color.WHITE)
@@ -62,15 +61,9 @@ class RecordGraphFragment : Fragment() {
                     }
                     entries.add(BarEntry(1F,monday))
                     entries.add(BarEntry(2F,tuesday))
-
                     entries.add(BarEntry(3F,wednesday))
-//                    entries.add(BarEntry(3F,0.2F))
-
                     entries.add(BarEntry(4F,thursday))
-//                    entries.add(BarEntry(4F,0.3F))
-
                     entries.add(BarEntry(5F,friday))
-//                    entries.add(BarEntry(5F,0.1F))
                     entries.add(BarEntry(6F,saturday))
                     entries.add(BarEntry(7F,sunday))
 
@@ -106,7 +99,6 @@ class RecordGraphFragment : Fragment() {
 
                     val set = BarDataSet(entries,"DataSet") // 데이터셋 초기화
                     set.color = ContextCompat.getColor(MyApplication.getApplication(), R.color.orange) // 바 그래프 색 설정
-
                     val dataSet :ArrayList<IBarDataSet> = ArrayList()
                     dataSet.add(set)
                     val data = BarData(dataSet)
@@ -120,22 +112,18 @@ class RecordGraphFragment : Fragment() {
                     Log.e("TAG", "Err")
                 }
             }else{
-//                binding.myConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
                 binding.graphFrame.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
                 binding.noData.visibility = View.VISIBLE
                 binding.noData.text = "통계 데이터가 없어요.."
                 binding.chart.visibility = View.INVISIBLE
             }
         }
-//        entries.add(BarEntry(6.0f,30.0f))
-//        entries.add(BarEntry(7.0f,90.0f))
         return binding.root
     }
 
 
     inner class MyXAxisFormatter : ValueFormatter() {
         private val days = arrayOf("월","화","수","목","금","토","일")
-//        private val days = dateList
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }

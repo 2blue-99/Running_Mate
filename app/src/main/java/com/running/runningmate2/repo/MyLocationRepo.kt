@@ -12,9 +12,6 @@ import com.google.android.gms.location.*
 
 object MyLocationRepo {
 
-
-    var locationCallback : LocationCallback? = null
-
     fun nowLocation(application : Application, callback: LocationCallback) {
 
         // FusedLocationProvider : 개발자가 위치를 획득할 수 있음. Fused(결합된)
@@ -54,7 +51,6 @@ object MyLocationRepo {
             return
         }
 
-//        locationCallback?:return
 
         val request = com.google.android.gms.location.LocationRequest.create().apply {
             this.priority = Priority.PRIORITY_HIGH_ACCURACY

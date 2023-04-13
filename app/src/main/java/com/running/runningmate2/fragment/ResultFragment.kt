@@ -16,10 +16,8 @@ class ResultFragment : Fragment() {
     private var _binding: FragmentResultBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
-    val currentTime = LocalDateTime.now()
 
     override fun onCreateView(
-        //뷰 만들기/
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -28,9 +26,7 @@ class ResultFragment : Fragment() {
         mainViewModel.readDB()
         binding.backBtn.setOnClickListener{
             (activity as MainActivity).changeFragment(3)
-            Log.e(javaClass.simpleName, "!! ResultFragment", )
         }
-        Log.e(javaClass.simpleName, "time: $currentTime", )
         return view
     }
 
@@ -47,24 +43,5 @@ class ResultFragment : Fragment() {
             }
 
         }
-
-//        object : LocationCallback() {
-//            override fun onLocationAvailability(p0: LocationAvailability) {
-//                super.onLocationAvailability(p0)
-//            }
-//
-//            override fun onLocationResult(p0: LocationResult) {
-//                super.onLocationResult(p0)
-//                p0.lastLocation?.let { location ->
-//                    Log.e(javaClass.simpleName, "result 로케이션! : $location")
-////                    _location.add(location)
-////                    _setNowBtn.value = location
-//                }
-//            }
-//        }.also {
-//            MyLocationRepo.nowLocation(MyApplication.getApplication(), it)
-//        }
-
-
     }
 }

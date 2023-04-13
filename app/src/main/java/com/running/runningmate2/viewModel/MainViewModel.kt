@@ -92,9 +92,7 @@ class MainViewModel : ViewModel(){
             calendar.add(Calendar.DATE, -1)
             myDate.format(calendar.time).replace("/","")
         }
-        Log.e("TAG", "baseDate: $baseDate", )
         val locate = myLocation?.let { TransLocationUtil.convertLocation(it) }
-        Log.e(javaClass.simpleName, "locate?.nx: ${locate?.nx}, locate?.ny: ${locate?.ny}")
 
         return HashMap<String, String>().apply {
             put("serviceKey", com.running.runningmate2.BuildConfig.SERVICE_KEY)
@@ -112,16 +110,13 @@ class MainViewModel : ViewModel(){
     fun getWeatherData(location: Location) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-//                throw Exception("강제 에러")
                 val data = createRequestParams(location)
                 myDataList = RepoImpl().RepoGetWeatherData(data)
                 _getWeatherData.postValue(myDataList)
 
             }catch (e:Exception){
-                Log.e(javaClass.simpleName, "My Err: ${e.localizedMessage}", )
                 val fakeData = DomainWeather(temperatures=0.0.toString(), rn1=0.0.toString(), eastWestWind=0.0.toString(), southNorthWind=0.0.toString(), humidity=0.0.toString(), rainType=0.0.toString(), windDirection=0.0.toString(), windSpeed=0.0.toString())
                 _getWeatherData.postValue(fakeData)
-//                _error.value = Event("현재 날씨 데이터를 이용하실 수 없습니다.")
             }
         }
     }
@@ -130,17 +125,11 @@ class MainViewModel : ViewModel(){
         readDB()
     }
 
-    ///데이터저장
     suspend fun insertDB(runningData: RunningData){
         if(dao == null){
             return
         }
-//        Log.e(
-//            javaClass.simpleName,
-//            "insertDB: ${Entity(LocalDateTime.now(),runningData.time,runningData.distance,runningData.calorie,runningData.step)}"
-//        )
         dao?.insertData(Entity(0,runningData.dayOfWeek,runningData.now,runningData.time,runningData.distance,runningData.calorie,runningData.step))
-//        myCount++
     }
 
     fun readDB(){
@@ -149,24 +138,17 @@ class MainViewModel : ViewModel(){
         }
         _runningData.clear()
         dao?.readAllData()?.onEach {
-            Log.e(javaClass.simpleName, "여기는. 룸 읽기 : $it", )
             _runningData.clear()
             _runningData.addAll(it)
         }?.launchIn(viewModelScope)
     }
 
     suspend fun deleteDB(data: Data){
-//        dao?.deleteData(Entity(runningData.time,runningData.distance,runningData.calorie,runningData.step))
         dao?.deleteData(data.id)
     }
 
     fun getDao(db : AppDataBase){
         dao = db.getDao()
-    }
-
-    // stop버튼을 눌렀을때 날씨정보를 새로 가져오기 위해 null로 지정
-    fun clearWeatherData() {
-        _getWeatherData.value = null
     }
 
     /**
@@ -178,7 +160,6 @@ class MainViewModel : ViewModel(){
             helper.weight = weight.toInt()
             _success.value = Event(Unit)
         } catch (t: Throwable) {
-            Log.e(javaClass.simpleName, "setWeightLocalStorage: ${t.localizedMessage}", )
             _error.value = Event("실수 형태로 입력 해라...")
         }
     }
@@ -188,13 +169,4 @@ class MainViewModel : ViewModel(){
     fun getWeight(): Int {
         return helper.weight
     }
-
-    /**
-     * Test 용도.
-     * SharedPreference Clear
-     */
-    fun clearLocalStorage() {
-        helper.clear()
-    }
-
 }

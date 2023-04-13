@@ -22,13 +22,11 @@ class RecordFragment : Fragment() {
     }
     private val adapter = Adapter()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         mainViewModel.readDB()
-
         parentFragmentManager
             .beginTransaction()
             .replace(binding.graphFrameLayout.id, RecordGraphFragment())
@@ -43,8 +41,6 @@ class RecordFragment : Fragment() {
                 binding.changeBotton.text = "통계보기"
                 binding.recyclerFrameLayout.visibility = View.VISIBLE
                 binding.graphFrameLayout.visibility = View.INVISIBLE
-
-//                binding.recordeFrameLayout.layout
             } else {
                 parentFragmentManager
                     .beginTransaction()

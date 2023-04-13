@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-//        Log.e(javaClass.simpleName, "onCreate : start")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if(backPressTime + 2000 > System.currentTimeMillis()){
             super.onBackPressed()
-            finish()//액티비티 종료
+            finish()
         }else{
             Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
         }

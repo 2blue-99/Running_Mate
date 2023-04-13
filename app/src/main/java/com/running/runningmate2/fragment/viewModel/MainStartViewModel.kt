@@ -83,15 +83,11 @@ class MainStartViewModel(
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation() {
         object : LocationCallback() {
-            override fun onLocationAvailability(p0: LocationAvailability) {
-                super.onLocationAvailability(p0)
-            }
 
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
                     if(end != 1) {
-                        Log.e("TAG", "end : $end")
                         Log.e(javaClass.simpleName, "location : $location")
                         _location.add(location)
                         _setNowBtn.value = location
@@ -140,7 +136,6 @@ class MainStartViewModel(
                 }else{
                     hour = "$_hour"
                 }
-//                Log.e("TAG", "myTime: ${_time.value}")
                 _time.value = "$hour:$minute:$second"
             }
         }
@@ -183,7 +178,6 @@ class MainStartViewModel(
             beforeLocate.longitude = locationData.last().longitude
 
             if (result != 0.0){
-                Log.e("TAG", " 칼로리 호출", )
                 val myCalorie = Calorie().myCalorie()
                 calorieHap += myCalorie
                 _calorie.value = calorieHap
@@ -193,7 +187,6 @@ class MainStartViewModel(
 
     @SuppressLint("ServiceCast")
     fun senSor(application : Application){
-        Log.e(javaClass.simpleName, "senSor")
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         accel = 10f

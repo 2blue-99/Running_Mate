@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface Dao {
-    //데이터 엑세스 오브젝트
-    //데이터를 엑세스 할 수 있는 공간(데이터 가공)
-
     @Insert
     suspend fun insertData(userData : Entity)
 
