@@ -17,7 +17,7 @@ class APIImpl: API {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .build() // Retrofit Object Create
+            .build()
             .create(API::class.java).getWeatherData(data)
     }
 
