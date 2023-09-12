@@ -66,8 +66,6 @@ class MainStartViewModel(
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val locationData = ArrayList<LatLng>()
     private var distanceHap : Double = 0.0
-//    private val workManager = WorkManager.getInstance(MyApplication.getApplication())
-//    private val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>().build()
     var end = 0
 
     private var accel: Float = 0.0f

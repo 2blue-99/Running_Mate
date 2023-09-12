@@ -73,8 +73,11 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
                 mainStartViewModel.repeatCallLocation()
             else {
-                Toast.makeText(requireContext(), "위치 이용에 동의를 하셔야 이용 할 수 있습니다. :)", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(
+                    requireContext(),
+                    "위치 이용에 동의를 하셔야 이용 할 수 있습니다. :)",
+                    Toast.LENGTH_SHORT
+                ).show()
                 requireActivity().finish()
             }
         }
@@ -282,45 +285,51 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        if(view!=null){
-        mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
-            if (latlngs.isNotEmpty()) {
-                nowPointMarker?.remove()
-                nowPointMarker = mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(latlngs.last().latitude, latlngs.last().longitude))
-                        .title("pureum")
-                        .alpha(0.9F)
-                    //여기에 내위치 마커 만들기
-                        .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
-                )
-                if (latlngs.size > 1) {
-                    val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
-                    val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
-                    beforeLocate.latitude = latlngs[latlngs.lastIndex-1].latitude
-                    beforeLocate.longitude = latlngs[latlngs.lastIndex-1].longitude
-                    afterLocate.latitude = latlngs[latlngs.lastIndex].latitude
-                    afterLocate.longitude = latlngs[latlngs.lastIndex].longitude
-                    val result = beforeLocate.distanceTo(afterLocate).toDouble()
-                    if(result >= 0) {
-                        mMap.addPolyline {
-                            add(latlngs[latlngs.lastIndex - 1], latlngs[latlngs.lastIndex])
-                            width(20F)
-                            startCap(RoundCap())
-                            endCap(RoundCap())
-                            color(Color.parseColor("#FA785F"))
+        if (view != null) {
+            mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
+                if (latlngs.isNotEmpty()) {
+                    nowPointMarker?.remove()
+                    nowPointMarker = mMap.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(latlngs.last().latitude, latlngs.last().longitude))
+                            .title("pureum")
+                            .alpha(0.9F)
+                            //여기에 내위치 마커 만들기
+                            .icon(
+                                bitmapDescriptorFromVector(
+                                    requireContext(),
+                                    R.drawable.ic_twotone_mylocate
+                                )
+                            )
+                    )
+                    if (latlngs.size > 1) {
+                        val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
+                        val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
+                        beforeLocate.latitude = latlngs[latlngs.lastIndex - 1].latitude
+                        beforeLocate.longitude = latlngs[latlngs.lastIndex - 1].longitude
+                        afterLocate.latitude = latlngs[latlngs.lastIndex].latitude
+                        afterLocate.longitude = latlngs[latlngs.lastIndex].longitude
+                        val result = beforeLocate.distanceTo(afterLocate).toDouble()
+                        if (result >= 0) {
+                            mMap.addPolyline {
+                                add(latlngs[latlngs.lastIndex - 1], latlngs[latlngs.lastIndex])
+                                width(20F)
+                                startCap(RoundCap())
+                                endCap(RoundCap())
+                                color(Color.parseColor("#FA785F"))
+                            }
                         }
                     }
                 }
             }
-        }
         }
     }
 
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(context, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val bitmap =
+                Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
             draw(Canvas(bitmap))
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
@@ -374,7 +383,12 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     .position(startLocate)
                     .title("현재 위치")
                     .alpha(0.9F)
-                    .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_twotone_mylocate))
+                    .icon(
+                        bitmapDescriptorFromVector(
+                            requireContext(),
+                            R.drawable.ic_twotone_mylocate
+                        )
+                    )
             )
         }
         binding.textConstraint.visibility = View.VISIBLE

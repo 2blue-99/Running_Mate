@@ -3,7 +3,36 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable-v24/color.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable-v24/ic_baseline_home_24.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/bottom_sheet_borderline.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic___weather_rain.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic___weather_suncloude.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_baseline_360_24.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_baseline_control_camera_24.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_baseline_directions_run_24.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_baseline_emoji_flags_24.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_outline_info_24.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/ic_twotone_mylocate.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/my_button.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/recyclerview_borderline.xml" value="0.2665" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/running_text_borderline.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_click_btn.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_dialog.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_recode_view.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_recycler_view.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_set_btn.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_set_userdata_view.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/drawable/shape_weather_view.xml" value="0.2365" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/activity_splash.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/fragment_record_graph.xml" value="0.10520833333333333" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/item_list.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/recode_page_box.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/running_page_databox.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/user_data_edit_page.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/PC01/Desktop/Android Practice/RunningMate/app/src/main/res/layout/weather_view.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RealRunning/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RealRunning/app/src/main/res/layout/activity_splash.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/PC01/Desktop/RealRunning/app/src/main/res/layout/dialog.xml" value="0.36614583333333334" />
