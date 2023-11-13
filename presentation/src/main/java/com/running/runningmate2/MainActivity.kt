@@ -1,23 +1,15 @@
 package com.running.runningmate2
 
-import android.Manifest
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.room.Room
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -27,6 +19,7 @@ import com.running.runningmate2.fragment.RecordFragment
 import com.running.runningmate2.fragment.ResultFragment
 import com.running.runningmate2.room.AppDataBase
 import com.running.runningmate2.viewModel.MainViewModel
+
 
 class MainActivity : AppCompatActivity() {
 

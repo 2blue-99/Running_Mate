@@ -6,7 +6,6 @@ import androidx.room.Room
 
 class MyApplication : Application() {
     init {
-
         instance = this
     }
 
