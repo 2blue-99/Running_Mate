@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment.viewModel
+package com.running.runningmate2.viewModel.fragmentViewModel
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -24,7 +24,7 @@ import com.running.runningmate2.utils.ListLiveData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainStartViewModel(
+class FragmentViewModel(
     application: Application,
 ) : AndroidViewModel(application), SensorEventListener{
 

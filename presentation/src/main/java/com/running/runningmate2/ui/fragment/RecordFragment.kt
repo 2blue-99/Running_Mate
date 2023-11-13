@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment
+package com.running.runningmate2.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,7 +11,7 @@ import com.running.runningmate2.databinding.FragmentRecordBinding
 import com.running.runningmate2.recyclerView.Adapter
 import com.running.runningmate2.model.Data
 import com.running.runningmate2.model.toData
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 class RecordFragment : Fragment() {
 

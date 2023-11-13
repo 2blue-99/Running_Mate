@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment
+package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,7 +13,7 @@ import com.running.runningmate2.databinding.FragmentRecordRecyclerBinding
 import com.running.runningmate2.recyclerView.Adapter
 import com.running.runningmate2.model.Data
 import com.running.runningmate2.model.toData
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 class RecordRecyclerFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()

@@ -1,11 +1,11 @@
-package com.running.data.util
+package com.running.data.mapper
 
 import android.util.Log
-import com.running.data.remote.model.Weather
+import com.running.data.remote.model.WeatherData
 import com.running.domain.model.DomainWeather
 
-class WeatherType {
-    fun getCategory(response : Weather.Response): DomainWeather {
+class WeatherTypeMapper {
+    fun getCategory(response : WeatherData.Response): DomainWeather {
         Log.e(javaClass.simpleName, "getCategory in, response : $response", )
         val temp = response.body.items.item.filter { it.category == "T1H" }.map { it.obsrValue }.first().toString()
         val rn1 = response.body.items.item.filter { it.category == "RN1" }.map { it.obsrValue }.first().toString()
@@ -21,5 +21,4 @@ class WeatherType {
         )
 
     }
-
 }

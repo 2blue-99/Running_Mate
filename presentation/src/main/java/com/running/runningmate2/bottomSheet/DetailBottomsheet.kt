@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.running.runningmate2.databinding.DialogBinding
 import com.running.runningmate2.model.Data
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 class DetailBottomsheet(
     val data: Data

@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment
+package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
@@ -19,7 +19,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 import com.running.runningmate2.databinding.FragmentRecordGraphBinding
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 
 class RecordGraphFragment : Fragment() {

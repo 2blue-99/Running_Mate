@@ -1,4 +1,4 @@
-package com.running.runningmate2.activity
+package com.running.runningmate2.ui.activity
 
 import android.content.Intent
 import android.os.Build
@@ -15,18 +15,18 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.running.runningmate2.R
 import com.running.runningmate2.databinding.ActivityMainBinding
-import com.running.runningmate2.fragment.MainMapsFragment
-import com.running.runningmate2.fragment.RecordFragment
-import com.running.runningmate2.fragment.ResultFragment
+import com.running.runningmate2.ui.fragment.MainMapsFragment
+import com.running.runningmate2.ui.fragment.RecordFragment
+import com.running.runningmate2.ui.fragment.ResultFragment
 import com.running.runningmate2.room.AppDataBase
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
-    // ActivityResultLauncher : 데이터를 받아옴, 이쪽ㅇ 페이지가 메모리 부족으로
-    // 소멸될 때 콜백을 분리하여 이 페이지가 사라져도 다시 호출 가능.
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()

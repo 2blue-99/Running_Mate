@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment
+package com.running.runningmate2.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.running.runningmate2.activity.MainActivity
+import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.databinding.FragmentResultBinding
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 class ResultFragment : Fragment() {
     private var _binding: FragmentResultBinding? = null

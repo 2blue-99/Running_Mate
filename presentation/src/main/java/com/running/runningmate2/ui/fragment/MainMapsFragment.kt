@@ -1,4 +1,4 @@
-package com.running.runningmate2.fragment
+package com.running.runningmate2.ui.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -31,15 +31,15 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.ktx.addPolyline
 import com.running.domain.model.DomainWeather
-import com.running.runningmate2.activity.MainActivity
+import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 import com.running.runningmate2.model.RunningData
 import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
-import com.running.runningmate2.fragment.viewModel.MainStartViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.FragmentViewModel
 import com.running.runningmate2.utils.EventObserver
-import com.running.runningmate2.viewModel.MainViewModel
+import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import java.lang.Math.round
 import java.time.LocalDate
 import java.time.LocalTime
@@ -49,7 +49,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
     private var nowPointMarker: Marker? = null
-    private val mainStartViewModel: MainStartViewModel by viewModels()
+    private val fragmentViewModel: FragmentViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private val binding: FragmentMapsBinding by lazy {
         FragmentMapsBinding.inflate(layoutInflater)
@@ -66,13 +66,13 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        mainStartViewModel.end = 0
+    ): View {
+        fragmentViewModel.end = 0
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
-                mainStartViewModel.repeatCallLocation()
+                fragmentViewModel.repeatCallLocation()
             else {
                 Toast.makeText(
                     requireContext(),
@@ -122,10 +122,10 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                         binding.runingBox.runStepText.text.toString()
                     )
                     mainViewModel.insertDB(datas)
-                    mainStartViewModel.end = 1
+                    fragmentViewModel.end = 1
                     (activity as MainActivity).changeFragment(2)
                     start = false
-                    mainStartViewModel.stepInit()
+                    fragmentViewModel.stepInit()
                 }
             }
         }
@@ -221,18 +221,18 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             //시작 버튼 눌렀을 때
             if (start) {
                 Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                mainStartViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation = LatLng(locations.latitude - 0.0006, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
-                    mainStartViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
                 }
                 //시작 안 했을 때
             } else {
                 Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                mainStartViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation = LatLng(locations.latitude, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
-                    mainStartViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
                 }
             }
         }
@@ -242,7 +242,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
 
         if (view != null) {
-            mainStartViewModel.location.observe(viewLifecycleOwner) { locations ->
+            fragmentViewModel.location.observe(viewLifecycleOwner) { locations ->
                 if (locations.size > 0 && weatherData == null) {
                     mainViewModel.getWeatherData(locations.first())
                     binding.weatherView.weatherTem
@@ -262,7 +262,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
                     LatLng(locations.last().latitude, locations.last().longitude).also {
                         if (start) {
-                            mainStartViewModel.setLatLng(it)
+                            fragmentViewModel.setLatLng(it)
                         } else {
                             if (locations.size == 1) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
@@ -287,7 +287,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         }
 
         if (view != null) {
-            mainStartViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
+            fragmentViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
                 if (latlngs.isNotEmpty()) {
                     nowPointMarker?.remove()
                     nowPointMarker = mMap.addMarker(
@@ -342,15 +342,15 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         start = true
         mMap.clear()
         (activity as MainActivity).changeFragment(1)
-        mainStartViewModel.myTime()
-        mainStartViewModel.myStep()
+        fragmentViewModel.myTime()
+        fragmentViewModel.myStep()
 
         //이동고정 버튼
         binding.followBtn.visibility = View.VISIBLE
         binding.followBtn.setOnClickListener {
             if (!static) {
                 Toast.makeText(requireContext(), "화면 고정 기능 ON", Toast.LENGTH_SHORT).show()
-                mainStartViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
+                fragmentViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation =
                         LatLng(locations.latitude - 0.0003, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18F))
@@ -361,12 +361,12 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 static = true
             } else {
                 Toast.makeText(requireContext(), "화면 고정 기능 OFF", Toast.LENGTH_SHORT).show()
-                mainStartViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
+                fragmentViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation =
                         LatLng(locations.latitude - 0.0006, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
                 }
-                mainStartViewModel.fixDisplayBtn.removeObservers(viewLifecycleOwner)
+                fragmentViewModel.fixDisplayBtn.removeObservers(viewLifecycleOwner)
                 binding.followBtn.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.shape_set_btn)
                 static = false
@@ -394,13 +394,13 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         }
         binding.textConstraint.visibility = View.VISIBLE
 
-        mainStartViewModel.time.observe(viewLifecycleOwner) { time ->
+        fragmentViewModel.time.observe(viewLifecycleOwner) { time ->
             if (time != null) {
                 binding.runingBox.runTimeText.text = time
             }
         }
 
-        mainStartViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
+        fragmentViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
             Log.e("TAG", "칼로리들어옴 $calorie")
             if (calorie.toString().length > 4)
                 binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
@@ -409,13 +409,13 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         }
 
-        mainStartViewModel.distance.observe(viewLifecycleOwner) { distance ->
+        fragmentViewModel.distance.observe(viewLifecycleOwner) { distance ->
             if (distance != null) {
                 binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
             }
         }
 
-        mainStartViewModel.step.observe(viewLifecycleOwner) {
+        fragmentViewModel.step.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.runingBox.runStepText.text = "$it 걸음"
             }
