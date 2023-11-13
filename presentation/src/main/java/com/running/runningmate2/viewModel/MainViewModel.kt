@@ -1,22 +1,19 @@
 package com.running.runningmate2.viewModel
 
 import android.annotation.SuppressLint
-import android.icu.util.LocaleData
 import android.location.Location
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.running.data.RepoImpl
+import com.running.data.repoImpl.GetWeatherRepoImpl
 import com.running.domain.model.DomainWeather
-import com.running.runningmate2.MyApplication
-import com.running.runningmate2.RunningData
-import com.running.runningmate2.TransLocationUtil
-import com.running.runningmate2.recyclerView.Data
+import com.running.runningmate2.model.RunningData
+import com.running.runningmate2.utils.TransLocationUtil
+import com.running.runningmate2.model.Data
 import com.running.runningmate2.repo.SharedPreferenceHelper
 import com.running.runningmate2.repo.SharedPreferenceHelperImpl
 import com.running.runningmate2.room.AppDataBase
@@ -111,7 +108,7 @@ class MainViewModel : ViewModel(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val data = createRequestParams(location)
-                myDataList = RepoImpl().RepoGetWeatherData(data)
+                myDataList = GetWeatherRepoImpl().RepoGetWeatherData(data)
                 _getWeatherData.postValue(myDataList)
 
             }catch (e:Exception){

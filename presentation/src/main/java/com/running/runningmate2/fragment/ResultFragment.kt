@@ -1,16 +1,14 @@
 package com.running.runningmate2.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.running.runningmate2.MainActivity
+import com.running.runningmate2.activity.MainActivity
 import com.running.runningmate2.databinding.FragmentResultBinding
 import com.running.runningmate2.viewModel.MainViewModel
-import java.time.LocalDateTime
 
 class ResultFragment : Fragment() {
     private var _binding: FragmentResultBinding? = null

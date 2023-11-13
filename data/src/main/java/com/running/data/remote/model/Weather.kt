@@ -1,4 +1,4 @@
-package com.running.data.dto
+package com.running.data.remote.model
 
 data class Weather(
     val response: Response

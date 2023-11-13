@@ -1,4 +1,4 @@
-package com.running.runningmate2
+package com.running.runningmate2.activity
 
 import android.content.Intent
 import android.os.Build
@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.running.runningmate2.R
 import com.running.runningmate2.databinding.ActivityMainBinding
 import com.running.runningmate2.fragment.MainMapsFragment
 import com.running.runningmate2.fragment.RecordFragment

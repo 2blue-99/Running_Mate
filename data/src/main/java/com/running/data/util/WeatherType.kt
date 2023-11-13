@@ -1,6 +1,7 @@
-package com.running.data.dto
+package com.running.data.util
 
 import android.util.Log
+import com.running.data.remote.model.Weather
 import com.running.domain.model.DomainWeather
 
 class WeatherType {

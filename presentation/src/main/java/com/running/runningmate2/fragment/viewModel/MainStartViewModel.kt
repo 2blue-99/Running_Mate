@@ -14,12 +14,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
-import com.running.runningmate2.Calorie
-import com.running.runningmate2.MyApplication
+import com.running.runningmate2.utils.Calorie
+import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.repo.MyLocationRepo
 import com.running.runningmate2.utils.ListLiveData
 import kotlinx.coroutines.delay

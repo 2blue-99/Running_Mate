@@ -1,4 +1,4 @@
-package com.running.runningmate2
+package com.running.runningmate2.model
 
 data class RunningData(
     val dayOfWeek:String,

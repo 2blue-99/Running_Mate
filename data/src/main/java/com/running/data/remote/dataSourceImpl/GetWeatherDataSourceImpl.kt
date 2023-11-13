@@ -1,15 +1,16 @@
-package com.running.data.impl
+package com.running.data.remote.dataSourceImpl
 
 import android.util.Log
 import com.jaehyeon.data.exception.WeatherApiException
-import com.running.data.data_source.API
-import com.running.data.dto.Weather
-import com.running.data.dto.WeatherType
+import com.running.data.remote.dataSource.GetWeatherDataSource
+import com.running.data.remote.model.Weather
+import com.running.data.util.WeatherType
 import com.running.domain.model.DomainWeather
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class APIImpl: API {
+class GetWeatherDataSourceImpl:
+    GetWeatherDataSource {
 
     private val BASE_URL = com.running.data.BuildConfig.BASE_URL
 
@@ -18,7 +19,7 @@ class APIImpl: API {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(API::class.java).getWeatherData(data)
+            .create(GetWeatherDataSource::class.java).getWeatherData(data)
     }
 
     fun dataFilter(resource : Weather): DomainWeather {

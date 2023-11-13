@@ -1,21 +1,18 @@
-package com.running.runningmate2
+package com.running.runningmate2.bottomSheet
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.running.runningmate2.databinding.DialogBinding
-import com.running.runningmate2.recyclerView.Data
+import com.running.runningmate2.model.Data
 import com.running.runningmate2.viewModel.MainViewModel
 
 class DetailBottomsheet(

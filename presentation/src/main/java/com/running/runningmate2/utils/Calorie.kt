@@ -1,4 +1,4 @@
-package com.running.runningmate2
+package com.running.runningmate2.utils
 
 import com.running.runningmate2.repo.SharedPreferenceHelperImpl
 

@@ -1,4 +1,4 @@
-package com.running.domain.repository
+package com.running.domain.repo
 
 import com.running.domain.model.DomainWeather
 

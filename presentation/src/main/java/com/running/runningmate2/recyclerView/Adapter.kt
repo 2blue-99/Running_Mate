@@ -1,11 +1,11 @@
 package com.running.runningmate2.recyclerView
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.running.runningmate2.databinding.ItemListBinding
+import com.running.runningmate2.model.Data
 
 class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
@@ -37,7 +37,7 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     }
 
     inner class MyViewHolder(private val binding: ItemListBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data:Data,position:Int){
+        fun bind(data: Data, position:Int){
             binding.dateTxt.text= data.now
             binding.dayCountTxt.text= "No.${position + 1}"
         }

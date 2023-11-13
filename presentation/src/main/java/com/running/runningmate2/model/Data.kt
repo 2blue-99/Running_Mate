@@ -1,4 +1,4 @@
-package com.running.runningmate2.recyclerView
+package com.running.runningmate2.model
 
 import com.running.runningmate2.room.Entity
 

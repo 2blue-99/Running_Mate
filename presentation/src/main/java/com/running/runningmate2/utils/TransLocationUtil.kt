@@ -1,4 +1,4 @@
-package com.running.runningmate2
+package com.running.runningmate2.utils
 
 import android.location.Location
 import kotlin.math.*

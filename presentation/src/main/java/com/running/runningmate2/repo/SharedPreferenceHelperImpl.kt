@@ -2,7 +2,7 @@ package com.running.runningmate2.repo
 
 import android.content.Context
 import androidx.core.content.edit
-import com.running.runningmate2.MyApplication
+import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 
 
@@ -11,7 +11,8 @@ import com.running.runningmate2.R
  */
 class SharedPreferenceHelperImpl : SharedPreferenceHelper {
 
-    private val sharedPreferences = MyApplication.getApplication().getSharedPreferences(MyApplication.getApplication().getString(
+    private val sharedPreferences = MyApplication.getApplication().getSharedPreferences(
+        MyApplication.getApplication().getString(
         R.string.app_name), Context.MODE_PRIVATE)
 
     override var weight: Int

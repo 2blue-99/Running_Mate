@@ -1,9 +1,9 @@
-package com.running.data.data_source
-import com.running.data.dto.Weather
+package com.running.data.remote.dataSource
+import com.running.data.remote.model.Weather
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
-interface API {
+interface GetWeatherDataSource {
     /**
      * ServiceKey
      * pageNo

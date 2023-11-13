@@ -1,4 +1,4 @@
-package com.running.runningmate2
+package com.running.runningmate2.bottomSheet
 
 import android.app.Dialog
 import android.os.Bundle

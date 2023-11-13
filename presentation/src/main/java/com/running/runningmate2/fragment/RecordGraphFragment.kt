@@ -16,7 +16,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.running.runningmate2.MyApplication
+import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 import com.running.runningmate2.databinding.FragmentRecordGraphBinding
 import com.running.runningmate2.viewModel.MainViewModel

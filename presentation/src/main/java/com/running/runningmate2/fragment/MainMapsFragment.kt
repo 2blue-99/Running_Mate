@@ -31,10 +31,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.ktx.addPolyline
 import com.running.domain.model.DomainWeather
-import com.running.runningmate2.MainActivity
-import com.running.runningmate2.MyApplication
+import com.running.runningmate2.activity.MainActivity
+import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
-import com.running.runningmate2.RunningData
+import com.running.runningmate2.model.RunningData
+import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
 import com.running.runningmate2.fragment.viewModel.MainStartViewModel
 import com.running.runningmate2.utils.EventObserver
@@ -93,7 +94,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
 
         binding.startButton.setOnClickListener {
             if (binding.startButton.text == "Start") {
-                val bottomSheet = com.running.runningmate2.BottomSheet(mainViewModel.getWeight()) {
+                val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
                     mainViewModel.setData(it)
                 }
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)

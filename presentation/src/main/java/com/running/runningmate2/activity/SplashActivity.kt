@@ -1,13 +1,10 @@
-package com.running.runningmate2
+package com.running.runningmate2.activity
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.running.runningmate2.R
 import kotlinx.coroutines.delay
 
 class SplashActivity : AppCompatActivity() {
