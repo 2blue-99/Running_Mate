@@ -1,18 +1,50 @@
-# Running Apllication Using Kakao Map API : Running Mate
-Google Map API와 공공데이터 실시간 날씨 API 를 통해, 달린거리를 측정 및 기록, 저장하며 런닝에 도움되는 날씨 정보까지 확인할 수 있는, 구글 스토어 배포 어플리캐이션
+# 🏃‍♂️Running Mate  
+<br/>
+<br/>  
 
-# Play Store 배포 링크 
-https://play.google.com/store/apps/details?id=com.running.runningmate2
+## 프로젝트 소개  
 
-# 개발 동기
-평소 부모님은 런닝 어플을 통해 유산소 운동을 하시며 기록하신다.
-컴퓨터공학 모바일 앱 개발자 꿈나무로서, 
-”나만의 UI와 기능을 가진 런닝 어플리케이션을 부모님께 선물해보면 어떨까?”
-라는 취지로, 요구사항 명세서인 SRS와 프로젝트 관리를 위한 WBS를 작성하며 체계적으로 프로젝트를 진행하게 되었다.
+Google Map Library, 공공데이터 실시간 날씨 API 사용 및 GPS와 자이로센서를 활용한 퍼스널 런닝 애플리케이션  
 
-# 주요 기능
-- GPS 센서, 자이로 센서 기능 사용
-- Google Map API 사용
-- 공공데이터 API 사용을 위한 서버 통신 및 로컬 DB 구현.
-- 저장 데이터를 통한 RecyclerView 활용 및 삭제, 통계화 기능 구현.
-- 디자인 전공 학부생과 협업한 UI 설계
+[플레이 스토어](https://play.google.com/store/apps/details?id=com.running.runningmate2)  
+<br/>
+<br/>
+<br/>  
+
+## 미리보기
+![Frame 5 (2)](https://github.com/2blue-99/RunningMate/assets/101654864/971da4e0-9dcf-4b43-8eaf-c9611fe053ca)  
+<br/>
+<br/>
+<br/>  
+
+## 개발정보
+- 사용언어 : Kotlin
+- 아키텍쳐 및 라이브러리
+  - CA
+  - MVVM
+  - DI
+  - Google Map
+  - LiveData
+  - Room
+  - Retrofit
+  - Coroutine
+  - Splash
+<br/>
+<br/>  
+
+## 기능정의
+- Google Map Library를 통한 런닝 기능 및 지도 UI, 이용 편의 기능 제공
+- 오픈 API 사용을 통한 날씨 정보 제공
+- 네이티브 센서를 통한 위치정보 제공 및 만보기 기능 제공 
+- Local DB를 이용한 런닝 정보 저장 및 조회와 삭제 기능
+- 시각화 라이브러리를 통해 런닝 데이터 그래프 제공
+<br/>
+<br/>
+
+## 화면 구성
+### 로딩 및 홈 화면
+![Frame 5 (1)](https://github.com/2blue-99/RunningMate/assets/101654864/fa6cf9ea-03a7-4fce-9867-75ee88716409) <br/><br/>
+### 런닝 화면 및 결과 화면
+![Frame 8](https://github.com/2blue-99/RunningMate/assets/101654864/3a28fa60-138c-4f5e-9e80-460ef32fda2d) <br/><br/>
+### 기록 조회 화면
+![Frame 9](https://github.com/2blue-99/RunningMate/assets/101654864/68894da3-6798-4b04-890f-1807e521e098) <br/><br/><br/><br/>
