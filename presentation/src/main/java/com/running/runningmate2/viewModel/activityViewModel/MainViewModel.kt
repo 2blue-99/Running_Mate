@@ -22,8 +22,6 @@ import com.running.runningmate2.room.Entity
 import com.running.runningmate2.utils.Event
 import com.running.runningmate2.utils.ListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -117,7 +115,7 @@ class MainViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getWeatherData(location: Location) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 val data = createRequestParams(location)
                 myDataList = getWeatherUseCase(data)
@@ -179,11 +177,9 @@ class MainViewModel @Inject constructor(
             helper.weight = weight.toInt()
             _success.value = Event(Unit)
         } catch (t: Throwable) {
-            _error.value = Event("실수 형태로 입력 해라...")
+            _error.value = Event("실수 형태로 입력하세요.")
         }
     }
 
-    fun getWeight(): Int {
-        return helper.weight
-    }
+    fun getWeight(): Int = helper.weight
 }

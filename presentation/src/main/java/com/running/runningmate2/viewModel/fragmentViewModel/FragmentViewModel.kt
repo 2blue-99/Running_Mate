@@ -80,7 +80,6 @@ class FragmentViewModel(
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation() {
         object : LocationCallback() {
-
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 p0.lastLocation?.let { location ->
@@ -116,23 +115,23 @@ class FragmentViewModel(
                     _minute = 0
                 }
 
-                if(_second.toString().length == 1){
+                if(_second.toString().length == 1)
                     second = "0$_second"
-                }else{
+                else
                     second = "$_second"
-                }
 
-                if(_minute.toString().length == 1){
+
+                if(_minute.toString().length == 1)
                     minute = "0$_minute"
-                }else{
+                else
                     minute = "$_minute"
-                }
 
-                if(_hour.toString().length == 1){
+
+                if(_hour.toString().length == 1)
                     hour = "0$_hour"
-                }else{
+                else
                     hour = "$_hour"
-                }
+
                 _time.value = "$hour:$minute:$second"
             }
         }
