@@ -1,36 +1,32 @@
 package com.running.runningmate2.ui.fragment
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordBinding
 import com.running.runningmate2.recyclerView.Adapter
 import com.running.runningmate2.model.Data
 import com.running.runningmate2.model.toData
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
-class RecordFragment : Fragment() {
+class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_record) {
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val binding: FragmentRecordBinding by lazy {
-        FragmentRecordBinding.inflate(layoutInflater)
-    }
-    private val adapter = Adapter()
+    private val adapter by lazy { Adapter() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun initData() {
         mainViewModel.readDB()
+    }
+
+    override fun initUI() {
         parentFragmentManager
             .beginTransaction()
             .replace(binding.graphFrameLayout.id, RecordGraphFragment())
             .commit()
+    }
 
+    override fun initListener() {
         binding.changeBotton.setOnClickListener {
             if (binding.changeBotton.text == "기록보기") {
                 parentFragmentManager
@@ -50,12 +46,9 @@ class RecordFragment : Fragment() {
                 binding.graphFrameLayout.visibility = View.VISIBLE
             }
         }
-        return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initObserver() {
         mainViewModel.runningData.observe(viewLifecycleOwner) { datas ->
             adapter.datalist = datas.map { it.toData() } as ArrayList<Data>
             if (datas.size > 0) {

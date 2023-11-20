@@ -46,8 +46,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
 
-class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps),
-    OnMapReadyCallback {
+class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
     private var nowPointMarker: Marker? = null
@@ -155,9 +154,6 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
             }
         }
     }
-
-    //    @RequiresApi(Build.VERSION_CODES.O)
-//    @SuppressLint("SetTextI18n")
     override fun initObserver() {
         mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
@@ -264,8 +260,6 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         if (view != null) {
@@ -362,8 +356,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
-    @SuppressLint("SetTextI18n")
-    fun runningStart() {
+    private fun runningStart() {
         start = true
         mMap.clear()
         (activity as MainActivity).changeFragment(1)
