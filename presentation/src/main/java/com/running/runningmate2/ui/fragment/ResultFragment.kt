@@ -1,36 +1,31 @@
 package com.running.runningmate2.ui.fragment
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.databinding.FragmentResultBinding
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
-class ResultFragment : Fragment() {
-    private var _binding: FragmentResultBinding? = null
-    private val binding get() = _binding!!
+class ResultFragment : BaseFragment<FragmentResultBinding>(R.layout.fragment_result) {
+
     private val mainViewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentResultBinding.inflate(inflater,container, false)
-        val view = binding.root
+    override fun initData() {
         mainViewModel.readDB()
+    }
+
+    override fun initUI() {
+
+    }
+
+    override fun initListener() {
         binding.backBtn.setOnClickListener{
             (activity as MainActivity).changeFragment(3)
         }
-        return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //데이터 불러오기
-        super.onViewCreated(view, savedInstanceState)
+    override fun initObserver() {
         mainViewModel.runningData.observe(viewLifecycleOwner){datas ->
             if(datas.size>0){
                 binding.todayData.text = datas.last().now
