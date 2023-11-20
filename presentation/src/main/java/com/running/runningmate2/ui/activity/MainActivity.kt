@@ -2,11 +2,7 @@ package com.running.runningmate2.ui.activity
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -14,6 +10,7 @@ import androidx.room.Room
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseActivity
 import com.running.runningmate2.databinding.ActivityMainBinding
 import com.running.runningmate2.ui.fragment.MainMapsFragment
 import com.running.runningmate2.ui.fragment.RecordFragment
@@ -24,20 +21,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var bottomNav: BottomNavigationView
-    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var binding: ActivityMainBinding
+//    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val mainViewModel: MainViewModel by viewModels()
-    private var backPressTime:Long = 0
+
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun initData() {
         val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
         mainViewModel.getDao(db)
 
@@ -49,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             return@setOnMenuItemClickListener true
         }
 
-        bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
+        bottomNav = findViewById(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
@@ -66,6 +58,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun initUI() {}
+
+    override fun initListener() {}
+
+    override fun initObserver() {}
+
+
 
     private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
@@ -94,16 +94,5 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
         }
-    }
-
-    override fun onBackPressed() {
-        if(backPressTime + 2000 > System.currentTimeMillis()){
-            super.onBackPressed()
-            finish()
-        }else{
-            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
-        }
-
-        backPressTime = System.currentTimeMillis()
     }
 }

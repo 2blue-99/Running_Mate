@@ -1,66 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
+    </data>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/custom_toolbar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white"
-        android:gravity="center"
-        app:menu="@menu/toolbar_nav_menu">
-        <TextView
-            android:id="@+id/adasdasdadad"
-            android:textSize="18dp"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.MainActivity">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/custom_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleTextColor="@color/white"
             android:gravity="center"
-            style="@style/myEngFont"
-            android:background="#00FFFFFF"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:text="Rinning Mate"
-            android:textColor="@color/white"/>
-    </androidx.appcompat.widget.Toolbar>
+            app:menu="@menu/toolbar_nav_menu">
+
+            <TextView
+                android:id="@+id/adasdasdadad"
+                android:textSize="18dp"
+                android:gravity="center"
+                style="@style/myEngFont"
+                android:background="#00FFFFFF"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:text="Rinning Mate"
+                android:textColor="@color/white" />
+        </androidx.appcompat.widget.Toolbar>
 
 
-    <FrameLayout
-        android:id="@+id/myFragMent"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/bottomNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/custom_toolbar">
+        <FrameLayout
+            android:id="@+id/myFragMent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/custom_toolbar">
 
-    </FrameLayout>
+        </FrameLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/black"
-        android:scrollIndicators="left"
-        app:itemIconTint="@drawable/color"
-        app:itemTextColor="@drawable/color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/nav_menu"
-        android:visibility="visible"
-        >
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
+            android:scrollIndicators="left"
+            app:itemIconTint="@drawable/color"
+            app:itemTextColor="@drawable/color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/nav_menu"
+            android:visibility="visible">
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
