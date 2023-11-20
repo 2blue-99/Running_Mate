@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -18,21 +17,22 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordGraphBinding
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 
 
-class RecordGraphFragment : Fragment() {
+class RecordGraphFragment : BaseFragment<FragmentRecordGraphBinding>(R.layout.fragment_record_graph) {
     private val mainViewModel: MainViewModel by activityViewModels()
-    val entries = ArrayList<BarEntry>()
-    private val binding: FragmentRecordGraphBinding by lazy {
-        FragmentRecordGraphBinding.inflate(layoutInflater)
-    }
-    var count = 1
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private val entries = ArrayList<BarEntry>()
+    private var count = 1
+    override fun initData() {}
+
+    override fun initUI() {}
+
+    override fun initListener() {}
+
+    override fun initObserver() {
         mainViewModel.runningData.observe(viewLifecycleOwner){datas->
             if(datas.size>0){
                 binding.graphFrame.setBackgroundColor(Color.WHITE)
@@ -118,16 +118,11 @@ class RecordGraphFragment : Fragment() {
                 binding.chart.visibility = View.INVISIBLE
             }
         }
-        return binding.root
     }
-
-
     inner class MyXAxisFormatter : ValueFormatter() {
         private val days = arrayOf("월","화","수","목","금","토","일")
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             return days.getOrNull(value.toInt()-1) ?: value.toString()
         }
     }
-
-
 }
