@@ -5,17 +5,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseActivity
+import com.running.runningmate2.databinding.ActivitySplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
-class SplashActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-
+class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
+    override fun initData() {
         supportActionBar?.hide()
-
         lifecycleScope.launchWhenCreated {
             delay(1000L)
             Intent(this@SplashActivity, MainActivity::class.java).also {
@@ -24,4 +22,9 @@ class SplashActivity : AppCompatActivity() {
             }
         }
     }
+    override fun initUI() {}
+
+    override fun initListener() {}
+
+    override fun initObserver() {}
 }
