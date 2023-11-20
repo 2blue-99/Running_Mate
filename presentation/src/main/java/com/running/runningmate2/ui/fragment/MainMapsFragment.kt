@@ -34,6 +34,7 @@ import com.running.domain.model.DomainWeather
 import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
+import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.model.RunningData
 import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
@@ -45,15 +46,13 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
 
-class MainMapsFragment : Fragment(), OnMapReadyCallback {
+class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps),
+    OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
     private var nowPointMarker: Marker? = null
     private val fragmentViewModel: FragmentViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val binding: FragmentMapsBinding by lazy {
-        FragmentMapsBinding.inflate(layoutInflater)
-    }
     private var start: Boolean = false
     private var myNowLati: Double? = null
     private var myNowLong: Double? = null
@@ -61,12 +60,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
     private var weatherData: DomainWeather? = null
     private var static = false
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun initData() {
         fragmentViewModel.end = 0
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -88,10 +82,20 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
         )
+        static = false
+    }
 
+    override fun initUI() {
         binding.loadingText.visibility = View.VISIBLE
         binding.setBtn.visibility = View.INVISIBLE
 
+        binding.startButton.visibility = View.INVISIBLE
+        binding.followBtn.visibility = View.INVISIBLE
+
+        binding.fake.text = "\n\n\n\n"
+    }
+
+    override fun initListener() {
         binding.startButton.setOnClickListener {
             if (binding.startButton.text == "Start") {
                 val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
@@ -129,15 +133,32 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
-        return binding.root
+
+        //현재 위치로 줌 해주는 버튼
+        binding.setBtn.setOnClickListener {
+            //시작 버튼 눌렀을 때
+            if (start) {
+                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
+                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                    val myLocation = LatLng(locations.latitude - 0.0006, locations.longitude)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
+                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                }
+                //시작 안 했을 때
+            } else {
+                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
+                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                    val myLocation = LatLng(locations.latitude, locations.longitude)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
+                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                }
+            }
+        }
     }
 
-
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    //    @RequiresApi(Build.VERSION_CODES.O)
+//    @SuppressLint("SetTextI18n")
+    override fun initObserver() {
         mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         })
@@ -177,70 +198,76 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
                     MyApplication.getApplication(),
                     R.drawable.ic___weather_suncloude
                 )
+
                 1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic___weather__strongrain
                 )
+
                 2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic__weather_snow
                 )
+
                 3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic__weather_snow
                 )
+
                 5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic___weather_rain
                 )
+
                 6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic__weather_snow
                 )
+
                 7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic__weather_snow
                 )
+
                 else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
                     MyApplication.getApplication(),
                     R.drawable.ic___weather_suncloude
                 )
             }
         }
-    }
 
+        fragmentViewModel.time.observe(viewLifecycleOwner) { time ->
+            if (time != null) {
+                binding.runingBox.runTimeText.text = time
+            }
+        }
+
+        fragmentViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
+            Log.e("TAG", "칼로리들어옴 $calorie")
+            if (calorie.toString().length > 4)
+                binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
+            else
+                binding.runingBox.runCaloreText.text = "$calorie Kcal"
+
+        }
+
+        fragmentViewModel.distance.observe(viewLifecycleOwner) { distance ->
+            if (distance != null) {
+                binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
+            }
+        }
+
+        fragmentViewModel.step.observe(viewLifecycleOwner) {
+            if (it != null) {
+                binding.runingBox.runStepText.text = "$it 걸음"
+            }
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
-        static = false
-        binding.fake.text = "\n\n\n\n"
-
-        //현재 위치로 줌 해주는 버튼
-        binding.setBtn.setOnClickListener {
-            //시작 버튼 눌렀을 때
-            if (start) {
-                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
-                    val myLocation = LatLng(locations.latitude - 0.0006, locations.longitude)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
-                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
-                }
-                //시작 안 했을 때
-            } else {
-                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
-                    val myLocation = LatLng(locations.latitude, locations.longitude)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
-                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
-                }
-            }
-        }
-
-        binding.startButton.visibility = View.INVISIBLE
-        binding.followBtn.visibility = View.INVISIBLE
         mMap = googleMap
-
         if (view != null) {
             fragmentViewModel.location.observe(viewLifecycleOwner) { locations ->
                 if (locations.size > 0 && weatherData == null) {
@@ -335,8 +362,6 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
-
-
     @SuppressLint("SetTextI18n")
     fun runningStart() {
         start = true
@@ -374,7 +399,7 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
         }
         val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
 
-        //빠르게 줌하기 위해 만듦
+        //빠르게 줌하기 위해 사용
         if (myNowLong != null && myNowLong != null) {
             val startZoom = LatLng(myNowLati!! - 0.0006, myNowLong!!)
             val startLocate = LatLng(myNowLati!!, myNowLong!!)
@@ -393,32 +418,5 @@ class MainMapsFragment : Fragment(), OnMapReadyCallback {
             )
         }
         binding.textConstraint.visibility = View.VISIBLE
-
-        fragmentViewModel.time.observe(viewLifecycleOwner) { time ->
-            if (time != null) {
-                binding.runingBox.runTimeText.text = time
-            }
-        }
-
-        fragmentViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
-            Log.e("TAG", "칼로리들어옴 $calorie")
-            if (calorie.toString().length > 4)
-                binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
-            else
-                binding.runingBox.runCaloreText.text = "$calorie Kcal"
-
-        }
-
-        fragmentViewModel.distance.observe(viewLifecycleOwner) { distance ->
-            if (distance != null) {
-                binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
-            }
-        }
-
-        fragmentViewModel.step.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.runingBox.runStepText.text = "$it 걸음"
-            }
-        }
     }
 }
