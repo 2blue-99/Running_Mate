@@ -86,6 +86,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         binding.followBtn.visibility = View.INVISIBLE
 
         binding.fake.text = "\n\n\n\n"
+
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
     }
 
     override fun initListener() {
@@ -149,6 +152,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
     }
+
     override fun initObserver() {
         mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
@@ -160,17 +164,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             binding.fake.text = "\n"
         })
 
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
-
         mainViewModel.getWeatherData.observe(viewLifecycleOwner) { weather ->
             weatherData = weather
         }
 
         mainViewModel.getWeatherData.observe(viewLifecycleOwner) { myData ->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-            binding.startButton.visibility = View.VISIBLE
+//            binding.startButton.visibility = View.VISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
             if (myData?.temperatures == null) {
                 binding.weatherView.weatherTem.text = "loading.."
@@ -254,86 +254,85 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.startButton.visibility = View.INVISIBLE
+        Log.e("TAG", "onResume: INVISIBLE ", )
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        if (view != null) {
-            mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
-                if (locations.size > 0 && weatherData == null) {
-                    mainViewModel.getWeatherData(locations.first())
-                    binding.weatherView.weatherTem
-                }
+        mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
+            if (locations.size > 0 && weatherData == null) {
+                mainViewModel.getWeatherData(locations.first())
+                binding.weatherView.weatherTem
+            }
 
-                if (locations.isNotEmpty()) {
-                    binding.loadingText.visibility = View.INVISIBLE
+            if (locations.isNotEmpty()) {
+                binding.loadingText.visibility = View.INVISIBLE
+                binding.startButton.visibility = View.VISIBLE
 
-                    if (!start) {
-                        binding.startButton.visibility = View.VISIBLE
-                    }
+                binding.setBtn.visibility = View.VISIBLE
 
-                    binding.setBtn.visibility = View.VISIBLE
+                myNowLati = locations.last().latitude
+                myNowLong = locations.last().longitude
 
-                    myNowLati = locations.last().latitude
-                    myNowLong = locations.last().longitude
-
-                    LatLng(locations.last().latitude, locations.last().longitude).also {
-                        if (start) {
-                            mapsViewModel.setLatLng(it)
-                        } else {
-                            if (locations.size == 1) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
-                            }
-                            mMap.clear()
-                            mainMarker = mMap.addMarker(
-                                MarkerOptions()
-                                    .position(LatLng(it.latitude, it.longitude))
-                                    .title("pureum")
-                                    .alpha(0.9F)
-                                    .icon(
-                                        bitmapDescriptorFromVector(
-                                            requireContext(),
-                                            R.drawable.ic_twotone_mylocate
-                                        )
-                                    )
-                            )
+                LatLng(locations.last().latitude, locations.last().longitude).also {
+                    if (start) {
+                        mapsViewModel.setLatLng(it)
+                    } else {
+                        if (locations.size == 1) {
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
                         }
+                        mMap.clear()
+                        mainMarker = mMap.addMarker(
+                            MarkerOptions()
+                                .position(LatLng(it.latitude, it.longitude))
+                                .title("pureum")
+                                .alpha(0.9F)
+                                .icon(
+                                    bitmapDescriptorFromVector(
+                                        requireContext(),
+                                        R.drawable.ic_twotone_mylocate
+                                    )
+                                )
+                        )
                     }
                 }
             }
         }
 
-        if (view != null) {
-            mapsViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
-                if (latlngs.isNotEmpty()) {
-                    nowPointMarker?.remove()
-                    nowPointMarker = mMap.addMarker(
-                        MarkerOptions()
-                            .position(LatLng(latlngs.last().latitude, latlngs.last().longitude))
-                            .title("pureum")
-                            .alpha(0.9F)
-                            //여기에 내위치 마커 만들기
-                            .icon(
-                                bitmapDescriptorFromVector(
-                                    requireContext(),
-                                    R.drawable.ic_twotone_mylocate
-                                )
+        mapsViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
+            if (latlngs.isNotEmpty()) {
+                nowPointMarker?.remove()
+                nowPointMarker = mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(latlngs.last().latitude, latlngs.last().longitude))
+                        .title("pureum")
+                        .alpha(0.9F)
+                        //여기에 내위치 마커 만들기
+                        .icon(
+                            bitmapDescriptorFromVector(
+                                requireContext(),
+                                R.drawable.ic_twotone_mylocate
                             )
-                    )
-                    if (latlngs.size > 1) {
-                        val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
-                        val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
-                        beforeLocate.latitude = latlngs[latlngs.lastIndex - 1].latitude
-                        beforeLocate.longitude = latlngs[latlngs.lastIndex - 1].longitude
-                        afterLocate.latitude = latlngs[latlngs.lastIndex].latitude
-                        afterLocate.longitude = latlngs[latlngs.lastIndex].longitude
-                        val result = beforeLocate.distanceTo(afterLocate).toDouble()
-                        if (result >= 0) {
-                            mMap.addPolyline {
-                                add(latlngs[latlngs.lastIndex - 1], latlngs[latlngs.lastIndex])
-                                width(20F)
-                                startCap(RoundCap())
-                                endCap(RoundCap())
-                                color(Color.parseColor("#FA785F"))
-                            }
+                        )
+                )
+                if (latlngs.size > 1) {
+                    val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
+                    val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
+                    beforeLocate.latitude = latlngs[latlngs.lastIndex - 1].latitude
+                    beforeLocate.longitude = latlngs[latlngs.lastIndex - 1].longitude
+                    afterLocate.latitude = latlngs[latlngs.lastIndex].latitude
+                    afterLocate.longitude = latlngs[latlngs.lastIndex].longitude
+                    val result = beforeLocate.distanceTo(afterLocate).toDouble()
+                    if (result >= 0) {
+                        mMap.addPolyline {
+                            add(latlngs[latlngs.lastIndex - 1], latlngs[latlngs.lastIndex])
+                            width(20F)
+                            startCap(RoundCap())
+                            endCap(RoundCap())
+                            color(Color.parseColor("#FA785F"))
                         }
                     }
                 }
@@ -350,6 +349,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
+
     private fun runningStart() {
         start = true
         mMap.clear()
