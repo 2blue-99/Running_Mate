@@ -12,8 +12,8 @@ import com.running.domain.SavedData.DomainWeather
 import com.running.domain.usecase.GetWeatherUseCase
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.TransLocationUtil
-import com.running.runningmate2.repo.SharedPreferenceHelper
-import com.running.runningmate2.repo.SharedPreferenceHelperImpl
+import com.running.runningmate2.utils.SharedPreferenceHelper
+import com.running.runningmate2.utils.SharedPreferenceHelperImpl
 import com.running.domain.model.RunningData
 import com.running.domain.usecase.LocalDataUseCase
 import com.running.runningmate2.utils.Event

@@ -55,7 +55,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private var static = false
 
     override fun initData() {
-        mapsViewModel.end = 0
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
@@ -98,7 +97,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
                 //stop버튼
             } else {
-                mapsViewModel.end = 1
+                mapsViewModel.removeLocation()
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     val nowTime =
                         "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
@@ -235,7 +234,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         mapsViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
-            Log.e("TAG", "칼로리들어옴 $calorie")
             if (calorie.toString().length > 4)
                 binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
             else

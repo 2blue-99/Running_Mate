@@ -1,4 +1,4 @@
-package com.running.runningmate2.repo
+package com.running.runningmate2.utils
 
 import android.Manifest
 import android.app.Application
@@ -6,15 +6,18 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Looper
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 
-class MyLocationRepo {
+object MyLocationRepo {
 
-    fun nowLocation(application : Application, callback: LocationCallback) {
+    lateinit var locationClient: FusedLocationProviderClient
+    lateinit var callback: LocationCallback
 
-        val locationClient : FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
+    fun nowLocation(application : Application, locationCallback: LocationCallback) {
+        callback = locationCallback
+        locationClient = LocationServices.getFusedLocationProviderClient(application)
+        locationClient.removeLocationUpdates(locationCallback)
 
         val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
             application,
@@ -34,10 +37,14 @@ class MyLocationRepo {
         }
 
 
-        val request = com.google.android.gms.location.LocationRequest.create().apply {
-            this.priority = Priority.PRIORITY_HIGH_ACCURACY
-            this.interval = 1500L
-            this.fastestInterval = 1500L
-        }.also {locationClient.requestLocationUpdates(it, callback, Looper.myLooper())}
+        val request = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 1500L
+            fastestInterval = 1500L
+        }.also {locationClient.requestLocationUpdates(it, locationCallback, Looper.myLooper())}
+    }
+
+    fun removeLocationClient(){
+        locationClient.removeLocationUpdates(callback)
     }
 }

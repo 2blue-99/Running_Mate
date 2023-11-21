@@ -1,8 +1,7 @@
-package com.running.runningmate2.repo
+package com.running.runningmate2.utils
 
 import android.content.Context
 import androidx.core.content.edit
-import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 
 

@@ -1,4 +1,4 @@
-package com.running.runningmate2.repo
+package com.running.runningmate2.utils
 
 /**
  * Created by Pureum on 2022/09/08.

@@ -1,7 +1,5 @@
 package com.running.runningmate2.utils
 
-import com.running.runningmate2.repo.SharedPreferenceHelperImpl
-
 class Calorie {
     fun myCalorie() : Double{
         val myWeight = SharedPreferenceHelperImpl().weight

@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
-import com.running.runningmate2.repo.MyLocationRepo
+import com.running.runningmate2.utils.MyLocationRepo
 import com.running.runningmate2.utils.ListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-) : BaseViewModel(), SensorEventListener{
+) : BaseViewModel(), SensorEventListener {
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
     private val _location = ListLiveData<Location>()
@@ -56,7 +56,7 @@ class MapsViewModel @Inject constructor(
     private val _step = MutableLiveData<Int>(0)
     val step: LiveData<Int> get() = _step
 
-    private val _notify =  MutableLiveData<Unit>()
+    private val _notify = MutableLiveData<Unit>()
     val notify: LiveData<Unit> get() = _notify
 
     private var _second = 0
@@ -69,9 +69,7 @@ class MapsViewModel @Inject constructor(
     private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
     private val locationData = ArrayList<LatLng>()
-    private var distanceHap : Double = 0.0
-    var end = 0
-
+    private var distanceHap: Double = 0.0
     private var accel: Float = 0.0f
     private var accelCurrent: Float = 0.0f
     private var accelLast: Float = 0.0f
@@ -87,14 +85,11 @@ class MapsViewModel @Inject constructor(
                 override fun onLocationResult(p0: LocationResult) {
                     super.onLocationResult(p0)
                     p0.lastLocation?.let { location ->
-                        if(end != 1) {
-                            Log.e(javaClass.simpleName, "location : $location")
-                            _location.add(location)
-                            _setNowBtn.value = location
-                        }
+                        _location.add(location)
+                        _setNowBtn.value = location
                     }
                 }
-            }.also { MyLocationRepo().nowLocation(MyApplication.getApplication(), it) }
+            }.also { MyLocationRepo.nowLocation(MyApplication.getApplication(), it) }
         }
     }
 
@@ -106,33 +101,33 @@ class MapsViewModel @Inject constructor(
         calculatorDistance(value)
     }
 
-    fun myTime(){
+    fun myTime() {
         Log.e(javaClass.simpleName, "myTime")
         viewModelScope.launch {
-            while(true){
+            while (true) {
                 delay(1000L)
                 _second++
-                if(_second == 60){
+                if (_second == 60) {
                     _second = 0
                     _minute++
-                }else if(_minute == 60){
+                } else if (_minute == 60) {
                     _hour++
                     _minute = 0
                 }
 
-                if(_second.toString().length == 1)
+                if (_second.toString().length == 1)
                     second = "0$_second"
                 else
                     second = "$_second"
 
 
-                if(_minute.toString().length == 1)
+                if (_minute.toString().length == 1)
                     minute = "0$_minute"
                 else
                     minute = "$_minute"
 
 
-                if(_hour.toString().length == 1)
+                if (_hour.toString().length == 1)
                     hour = "0$_hour"
                 else
                     hour = "$_hour"
@@ -142,35 +137,35 @@ class MapsViewModel @Inject constructor(
         }
     }
 
-    fun myStep(){
+    fun myStep() {
         senSor(MyApplication.getApplication())
         notify.observeForever {
-            Log.e("TAG", "viewModel count: $it", )
+            Log.e("TAG", "viewModel count: $it")
             _step.value?.let {
-                Log.e("TAG", " _step.value : $it", )
-                _step.value = it+1
+                Log.e("TAG", " _step.value : $it")
+                _step.value = it + 1
             }
         }
     }
 
-    fun stepInit(){
+    fun stepInit() {
         killSensor()
     }
 
-    fun calculatorDistance(value:LatLng){
+    fun calculatorDistance(value: LatLng) {
         locationData.add(value)
-        if(locationData.size > 1){
-            if(locationData.size == 2) {
+        if (locationData.size > 1) {
+            if (locationData.size == 2) {
                 beforeLocate.latitude = locationData.first().latitude
                 beforeLocate.longitude = locationData.first().longitude
             }
-            afterLocate.latitude= locationData.last().latitude
-            afterLocate.longitude= locationData.last().longitude
+            afterLocate.latitude = locationData.last().latitude
+            afterLocate.longitude = locationData.last().longitude
 
             var result = beforeLocate.distanceTo(afterLocate).toDouble()
 
-            if(result <= 2) result = 0.0
-            Log.e("TAG", " 거리 result : $result", )
+            if (result <= 2) result = 0.0
+            Log.e("TAG", " 거리 result : $result")
 
             distanceHap += result
             _distance.value = distanceHap
@@ -178,7 +173,7 @@ class MapsViewModel @Inject constructor(
             beforeLocate.latitude = locationData.last().latitude
             beforeLocate.longitude = locationData.last().longitude
 
-            if (result != 0.0){
+            if (result != 0.0) {
                 val myCalorie = Calorie().myCalorie()
                 calorieHap += myCalorie
                 _calorie.value = calorieHap
@@ -187,36 +182,37 @@ class MapsViewModel @Inject constructor(
     }
 
     @SuppressLint("ServiceCast")
-    fun senSor(application : Application){
+    fun senSor(application: Application) {
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         accel = 10f
         accelCurrent = SensorManager.GRAVITY_EARTH
         accelLast = SensorManager.GRAVITY_EARTH
 
-        sensorManager.registerListener(this, sensorManager
-            .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(
+            this, sensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME
+        )
 
     }
 
 
-
     override fun onSensorChanged(event: SensorEvent?) {
-        val x:Float = event?.values?.get(0) as Float
-        val y:Float = event.values?.get(1) as Float
-        val z:Float = event.values?.get(2) as Float
+        val x: Float = event?.values?.get(0) as Float
+        val y: Float = event.values?.get(1) as Float
+        val z: Float = event.values?.get(2) as Float
 
         accelLast = accelCurrent
         accelCurrent = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
 
-        val delta:Float = accelCurrent - accelLast
+        val delta: Float = accelCurrent - accelLast
 
         accel = accel * 0.9f + delta
 
         System.currentTimeMillis()
-        if(accel > 15){
+        if (accel > 15) {
             val currentTime = System.currentTimeMillis()
-            if(myShakeTime + skip > currentTime){
+            if (myShakeTime + skip > currentTime) {
                 return
             }
             myShakeTime = currentTime
@@ -231,7 +227,11 @@ class MapsViewModel @Inject constructor(
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-    private fun killSensor(){
+    private fun killSensor() {
         sensorManager.unregisterListener(this)
+    }
+
+    fun removeLocation(){
+        MyLocationRepo.removeLocationClient()
     }
 }
