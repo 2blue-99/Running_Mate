@@ -1,8 +1,8 @@
 package com.running.data.remote.model
 
 import com.jaehyeon.data.exception.WeatherApiException
-import com.running.data.mapper.WeatherTypeMapper
-import com.running.domain.model.DomainWeather
+import com.running.data.mapper.DataMapper
+import com.running.domain.SavedData.DomainWeather
 
 data class WeatherData(
     val response: Response
@@ -38,7 +38,7 @@ data class WeatherData(
 
 fun WeatherData.dataFilter(): DomainWeather {
     return when(this.response.header.resultCode.toString()){
-        "0" -> WeatherTypeMapper().getCategory(this.response)
+        "0" -> DataMapper.getCategory(this.response)
         "1" -> throw WeatherApiException.ApplicationErrorException(this.response.header.resultMsg)
         "2" -> throw WeatherApiException.DataBaseErrorException(this.response.header.resultMsg)
         "3" -> throw WeatherApiException.NoDataErrorException(this.response.header.resultMsg)

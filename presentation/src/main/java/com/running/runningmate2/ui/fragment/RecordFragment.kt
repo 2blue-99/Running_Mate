@@ -1,28 +1,28 @@
 package com.running.runningmate2.ui.fragment
 
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordBinding
 import com.running.runningmate2.recyclerView.Adapter
-import com.running.runningmate2.model.Data
-import com.running.runningmate2.model.toData
-import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_record) {
 
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private val viewModel: RecordViewModel by viewModels()
     private val adapter by lazy { Adapter() }
 
     override fun initData() {
-        mainViewModel.readDB()
+        viewModel.readDB()
     }
 
     override fun initUI() {
         parentFragmentManager
             .beginTransaction()
-            .replace(binding.graphFrameLayout.id, RecordGraphFragment())
+            .replace(binding.graphFrameLayout.id, RecordGraphFragment(viewModel))
             .commit()
     }
 
@@ -31,7 +31,7 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
             if (binding.changeBotton.text == "기록보기") {
                 parentFragmentManager
                     .beginTransaction()
-                    .replace(binding.recyclerFrameLayout.id, RecordRecyclerFragment())
+                    .replace(binding.recyclerFrameLayout.id, RecordRecyclerFragment(viewModel))
                     .commit()
                 binding.changeBotton.text = "통계보기"
                 binding.recyclerFrameLayout.visibility = View.VISIBLE
@@ -39,7 +39,7 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
             } else {
                 parentFragmentManager
                     .beginTransaction()
-                    .replace(binding.graphFrameLayout.id, RecordGraphFragment())
+                    .replace(binding.graphFrameLayout.id, RecordGraphFragment(viewModel))
                     .commit()
                 binding.changeBotton.text = "기록보기"
                 binding.recyclerFrameLayout.visibility = View.INVISIBLE
@@ -49,9 +49,9 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
     }
 
     override fun initObserver() {
-        mainViewModel.runningData.observe(viewLifecycleOwner) { datas ->
-            adapter.datalist = datas.map { it.toData() } as ArrayList<Data>
-            if (datas.size > 0) {
+        viewModel.runningData.observe(viewLifecycleOwner) { datas ->
+            adapter.datalist = datas
+            if (datas.isNotEmpty()) {
                 var seconde = 0
                 var minute = 0
                 var hour = 0
@@ -73,15 +73,18 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
                     hour += data.time.split(":")[0].toInt()
                     calorie += data.calorie.split(" ")[0].toDouble()
                     step += data.step.split(" ")[0].toInt()
-                    distance += data.distance.split(" ")[0].toDouble() }
+                    distance += data.distance.split(" ")[0].toDouble()
+                }
                 if (seconde >= 60) {
                     val gap = seconde/60
                     minute += seconde / 60
-                    seconde -= 60 * gap }
+                    seconde -= 60 * gap
+                }
                 if (minute >= 60) {
                     val gap = minute/60
                     hour += minute / 60
-                    minute -= 60 * gap }
+                    minute -= 60 * gap
+                }
 
                 _seconde = if (seconde.toString().length == 1) "0$seconde"
                 else seconde.toString()

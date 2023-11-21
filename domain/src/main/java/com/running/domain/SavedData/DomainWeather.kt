@@ -1,4 +1,4 @@
-package com.running.domain.model
+package com.running.domain.SavedData
 
 data class DomainWeather(
     val temperatures: String = "loading..",

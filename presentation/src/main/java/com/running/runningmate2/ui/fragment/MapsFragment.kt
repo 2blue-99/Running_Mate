@@ -23,27 +23,29 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.ktx.addPolyline
-import com.running.domain.model.DomainWeather
+import com.running.domain.SavedData.DomainWeather
+import com.running.domain.model.RunningData
 import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
-import com.running.runningmate2.model.RunningData
 import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
-import com.running.runningmate2.viewModel.fragmentViewModel.FragmentViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.EventObserver
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.round
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
 
-class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
+@AndroidEntryPoint
+class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var mainMarker: Marker? = null
     private var nowPointMarker: Marker? = null
-    private val fragmentViewModel: FragmentViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private var start: Boolean = false
     private var myNowLati: Double? = null
@@ -53,12 +55,12 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
     private var static = false
 
     override fun initData() {
-        fragmentViewModel.end = 0
+        mapsViewModel.end = 0
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
-                fragmentViewModel.repeatCallLocation()
+                mapsViewModel.repeatCallLocation()
             else {
                 Toast.makeText(
                     requireContext(),
@@ -96,6 +98,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
                 //stop버튼
             } else {
+                mapsViewModel.end = 1
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     val nowTime =
                         "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
@@ -110,6 +113,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
                             else -> "토"
                         }
                     val datas = RunningData(
+                        0,
                         dayOfWeek,
                         nowTime,
                         binding.runingBox.runTimeText.text.toString(),
@@ -118,10 +122,9 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
                         binding.runingBox.runStepText.text.toString()
                     )
                     mainViewModel.insertDB(datas)
-                    fragmentViewModel.end = 1
                     (activity as MainActivity).changeFragment(2)
                     start = false
-                    fragmentViewModel.stepInit()
+                    mapsViewModel.stepInit()
                 }
             }
         }
@@ -131,18 +134,18 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
             //시작 버튼 눌렀을 때
             if (start) {
                 Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                mapsViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation = LatLng(locations.latitude - 0.0006, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
-                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                    mapsViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
                 }
                 //시작 안 했을 때
             } else {
                 Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
+                mapsViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation = LatLng(locations.latitude, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
-                    fragmentViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                    mapsViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
                 }
             }
         }
@@ -225,13 +228,13 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
             }
         }
 
-        fragmentViewModel.time.observe(viewLifecycleOwner) { time ->
+        mapsViewModel.time.observe(viewLifecycleOwner) { time ->
             if (time != null) {
                 binding.runingBox.runTimeText.text = time
             }
         }
 
-        fragmentViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
+        mapsViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
             Log.e("TAG", "칼로리들어옴 $calorie")
             if (calorie.toString().length > 4)
                 binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
@@ -240,13 +243,13 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
 
         }
 
-        fragmentViewModel.distance.observe(viewLifecycleOwner) { distance ->
+        mapsViewModel.distance.observe(viewLifecycleOwner) { distance ->
             if (distance != null) {
                 binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
             }
         }
 
-        fragmentViewModel.step.observe(viewLifecycleOwner) {
+        mapsViewModel.step.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.runingBox.runStepText.text = "$it 걸음"
             }
@@ -256,7 +259,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         if (view != null) {
-            fragmentViewModel.location.observe(viewLifecycleOwner) { locations ->
+            mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
                 if (locations.size > 0 && weatherData == null) {
                     mainViewModel.getWeatherData(locations.first())
                     binding.weatherView.weatherTem
@@ -276,7 +279,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
 
                     LatLng(locations.last().latitude, locations.last().longitude).also {
                         if (start) {
-                            fragmentViewModel.setLatLng(it)
+                            mapsViewModel.setLatLng(it)
                         } else {
                             if (locations.size == 1) {
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
@@ -301,7 +304,7 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
         }
 
         if (view != null) {
-            fragmentViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
+            mapsViewModel.latLng.observe(viewLifecycleOwner) { latlngs ->
                 if (latlngs.isNotEmpty()) {
                     nowPointMarker?.remove()
                     nowPointMarker = mMap.addMarker(
@@ -353,15 +356,15 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
         start = true
         mMap.clear()
         (activity as MainActivity).changeFragment(1)
-        fragmentViewModel.myTime()
-        fragmentViewModel.myStep()
+        mapsViewModel.myTime()
+        mapsViewModel.myStep()
 
         //이동고정 버튼
         binding.followBtn.visibility = View.VISIBLE
         binding.followBtn.setOnClickListener {
             if (!static) {
                 Toast.makeText(requireContext(), "화면 고정 기능 ON", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
+                mapsViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation =
                         LatLng(locations.latitude - 0.0003, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18F))
@@ -372,12 +375,12 @@ class MainMapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_map
                 static = true
             } else {
                 Toast.makeText(requireContext(), "화면 고정 기능 OFF", Toast.LENGTH_SHORT).show()
-                fragmentViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
+                mapsViewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
                     val myLocation =
                         LatLng(locations.latitude - 0.0006, locations.longitude)
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
                 }
-                fragmentViewModel.fixDisplayBtn.removeObservers(viewLifecycleOwner)
+                mapsViewModel.fixDisplayBtn.removeObservers(viewLifecycleOwner)
                 binding.followBtn.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.shape_set_btn)
                 static = false

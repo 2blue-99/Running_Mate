@@ -1,10 +1,27 @@
 package com.running.data.mapper
 
 import android.util.Log
+import com.running.data.local.entity.RoomData
 import com.running.data.remote.model.WeatherData
-import com.running.domain.model.DomainWeather
+import com.running.domain.SavedData.DomainWeather
+import com.running.domain.model.RunningData
 
-class WeatherTypeMapper {
+/**
+ * 2023-11-21
+ * pureum
+ */
+object DataMapper {
+    fun RunningData.toRoomData(): RoomData =
+        RoomData(
+            id = this.id,
+            dayOfWeek = this.dayOfWeek,
+            now = this.now,
+            time = this.time,
+            distance = this.distance,
+            calorie = this.calorie,
+            step = this.step
+        )
+
     fun getCategory(response : WeatherData.Response): DomainWeather {
         Log.e(javaClass.simpleName, "getCategory in, response : $response", )
         val temp = response.body.items.item.filter { it.category == "T1H" }.map { it.obsrValue }.first().toString()

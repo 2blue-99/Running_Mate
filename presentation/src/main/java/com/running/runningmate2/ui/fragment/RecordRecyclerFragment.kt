@@ -1,24 +1,28 @@
 package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.running.domain.model.RunningData
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
-import com.running.runningmate2.bottomSheet.DetailBottomsheet
+import com.running.runningmate2.bottomSheet.DetailBottomSheet
 import com.running.runningmate2.databinding.FragmentRecordRecyclerBinding
 import com.running.runningmate2.recyclerView.Adapter
-import com.running.runningmate2.model.Data
-import com.running.runningmate2.model.toData
-import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class RecordRecyclerFragment : BaseFragment<FragmentRecordRecyclerBinding>(R.layout.fragment_record_recycler) {
-    private val mainViewModel: MainViewModel by activityViewModels()
+
+@AndroidEntryPoint
+class RecordRecyclerFragment(
+    recordViewModel: RecordViewModel
+) : BaseFragment<FragmentRecordRecyclerBinding>(R.layout.fragment_record_recycler) {
+    private val viewModel = recordViewModel
     private val adapter by lazy { Adapter() }
 
     override fun initData() {
-        mainViewModel.readDB()
+        viewModel.readDB()
     }
 
     override fun initUI() {
@@ -30,25 +34,25 @@ class RecordRecyclerFragment : BaseFragment<FragmentRecordRecyclerBinding>(R.lay
 
     override fun initListener() {
         adapter.setItemClickListener(object: Adapter.OnItemClickListener{
-            override fun onClick(data: Data) {
-                val bottomDialogSheet = DetailBottomsheet(data)
+            override fun onClick(data: RunningData) {
+                val bottomDialogSheet = DetailBottomSheet(data, viewModel)
                 bottomDialogSheet.show(parentFragmentManager, bottomDialogSheet.tag)
             }
         })
     }
 
     override fun initObserver() {
-        mainViewModel.runningData.observe(viewLifecycleOwner) { data ->
-            if(data.size > 0){
+        viewModel.runningData.observe(viewLifecycleOwner) { data ->
+            if(data.isNotEmpty()){
                 binding.myRecyclerView.minimumHeight = 875
                 binding.noData.visibility=View.INVISIBLE
-                adapter.datalist = data.map { it.toData() } as ArrayList<Data>
+                adapter.datalist = data
 
             }
             else{
                 binding.recyclerConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
                 binding.myRecyclerView.minimumHeight = 875
-                adapter.datalist = data.map { it.toData() } as ArrayList<Data>
+                adapter.datalist = data
                 binding.noData.visibility=View.VISIBLE
                 binding.noData.text = "기록 데이터가 없어요.."
             }

@@ -7,23 +7,17 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.running.domain.model.DomainWeather
+import com.running.domain.SavedData.DomainWeather
 import com.running.domain.usecase.GetWeatherUseCase
-import com.running.runningmate2.model.RunningData
+import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.TransLocationUtil
-import com.running.runningmate2.model.Data
 import com.running.runningmate2.repo.SharedPreferenceHelper
 import com.running.runningmate2.repo.SharedPreferenceHelperImpl
-import com.running.runningmate2.room.AppDataBase
-import com.running.runningmate2.room.Dao
-import com.running.runningmate2.room.Entity
+import com.running.domain.model.RunningData
+import com.running.domain.usecase.LocalDataUseCase
 import com.running.runningmate2.utils.Event
-import com.running.runningmate2.utils.ListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -31,22 +25,16 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
-) : ViewModel() {
+    private val localDataUseCase: LocalDataUseCase
+) : BaseViewModel() {
     private val _getWeatherData = MutableLiveData<DomainWeather?>()
     val getWeatherData: LiveData<DomainWeather?> get() = _getWeatherData
 
-    lateinit var myDataList: DomainWeather
-
-    private var dao: Dao? = null
-
-    private val _runningData = ListLiveData<Entity>()
-    val runningData: LiveData<ArrayList<Entity>> get() = _runningData
 
     private val _error = MutableLiveData<Event<String>>()
     val error: LiveData<Event<String>> get() = _error
@@ -55,10 +43,9 @@ class MainViewModel @Inject constructor(
     val success: LiveData<Event<Unit>> get() = _success
 
     private val helper: SharedPreferenceHelper = SharedPreferenceHelperImpl()
+    var savedData: RunningData? = null
+    private lateinit var myDataList: DomainWeather
 
-    init {
-        readDB()
-    }
 
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -136,42 +123,11 @@ class MainViewModel @Inject constructor(
         }
     }
     suspend fun insertDB(runningData: RunningData) {
-        if (dao == null) {
-            return
+        savedData = runningData
+        ioScope.launch {
+            localDataUseCase.insertData(runningData)
         }
-        dao?.insertData(
-            Entity(
-                0,
-                runningData.dayOfWeek,
-                runningData.now,
-                runningData.time,
-                runningData.distance,
-                runningData.calorie,
-                runningData.step
-            )
-        )
     }
-
-    fun readDB() {
-        if (dao == null) {
-            return
-        }
-        _runningData.clear()
-        dao?.readAllData()?.onEach {
-            _runningData.clear()
-            _runningData.addAll(it)
-        }?.launchIn(viewModelScope)
-    }
-
-    suspend fun deleteDB(data: Data) {
-        dao?.deleteData(data.id)
-    }
-
-    fun getDao(db: AppDataBase) {
-        dao = db.getDao()
-    }
-
-
     fun setData(weight: String) {
         try {
             helper.weight = weight.toInt()

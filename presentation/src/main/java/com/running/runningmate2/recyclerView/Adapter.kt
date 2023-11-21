@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.running.domain.model.RunningData
 import com.running.runningmate2.databinding.ItemListBinding
-import com.running.runningmate2.model.Data
 
 class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
-    var datalist = arrayListOf<Data>()//리사이클러뷰에서 사용할 데이터 미리 정의 -> 나중에 MainActivity등에서 datalist에 실제 데이터 추가
+    var datalist = listOf<RunningData>()
     @SuppressLint("NotifyDataSetChanged")
 
     set(value) {
@@ -37,14 +37,14 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
     }
 
     inner class MyViewHolder(private val binding: ItemListBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Data, position:Int){
+        fun bind(data: RunningData, position:Int){
             binding.dateTxt.text= data.now
             binding.dayCountTxt.text= "No.${position + 1}"
         }
     }
 
     interface OnItemClickListener {
-        fun onClick(data: Data)
+        fun onClick(data: RunningData)
     }
 
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {

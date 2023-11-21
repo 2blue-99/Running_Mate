@@ -3,4 +3,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="stop">Stop</string>
+
+    <string name="frame_title">Running Mate</string>
+
+    <string name="record_button_text">기록보기</string>
+
+    <string name="result_title">Running\nStart</string>
+
 </resources>

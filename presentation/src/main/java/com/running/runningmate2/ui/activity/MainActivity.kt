@@ -6,16 +6,14 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.room.Room
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseActivity
 import com.running.runningmate2.databinding.ActivityMainBinding
-import com.running.runningmate2.ui.fragment.MainMapsFragment
+import com.running.runningmate2.ui.fragment.MapsFragment
 import com.running.runningmate2.ui.fragment.RecordFragment
 import com.running.runningmate2.ui.fragment.ResultFragment
-import com.running.runningmate2.room.AppDataBase
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,10 +28,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initData() {
-        val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
-        mainViewModel.getDao(db)
+//        val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
+//        mainViewModel.getDao(db)
 
-        loadFragment(MainMapsFragment())
+        loadFragment(MapsFragment())
 
         binding.customToolbar.bringToFront()
         binding.customToolbar.menu.getItem(0).setOnMenuItemClickListener {
@@ -45,7 +43,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    loadFragment(MainMapsFragment())
+                    loadFragment(MapsFragment())
                     true
                 }
                 R.id.recode -> {
@@ -90,7 +88,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 binding.bottomNav.visibility = View.VISIBLE
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.myFragMent, MainMapsFragment())
+                    .replace(R.id.myFragMent, MapsFragment())
                     .commit()
             }
         }

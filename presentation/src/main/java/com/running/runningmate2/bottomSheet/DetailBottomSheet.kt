@@ -7,18 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.running.domain.model.RunningData
 import com.running.runningmate2.databinding.DialogBinding
-import com.running.runningmate2.model.Data
-import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
 
-class DetailBottomsheet(
-    val data: Data
+class DetailBottomSheet(
+    val data: RunningData,
+    recordViewModel: RecordViewModel
 ) : BottomSheetDialogFragment(){
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private val viewModel = recordViewModel
     private lateinit var dlg : BottomSheetDialog
     private val binding: DialogBinding by lazy {
         DialogBinding.inflate(layoutInflater)
@@ -38,8 +38,7 @@ class DetailBottomsheet(
 
         binding.dialogRemoveBtn.setOnClickListener {
             lifecycleScope.launchWhenCreated {
-                mainViewModel.deleteDB(data)
-                mainViewModel.readDB()
+                viewModel.deleteDB(data)
             }
             dismiss()
         }

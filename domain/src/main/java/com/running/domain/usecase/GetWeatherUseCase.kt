@@ -1,15 +1,15 @@
 package com.running.domain.usecase
 
-import com.running.domain.model.DomainWeather
-import com.running.domain.repo.GetWeatherRepository
+import com.running.domain.SavedData.DomainWeather
+import com.running.domain.repo.GetWeatherRepo
 
 /**
  * 2023-11-13
  * pureum
  */
 class GetWeatherUseCase(
-    private val getWeatherRepository: GetWeatherRepository
+    private val getWeatherRepo: GetWeatherRepo
 ) {
     suspend operator fun invoke(data: HashMap<String, String>): DomainWeather =
-        getWeatherRepository.getWeatherRepoImpl(data)
+        getWeatherRepo.getWeatherRepoImpl(data)
 }

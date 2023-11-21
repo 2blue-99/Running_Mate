@@ -33,7 +33,7 @@
                 android:background="#00FFFFFF"
                 android:layout_width="170dp"
                 android:layout_height="match_parent"
-                android:text="Rinning Mate"
+                android:text="@string/frame_title"
                 android:textColor="@color/white" />
         </androidx.appcompat.widget.Toolbar>
 

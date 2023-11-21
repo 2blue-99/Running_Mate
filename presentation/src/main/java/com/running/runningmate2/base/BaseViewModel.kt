@@ -1,15 +1,17 @@
 package com.running.runningmate2.base
 
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
-abstract class BaseViewModel(val name: String) : ViewModel(){
+abstract class BaseViewModel : ViewModel(){
 
     protected val isLoading = MutableLiveData(false)
 
     private val job = SupervisorJob()
 
     protected val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        Log.e("TAG", "$throwable: ", )
         isLoading.postValue(false)
         coroutineContext.job.cancel()
     }

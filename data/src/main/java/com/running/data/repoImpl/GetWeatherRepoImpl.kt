@@ -2,13 +2,13 @@ package com.running.data.repoImpl
 
 import com.running.data.remote.dataSource.GetWeatherDataSource
 import com.running.data.remote.model.dataFilter
-import com.running.domain.model.DomainWeather
-import com.running.domain.repo.GetWeatherRepository
+import com.running.domain.SavedData.DomainWeather
+import com.running.domain.repo.GetWeatherRepo
 import javax.inject.Inject
 
-class GetGetWeatherRepoImpl @Inject constructor(
+class GetWeatherRepoImpl @Inject constructor(
     private val getWeatherDataSource: GetWeatherDataSource
-) : GetWeatherRepository {
+) : GetWeatherRepo {
     override suspend fun getWeatherRepoImpl(data: HashMap<String, String>): DomainWeather =
         getWeatherDataSource.getWeatherData(data).dataFilter()
 

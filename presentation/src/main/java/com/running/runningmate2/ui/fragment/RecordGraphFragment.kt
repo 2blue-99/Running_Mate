@@ -1,13 +1,9 @@
 package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -19,11 +15,15 @@ import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordGraphBinding
-import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class RecordGraphFragment : BaseFragment<FragmentRecordGraphBinding>(R.layout.fragment_record_graph) {
-    private val mainViewModel: MainViewModel by activityViewModels()
+@AndroidEntryPoint
+class RecordGraphFragment(
+    viewModel: RecordViewModel
+) : BaseFragment<FragmentRecordGraphBinding>(R.layout.fragment_record_graph) {
+    private val mainViewModel = viewModel
     private val entries = ArrayList<BarEntry>()
     private var count = 1
     override fun initData() {}

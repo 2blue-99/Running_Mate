@@ -10,23 +10,25 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.repo.MyLocationRepo
 import com.running.runningmate2.utils.ListLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FragmentViewModel(
-    application: Application,
-) : AndroidViewModel(application), SensorEventListener{
+@HiltViewModel
+class MapsViewModel @Inject constructor(
+) : BaseViewModel(), SensorEventListener{
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
     private val _location = ListLiveData<Location>()
@@ -54,6 +56,9 @@ class FragmentViewModel(
     private val _step = MutableLiveData<Int>(0)
     val step: LiveData<Int> get() = _step
 
+    private val _notify =  MutableLiveData<Unit>()
+    val notify: LiveData<Unit> get() = _notify
+
     private var _second = 0
     private var _minute = 0
     private var _hour = 0
@@ -73,24 +78,24 @@ class FragmentViewModel(
     lateinit var sensorManager: SensorManager
     private var skip = 300L
     private var myShakeTime = 0L
-    private val _notify =  MutableLiveData<Unit>()
-    val notify: LiveData<Unit> get() = _notify
 
 
     // 맨처음 위치 받아와서 넣기.
     fun repeatCallLocation() {
-        object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                p0.lastLocation?.let { location ->
-                    if(end != 1) {
-                        Log.e(javaClass.simpleName, "location : $location")
-                        _location.add(location)
-                        _setNowBtn.value = location
+        modelScope.launch {
+            object : LocationCallback() {
+                override fun onLocationResult(p0: LocationResult) {
+                    super.onLocationResult(p0)
+                    p0.lastLocation?.let { location ->
+                        if(end != 1) {
+                            Log.e(javaClass.simpleName, "location : $location")
+                            _location.add(location)
+                            _setNowBtn.value = location
+                        }
                     }
                 }
-            }
-        }.also { MyLocationRepo.nowLocation(MyApplication.getApplication(), it) }
+            }.also { MyLocationRepo().nowLocation(MyApplication.getApplication(), it) }
+        }
     }
 
 
@@ -198,8 +203,8 @@ class FragmentViewModel(
 
     override fun onSensorChanged(event: SensorEvent?) {
         val x:Float = event?.values?.get(0) as Float
-        val y:Float = event?.values?.get(1) as Float
-        val z:Float = event?.values?.get(2) as Float
+        val y:Float = event.values?.get(1) as Float
+        val z:Float = event.values?.get(2) as Float
 
         accelLast = accelCurrent
         accelCurrent = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
@@ -226,7 +231,7 @@ class FragmentViewModel(
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-    fun killSensor(){
+    private fun killSensor(){
         sensorManager.unregisterListener(this)
     }
 }

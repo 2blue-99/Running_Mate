@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="dataList"
+            type="com.running.domain.model.RunningData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +26,7 @@
             android:layout_weight="1"
             android:background="#00FFFFFF"
             android:gravity="center"
-            android:text="Running\nStart"
+            android:text="@string/result_title"
             android:textColor="@color/white"
             android:textSize="22dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="00:00:00"
+                android:text="@{dataList.now}"
                 android:textColor="@color/white"
                 android:textSize="17dp" />
 
@@ -109,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="00:00:00"
+                android:text="@{dataList.time}"
                 android:textColor="@color/white"
                 android:textSize="17dp" />
 
@@ -143,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0.00 M"
+                android:text="@{dataList.distance + ` M`}"
                 android:textColor="@color/white"
                 android:textSize="17dp" />
         </LinearLayout>
@@ -177,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0.0 Kcal"
+                android:text="@{dataList.calorie}"
                 android:textColor="@color/white"
                 android:textSize="17dp" />
         </LinearLayout>
@@ -211,9 +213,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0 걸음"
+                android:text="@{dataList.step}"
                 android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:textSize="17sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
