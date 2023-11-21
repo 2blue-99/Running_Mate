@@ -2,6 +2,7 @@ package com.running.runningmate2.ui.activity
 
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -22,14 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var bottomNav: BottomNavigationView
-//    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-    private val mainViewModel: MainViewModel by viewModels()
-
+    private var presentLocation = R.id.home
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun initData() {
-//        val db: AppDataBase = Room.databaseBuilder(applicationContext, AppDataBase::class.java, "UserDB").build()
-//        mainViewModel.getDao(db)
 
         loadFragment(MapsFragment())
 
@@ -41,13 +38,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener {
+            if(presentLocation == it.itemId)
+                return@setOnItemSelectedListener true
             when (it.itemId) {
                 R.id.home -> {
                     loadFragment(MapsFragment())
+                    presentLocation = it.itemId
                     true
                 }
                 R.id.recode -> {
                     loadFragment(RecordFragment())
+                    presentLocation = it.itemId
                     true
                 }
                 else -> {
