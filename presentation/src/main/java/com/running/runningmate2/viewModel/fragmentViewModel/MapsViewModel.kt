@@ -3,7 +3,6 @@ package com.running.runningmate2.viewModel.fragmentViewModel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -14,26 +13,27 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
-import com.running.data.local.sharedPreference.SharedPreferenceManager
+import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
+import com.running.domain.usecase.LocationUseCase
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
-import com.running.runningmate2.utils.MyLocationRepo
 import com.running.runningmate2.utils.ListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-    private val sharedPreferences: SharedPreferenceManager
+    private val sharedPreferences: SharedPreferenceHelperImpl,
+    private val locationUseCase: LocationUseCase
 ) : BaseViewModel(), SensorEventListener {
-
-    // 지속적으로 받아오는 위치 정보를 List로 관리.
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
 
@@ -80,22 +80,14 @@ class MapsViewModel @Inject constructor(
     private var skip = 300L
     private var myShakeTime = 0L
 
-
-    // 맨처음 위치 받아와서 넣기.
-    fun repeatCallLocation() {
+    init {
         modelScope.launch {
-            object : LocationCallback() {
-                override fun onLocationResult(p0: LocationResult) {
-                    super.onLocationResult(p0)
-                    p0.lastLocation?.let { location ->
-                        _location.add(location)
-                        _setNowBtn.value = location
-                    }
-                }
-            }.also { MyLocationRepo.nowLocation(MyApplication.getApplication(), it) }
+            locationUseCase.getLocationDataStream().collect {
+                _location.add(it)
+                _setNowBtn.value = it
+            }
         }
     }
-
 
     fun setLatLng(value: LatLng) {
         _latLng.add(value)
@@ -235,6 +227,6 @@ class MapsViewModel @Inject constructor(
     }
 
     fun removeLocation(){
-        MyLocationRepo.removeLocationClient()
+        locationUseCase.removeLocationDataStream()
     }
 }

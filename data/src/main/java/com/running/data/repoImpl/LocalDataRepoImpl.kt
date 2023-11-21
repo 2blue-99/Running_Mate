@@ -26,8 +26,4 @@ class LocalDataRepoImpl @Inject constructor(
 
     override suspend fun deleteData(id: Int) =
         roomMyDao.deleteData(id)
-
-
-//    override suspend fun delete(userData: LocalData) =
-//        roomMyDao.delete()
 }

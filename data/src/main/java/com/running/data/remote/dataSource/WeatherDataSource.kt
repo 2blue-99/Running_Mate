@@ -3,7 +3,7 @@ import com.running.data.remote.model.WeatherData
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
-interface GetWeatherDataSource {
+interface WeatherDataSource {
     @GET("1360000/VilageFcstInfoService_2.0/getUltraSrtNcst")
     suspend fun getWeatherData(@QueryMap data: HashMap<String, String>): WeatherData
 

@@ -59,7 +59,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
             if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
-                mapsViewModel.repeatCallLocation()
             else {
                 Toast.makeText(
                     requireContext(),

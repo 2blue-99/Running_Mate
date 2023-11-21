@@ -1,10 +1,11 @@
 package com.running.data.di
 
-import com.running.data.repoImpl.LocalDataRepoImpl
-import com.running.domain.repo.GetWeatherRepo
+import com.running.domain.repo.WeatherDataRepo
 import com.running.domain.repo.LocalDataRepo
+import com.running.domain.repo.LocationDataRepo
 import com.running.domain.usecase.GetWeatherUseCase
 import com.running.domain.usecase.LocalDataUseCase
+import com.running.domain.usecase.LocationUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,12 +23,17 @@ object UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideWeatherUseCase(repo: GetWeatherRepo): GetWeatherUseCase =
+    fun provideWeatherUseCase(repo: WeatherDataRepo): GetWeatherUseCase =
         GetWeatherUseCase(repo)
 
     @Provides
     @Singleton
     fun provideLocalUseCase(repo: LocalDataRepo): LocalDataUseCase =
         LocalDataUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideLocationUseCase(repo: LocationDataRepo): LocationUseCase =
+        LocationUseCase(repo)
 
 }

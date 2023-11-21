@@ -1,7 +1,7 @@
 package com.running.data.di
 
-import com.running.data.remote.dataSource.GetWeatherDataSource
-import com.running.data.remote.dataSourceImpl.GetWeatherDataSourceImpl
+import com.running.data.remote.dataSource.WeatherDataSource
+import com.running.data.remote.dataSourceImpl.WeatherDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +19,6 @@ object DataSourceModule {
 
     @Singleton
     @Provides
-    fun provideDataSource(retrofit: Retrofit): GetWeatherDataSource =
-        GetWeatherDataSourceImpl(retrofit)
+    fun provideDataSource(retrofit: Retrofit): WeatherDataSource =
+        WeatherDataSourceImpl(retrofit)
 }

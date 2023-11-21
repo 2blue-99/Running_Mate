@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.running.data.local.sharedPreference.SharedPreferenceManager
+import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.usecase.GetWeatherUseCase
 import com.running.runningmate2.base.BaseViewModel
@@ -30,7 +30,7 @@ import kotlin.collections.HashMap
 class MainViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val localDataUseCase: LocalDataUseCase,
-    private val sharedPreferenceManager: SharedPreferenceManager
+    private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel() {
     private val _getWeatherData = MutableLiveData<DomainWeather?>()
     val getWeatherData: LiveData<DomainWeather?> get() = _getWeatherData
@@ -129,12 +129,12 @@ class MainViewModel @Inject constructor(
     }
     fun setData(weight: String) {
         try {
-            sharedPreferenceManager.saveWeight(weight.toInt())
+            sharedPreferenceHelperImpl.saveWeight(weight.toInt())
             _success.value = Event(Unit)
         } catch (t: Throwable) {
             _error.value = Event("실수 형태로 입력하세요.")
         }
     }
 
-    fun getWeight(): Int = sharedPreferenceManager.getWeight()
+    fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
 }

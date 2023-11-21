@@ -1,10 +1,9 @@
 package com.running.data.di
 
 import android.content.Context
-import android.preference.PreferenceManager
 import androidx.room.Room
 import com.running.data.local.room.AppDataBase
-import com.running.data.local.sharedPreference.SharedPreferenceManager
+import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +28,6 @@ object LocalDataModule {
 
     @Singleton
     @Provides
-    fun providePreferenceDataBase(@ApplicationContext appContext: Context): SharedPreferenceManager =
-        SharedPreferenceManager(appContext.getSharedPreferences(appContext.packageName, Context.MODE_PRIVATE))
+    fun providePreferenceDataBase(@ApplicationContext appContext: Context): SharedPreferenceHelperImpl =
+        SharedPreferenceHelperImpl(appContext.getSharedPreferences(appContext.packageName, Context.MODE_PRIVATE))
 }

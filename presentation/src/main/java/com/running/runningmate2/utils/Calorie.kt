@@ -1,8 +1,5 @@
 package com.running.runningmate2.utils
 
-import com.running.data.local.sharedPreference.SharedPreferenceManager
-import javax.inject.Inject
-
 class Calorie (
     private val weight: Int
 ) {
