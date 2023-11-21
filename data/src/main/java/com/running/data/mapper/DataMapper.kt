@@ -1,7 +1,7 @@
 package com.running.data.mapper
 
 import android.util.Log
-import com.running.data.local.entity.RoomData
+import com.running.data.local.room.entity.RoomData
 import com.running.data.remote.model.WeatherData
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.model.RunningData

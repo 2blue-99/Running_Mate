@@ -1,6 +1,6 @@
 package com.running.data.di
 
-import com.running.data.local.AppDataBase
+import com.running.data.local.room.AppDataBase
 import com.running.data.remote.dataSource.GetWeatherDataSource
 import com.running.data.repoImpl.GetWeatherRepoImpl
 import com.running.data.repoImpl.LocalDataRepoImpl

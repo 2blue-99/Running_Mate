@@ -1,6 +1,6 @@
 package com.running.runningmate2.model
 
-import com.running.data.local.entity.RoomData
+import com.running.data.local.room.entity.RoomData
 
 //data class Data(
 //    val id : Int,

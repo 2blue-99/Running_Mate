@@ -8,12 +8,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.running.data.local.sharedPreference.SharedPreferenceManager
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.usecase.GetWeatherUseCase
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.TransLocationUtil
-import com.running.runningmate2.utils.SharedPreferenceHelper
-import com.running.runningmate2.utils.SharedPreferenceHelperImpl
 import com.running.domain.model.RunningData
 import com.running.domain.usecase.LocalDataUseCase
 import com.running.runningmate2.utils.Event
@@ -30,7 +29,8 @@ import kotlin.collections.HashMap
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
-    private val localDataUseCase: LocalDataUseCase
+    private val localDataUseCase: LocalDataUseCase,
+    private val sharedPreferenceManager: SharedPreferenceManager
 ) : BaseViewModel() {
     private val _getWeatherData = MutableLiveData<DomainWeather?>()
     val getWeatherData: LiveData<DomainWeather?> get() = _getWeatherData
@@ -42,7 +42,6 @@ class MainViewModel @Inject constructor(
     private val _success = MutableLiveData<Event<Unit>>()
     val success: LiveData<Event<Unit>> get() = _success
 
-    private val helper: SharedPreferenceHelper = SharedPreferenceHelperImpl()
     var savedData: RunningData? = null
     private lateinit var myDataList: DomainWeather
 
@@ -130,12 +129,12 @@ class MainViewModel @Inject constructor(
     }
     fun setData(weight: String) {
         try {
-            helper.weight = weight.toInt()
+            sharedPreferenceManager.saveWeight(weight.toInt())
             _success.value = Event(Unit)
         } catch (t: Throwable) {
             _error.value = Event("실수 형태로 입력하세요.")
         }
     }
 
-    fun getWeight(): Int = helper.weight
+    fun getWeight(): Int = sharedPreferenceManager.getWeight()
 }

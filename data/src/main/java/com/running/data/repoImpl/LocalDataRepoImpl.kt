@@ -1,7 +1,7 @@
 package com.running.data.repoImpl
 
-import com.running.data.local.dao.MyDao
-import com.running.data.local.entity.toLocalData
+import com.running.data.local.room.dao.MyDao
+import com.running.data.local.room.entity.toLocalData
 import com.running.data.mapper.DataMapper.toRoomData
 import com.running.domain.model.RunningData
 import com.running.domain.repo.LocalDataRepo

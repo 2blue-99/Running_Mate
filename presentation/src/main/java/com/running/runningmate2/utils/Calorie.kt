@@ -1,8 +1,13 @@
 package com.running.runningmate2.utils
 
-class Calorie {
+import com.running.data.local.sharedPreference.SharedPreferenceManager
+import javax.inject.Inject
+
+class Calorie (
+    private val weight: Int
+) {
     fun myCalorie() : Double{
-        val myWeight = SharedPreferenceHelperImpl().weight
+        val myWeight = weight
         if(myWeight <= 50){
             return 0.17
         }else if(myWeight <= 55){

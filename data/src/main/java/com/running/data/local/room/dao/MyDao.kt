@@ -1,10 +1,10 @@
-package com.running.data.local.dao
+package com.running.data.local.room.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.running.data.local.entity.RoomData
+import com.running.data.local.room.entity.RoomData
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,6 +3,7 @@ package com.running.runningmate2.viewModel.fragmentViewModel
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import com.running.data.local.sharedPreference.SharedPreferenceManager
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
@@ -28,6 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferenceManager
 ) : BaseViewModel(), SensorEventListener {
 
     // 지속적으로 받아오는 위치 정보를 List로 관리.
@@ -174,7 +177,7 @@ class MapsViewModel @Inject constructor(
             beforeLocate.longitude = locationData.last().longitude
 
             if (result != 0.0) {
-                val myCalorie = Calorie().myCalorie()
+                val myCalorie = Calorie(sharedPreferences.getWeight()).myCalorie()
                 calorieHap += myCalorie
                 _calorie.value = calorieHap
             }
