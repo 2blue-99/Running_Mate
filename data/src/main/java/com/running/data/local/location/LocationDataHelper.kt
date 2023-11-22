@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
  * pureum
  */
 interface LocationDataHelper {
-    fun getLocationDataStream(): Flow<Location>
+    val getLocationDataStream: Flow<Location>
     fun removeLocationDataStream()
 }

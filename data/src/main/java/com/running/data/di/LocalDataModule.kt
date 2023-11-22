@@ -1,7 +1,10 @@
 package com.running.data.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.running.data.local.location.LocationDataHelper
+import com.running.data.local.location.LocationDataHelperImpl
 import com.running.data.local.room.AppDataBase
 import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import dagger.Module
@@ -28,6 +31,11 @@ object LocalDataModule {
 
     @Singleton
     @Provides
-    fun providePreferenceDataBase(@ApplicationContext appContext: Context): SharedPreferenceHelperImpl =
+    fun providePreference(@ApplicationContext appContext: Context): SharedPreferenceHelperImpl =
         SharedPreferenceHelperImpl(appContext.getSharedPreferences(appContext.packageName, Context.MODE_PRIVATE))
+
+    @Singleton
+    @Provides
+    fun provideLocation(@ApplicationContext appContext: Context): LocationDataHelper =
+        LocationDataHelperImpl(appContext)
 }

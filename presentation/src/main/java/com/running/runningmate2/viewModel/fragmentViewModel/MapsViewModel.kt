@@ -84,6 +84,7 @@ class MapsViewModel @Inject constructor(
         modelScope.launch {
             locationUseCase.getLocationDataStream().collect {
                 _location.add(it)
+                _location.clear()
                 _setNowBtn.value = it
             }
         }
@@ -91,6 +92,7 @@ class MapsViewModel @Inject constructor(
 
     fun setLatLng(value: LatLng) {
         _latLng.add(value)
+        _latLng.clear()
         val now = LatLng(value.latitude, value.longitude)
         _fixDisplayBtn.value = now
         calculatorDistance(value)
@@ -147,7 +149,7 @@ class MapsViewModel @Inject constructor(
         killSensor()
     }
 
-    fun calculatorDistance(value: LatLng) {
+    private fun calculatorDistance(value: LatLng) {
         locationData.add(value)
         if (locationData.size > 1) {
             if (locationData.size == 2) {
@@ -227,6 +229,7 @@ class MapsViewModel @Inject constructor(
     }
 
     fun removeLocation(){
+        onCleared()
         locationUseCase.removeLocationDataStream()
     }
 }

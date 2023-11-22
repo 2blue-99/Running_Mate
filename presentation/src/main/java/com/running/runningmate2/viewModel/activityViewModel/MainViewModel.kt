@@ -101,7 +101,7 @@ class MainViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getWeatherData(location: Location) {
-        viewModelScope.launch {
+        modelScope.launch {
             try {
                 val data = createRequestParams(location)
                 myDataList = getWeatherUseCase(data)

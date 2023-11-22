@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -99,7 +98,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
                 //stop버튼
             } else {
-                mapsViewModel.removeLocation()
                 viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     val nowTime =
                         "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
@@ -256,7 +254,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     override fun onResume() {
         super.onResume()
         binding.startButton.visibility = View.INVISIBLE
-        Log.e("TAG", "onResume: INVISIBLE ", )
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -404,5 +401,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             )
         }
         binding.textConstraint.visibility = View.VISIBLE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapsViewModel.removeLocation()
     }
 }

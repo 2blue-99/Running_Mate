@@ -21,7 +21,10 @@ class ListLiveData<T>: MutableLiveData<ArrayList<T>>(){
 
     fun clear() {
         val items = value
-        items?.clear()
+        if(items?.size!! > 2){
+            items.removeAt(0)
+        }
+
         value = items
     }
 }
