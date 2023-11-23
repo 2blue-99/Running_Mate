@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAcwWIZajtXAJk5n-vcQXbrDympLgSpG6I" />
+            android:value="@{MAP_KEY}" />
 
         <activity
             android:screenOrientation="fullSensor"

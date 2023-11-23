@@ -1,7 +1,6 @@
 package com.running.data.local.location
 
 import android.Manifest
-import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,6 +8,8 @@ import android.location.LocationManager
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -18,12 +19,12 @@ import com.google.android.gms.location.Priority
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -31,79 +32,45 @@ import javax.inject.Inject
  * pureum
  */
 class LocationDataHelperImpl @Inject constructor(
-    @ApplicationContext private val application: Context,
+    @ApplicationContext private val context: Context,
 ) : LocationDataHelper {
-    private lateinit var locationClient: FusedLocationProviderClient
     private lateinit var callback: LocationCallback
-    private var location: Location = Location(null)
+    private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+    private var _data = MutableSharedFlow<Location>()
+    val data : SharedFlow<Location> get() = _data
 
     override val getLocationDataStream = flow {
         startLocationDataStream()
-        while (true) {
-            Log.e("TAG", "getLocationDataStream: ")
-            if (location != Location(null))
-                emit(location)
-            delay(1500L)
+        data.collect {
+            emit(it)
         }
     }
-
-
-//    override fun getLocationDataStream(): Flow<Location> {
-//        startLocationDataStream()
-//        return flow {
-//            while (true) {
-//                Log.e("TAG", "getLocationDataStream: ",)
-//                if (location != Location(null))
-//                    emit(location)
-//                delay(1500L)
-//            }
-//        }
-//    }
 
     private fun startLocationDataStream() {
-        Log.e("TAG", "startLocationData: ")
-        object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                p0.lastLocation?.let {
-                    location = it
-                    Log.e("TAG", "onLocationResult: $it")
-                }
-            }
-        }.also { settingLocationStream(it) }
-    }
-
-
-    private fun settingLocationStream(locationCallback: LocationCallback) {
-        callback = locationCallback
-        locationClient = LocationServices.getFusedLocationProviderClient(application)
-
-        val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
-            application,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
-            application,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        val locationManager =
-            application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
-            return
+        val locationRequest: LocationRequest = LocationRequest.create().apply {
+            interval = 1000L
+            fastestInterval = 1000L
+            priority = Priority.PRIORITY_HIGH_ACCURACY
         }
 
-        LocationRequest.create().apply {
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 1500L
-            fastestInterval = 1500L
-        }.also { locationClient.requestLocationUpdates(it, locationCallback, Looper.myLooper()) }
-    }
+        callback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                p0.lastLocation?.let {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        _data.emit(it)
+                    }
+                }
+            }
+        }
 
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            callback,
+            null
+        )
+    }
     override fun removeLocationDataStream() {
-        locationClient.removeLocationUpdates(callback)
+        fusedLocationClient.removeLocationUpdates(callback)
     }
 }
