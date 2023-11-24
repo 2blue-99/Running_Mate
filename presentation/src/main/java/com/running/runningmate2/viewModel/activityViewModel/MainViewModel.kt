@@ -33,16 +33,7 @@ class MainViewModel @Inject constructor(
     private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel() {
 
-
-
-    private val _error = MutableLiveData<Event<String>>()
-    val error: LiveData<Event<String>> get() = _error
-
-    private val _success = MutableLiveData<Event<Unit>>()
-    val success: LiveData<Event<Unit>> get() = _success
-
     var savedData: RunningData? = null
-
 
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -102,14 +93,4 @@ class MainViewModel @Inject constructor(
             localDataUseCase.insertData(runningData)
         }
     }
-    fun setData(weight: String) {
-        try {
-            sharedPreferenceHelperImpl.saveWeight(weight.toInt())
-            _success.value = Event(Unit)
-        } catch (t: Throwable) {
-            _error.value = Event("실수 형태로 입력하세요.")
-        }
-    }
-
-    fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
 }

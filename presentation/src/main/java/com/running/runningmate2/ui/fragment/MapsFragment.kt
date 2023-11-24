@@ -27,6 +27,7 @@ import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
+import com.running.runningmate2.utils.BitmapHelper
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.EventObserver
 import com.running.runningmate2.utils.MapState
@@ -69,8 +70,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun showStartBottomSheet(){
-        val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
-            mainViewModel.setData(it)
+        val bottomSheet = BottomSheet(mapsViewModel.getWeight()) {
+            mapsViewModel.setData(it)
         }
         bottomSheet.show(parentFragmentManager, bottomSheet.tag)
     }
@@ -150,7 +151,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 //            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
 //        })
 
-        mainViewModel.success.observe(viewLifecycleOwner, EventObserver {
+        mapsViewModel.success.observe(viewLifecycleOwner, EventObserver {
             runningStart()
             binding.btnStartStop.text = "Stop"
             binding.fake.text = "\n"
@@ -176,36 +177,26 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         mapsViewModel.time.observe(viewLifecycleOwner) { time ->
-            if (time != null) {
-                binding.runingBox.runTimeText.text = time
-            }
+            if (time != null) binding.runingBox.runTimeText.text = time
         }
 
         mapsViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
-            if (calorie.toString().length > 4)
-                binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
-            else
-                binding.runingBox.runCaloreText.text = "$calorie Kcal"
-
+            if (calorie.toString().length > 4) binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
+            else binding.runingBox.runCaloreText.text = "$calorie Kcal"
         }
 
         mapsViewModel.distance.observe(viewLifecycleOwner) { distance ->
-            if (distance != null) {
-                binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
-            }
+            if (distance != null) binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
         }
 
         mapsViewModel.step.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.runingBox.runStepText.text = "$it 걸음"
-            }
+            if (it != null) binding.runingBox.runStepText.text = "$it 걸음"
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        binding.btnStartStop.visibility = View.INVISIBLE
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        binding.btnStartStop.visibility = View.INVISIBLE
+//    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -217,7 +208,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
             if (locations.isNotEmpty()) {
                 binding.loadingText.visibility = View.INVISIBLE
-                binding.startButton.visibility = View.VISIBLE
+                binding.btnStartStop.visibility = View.VISIBLE
 
                 binding.setBtn.visibility = View.VISIBLE
 
@@ -238,7 +229,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                                 .title("pureum")
                                 .alpha(0.9F)
                                 .icon(
-                                    bitmapDescriptorFromVector(
+                                    BitmapHelper(
                                         requireContext(),
                                         R.drawable.ic_twotone_mylocate
                                     )
@@ -259,7 +250,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                         .alpha(0.9F)
                         //여기에 내위치 마커 만들기
                         .icon(
-                            bitmapDescriptorFromVector(
+                            BitmapHelper(
                                 requireContext(),
                                 R.drawable.ic_twotone_mylocate
                             )
@@ -286,17 +277,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
     }
-
-    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-        return ContextCompat.getDrawable(context, vectorResId)?.run {
-            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-            val bitmap =
-                Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
-            draw(Canvas(bitmap))
-            BitmapDescriptorFactory.fromBitmap(bitmap)
-        }
-    }
-
     private fun runningStart() {
         start = true
         mMap.clear()
@@ -344,7 +324,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     .title("현재 위치")
                     .alpha(0.9F)
                     .icon(
-                        bitmapDescriptorFromVector(
+                        BitmapHelper(
                             requireContext(),
                             R.drawable.ic_twotone_mylocate
                         )

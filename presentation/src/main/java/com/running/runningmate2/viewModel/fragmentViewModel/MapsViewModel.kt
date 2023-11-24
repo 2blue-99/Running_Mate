@@ -22,6 +22,7 @@ import com.running.domain.usecase.GetWeatherUseCase
 import com.running.domain.usecase.LocationUseCase
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
+import com.running.runningmate2.utils.Event
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
@@ -36,7 +37,8 @@ import javax.inject.Inject
 class MapsViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val sharedPreferences: SharedPreferenceHelperImpl,
-    private val locationUseCase: LocationUseCase
+    private val locationUseCase: LocationUseCase,
+    private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel(), SensorEventListener {
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
@@ -74,6 +76,12 @@ class MapsViewModel @Inject constructor(
     private val _mapState = MutableLiveData<MapState>()
     val mapState: LiveData<MapState> get() = _mapState
     fun getMapState() = mapState.value
+
+    private val _error = MutableLiveData<Event<String>>()
+    val error: LiveData<Event<String>> get() = _error
+
+    private val _success = MutableLiveData<Event<Unit>>()
+    val success: LiveData<Event<Unit>> get() = _success
 
     private var _second = 0
     private var _minute = 0
@@ -322,4 +330,15 @@ class MapsViewModel @Inject constructor(
         onCleared()
         locationUseCase.removeLocationDataStream()
     }
+
+    fun setData(weight: String) {
+        try {
+            sharedPreferenceHelperImpl.saveWeight(weight.toInt())
+            _success.value = Event(Unit)
+        } catch (t: Throwable) {
+            _error.value = Event("실수 형태로 입력하세요.")
+        }
+    }
+
+    fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
 }
