@@ -66,7 +66,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         mapFragment?.getMapAsync(this)
     }
 
-    private fun showBottomSheet(){
+    private fun showStartBottomSheet(){
         val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
             mainViewModel.setData(it)
         }
@@ -93,11 +93,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     override fun initListener() {
         binding.btnStartStop.setOnClickListener {
-            if (binding.btnStartStop.text == "Start") {
-                showBottomSheet()
-            } else {
-                // STOP일 때
-                stopRunning()
+            when(mapsViewModel.getMapState()){
+                MapState.HOME -> showStartBottomSheet()
+                MapState.RUNNING -> stopRunning()
             }
         }
 
@@ -126,19 +124,18 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     override fun initObserver() {
-
         mapsViewModel.mapState.observe(viewLifecycleOwner){
             when(it){
                 MapState.LOADING -> {
                     binding.loadingText.visibility = View.VISIBLE
                     binding.setBtn.visibility = View.INVISIBLE
-                    binding.startButton.visibility = View.INVISIBLE
+                    binding.btnStartStop.visibility = View.INVISIBLE
                     binding.followBtn.visibility = View.INVISIBLE
                 }
                 MapState.HOME -> {
                     binding.loadingText.visibility = View.VISIBLE
                     binding.setBtn.visibility = View.VISIBLE
-                    binding.startButton.visibility = View.VISIBLE
+                    binding.btnStartStop.visibility = View.VISIBLE
                     binding.followBtn.visibility = View.VISIBLE
                 }
                 MapState.RUNNING -> {
@@ -147,19 +144,19 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
 
-        mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        })
+//        mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
+//            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+//        })
 
         mainViewModel.success.observe(viewLifecycleOwner, EventObserver {
             runningStart()
-            binding.startButton.text = "Stop"
+            binding.btnStartStop.text = "Stop"
             binding.fake.text = "\n"
         })
 
-        mapsViewModel.weatherData.observe(viewLifecycleOwner) { weather ->
-            weatherData = weather
-        }
+//        mapsViewModel.weatherData.observe(viewLifecycleOwner) { weather ->
+//            weatherData = weather
+//        }
 
         mapsViewModel.weatherData.observe(viewLifecycleOwner) { myData ->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
@@ -255,7 +252,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
-            if (locations.size > 0 && weatherData == null) {
+            if (locations.size > 0 && mapsViewModel.getWeatherData() == null) {
                 mapsViewModel.getWeatherData(locations.first())
                 binding.weatherView.weatherTem
             }

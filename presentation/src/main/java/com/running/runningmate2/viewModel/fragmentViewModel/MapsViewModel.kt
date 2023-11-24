@@ -69,9 +69,11 @@ class MapsViewModel @Inject constructor(
 
     private val _weatherData = MutableLiveData<DomainWeather?>()
     val weatherData: LiveData<DomainWeather?> get() = _weatherData
+    fun getWeatherData() = weatherData.value ?: null
 
     private val _mapState = MutableLiveData<MapState>()
     val mapState: LiveData<MapState> get() = _mapState
+    fun getMapState() = mapState.value
 
     private var _second = 0
     private var _minute = 0
