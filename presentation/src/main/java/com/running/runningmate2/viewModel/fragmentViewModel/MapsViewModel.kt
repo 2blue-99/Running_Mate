@@ -24,6 +24,7 @@ import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
+import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.WeatherRequestMaker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -51,6 +52,7 @@ class MapsViewModel @Inject constructor(
 
     private val _setNowBtn = MutableLiveData<Location>()
     val setNowBtn: LiveData<Location> get() = _setNowBtn
+    fun getNowLocation(): Location = _setNowBtn.value?: Location(null)
 
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
@@ -67,6 +69,9 @@ class MapsViewModel @Inject constructor(
 
     private val _weatherData = MutableLiveData<DomainWeather?>()
     val weatherData: LiveData<DomainWeather?> get() = _weatherData
+
+    private val _mapState = MutableLiveData<MapState>()
+    val mapState: LiveData<MapState> get() = _mapState
 
     private var _second = 0
     private var _minute = 0

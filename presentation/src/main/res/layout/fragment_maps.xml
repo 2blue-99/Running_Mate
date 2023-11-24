@@ -107,7 +107,7 @@
                 android:orientation="horizontal" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/startButton"
+                android:id="@+id/btn_start_stop"
                 style="@style/myEngFont"
                 android:layout_width="200dp"
                 android:layout_height="60dp"

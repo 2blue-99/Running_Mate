@@ -1,6 +1,5 @@
 package com.running.runningmate2.ui.fragment
 
-import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -10,8 +9,6 @@ import android.location.LocationManager
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -32,11 +29,11 @@ import com.running.runningmate2.bottomSheet.BottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.EventObserver
+import com.running.runningmate2.utils.MapState
+import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.round
-import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 
 @AndroidEntryPoint
@@ -59,77 +56,97 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     override fun initUI() {
         binding.loadingText.visibility = View.VISIBLE
         binding.setBtn.visibility = View.INVISIBLE
-        binding.startButton.visibility = View.INVISIBLE
+        binding.btnStartStop.visibility = View.INVISIBLE
         binding.followBtn.visibility = View.INVISIBLE
 
+        // TODO?
         binding.fake.text = "\n\n\n\n"
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
 
+    private fun showBottomSheet(){
+        val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
+            mainViewModel.setData(it)
+        }
+        bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+    }
+
+    private fun stopRunning(){
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            val result = RunningData(
+                0,
+                TimeHelper().getDay(),
+                TimeHelper().getTime(),
+                binding.runingBox.runTimeText.text.toString(),
+                binding.runingBox.runDistanceText.text.toString(),
+                binding.runingBox.runCaloreText.text.toString(),
+                binding.runingBox.runStepText.text.toString()
+            )
+            mainViewModel.insertDB(result)
+            (activity as MainActivity).changeFragment(2)
+            start = false
+            mapsViewModel.stepInit()
+        }
+    }
+
     override fun initListener() {
-        binding.startButton.setOnClickListener {
-            if (binding.startButton.text == "Start") {
-                val bottomSheet = BottomSheet(mainViewModel.getWeight()) {
-                    mainViewModel.setData(it)
-                }
-                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
-                //stop버튼
+        binding.btnStartStop.setOnClickListener {
+            if (binding.btnStartStop.text == "Start") {
+                showBottomSheet()
             } else {
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                    val nowTime =
-                        "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
-                    val dayOfWeek =
-                        when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK).toString()) {
-                            "1" -> "일"
-                            "2" -> "월"
-                            "3" -> "화"
-                            "4" -> "수"
-                            "5" -> "목"
-                            "6" -> "금"
-                            else -> "토"
-                        }
-                    val datas = RunningData(
-                        0,
-                        dayOfWeek,
-                        nowTime,
-                        binding.runingBox.runTimeText.text.toString(),
-                        binding.runingBox.runDistanceText.text.toString(),
-                        binding.runingBox.runCaloreText.text.toString(),
-                        binding.runingBox.runStepText.text.toString()
-                    )
-                    mainViewModel.insertDB(datas)
-                    (activity as MainActivity).changeFragment(2)
-                    start = false
-                    mapsViewModel.stepInit()
-                }
+                // STOP일 때
+                stopRunning()
             }
         }
 
         //현재 위치로 줌 해주는 버튼
         binding.setBtn.setOnClickListener {
-            //시작 버튼 눌렀을 때
-            if (start) {
-                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                mapsViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
-                    val myLocation = LatLng(locations.latitude - 0.0006, locations.longitude)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17.5F))
-                    mapsViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+            Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
+            val nowLocation = mapsViewModel.getNowLocation()
+            when(mapsViewModel.mapState.value){
+                MapState.HOME -> {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        LatLng(nowLocation.latitude, nowLocation.longitude),
+                        17F)
+                    )
                 }
-                //시작 안 했을 때
-            } else {
-                Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-                mapsViewModel.setNowBtn.observe(viewLifecycleOwner) { locations ->
-                    val myLocation = LatLng(locations.latitude, locations.longitude)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 17F))
-                    mapsViewModel.setNowBtn.removeObservers(viewLifecycleOwner)
+                MapState.RUNNING -> {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        LatLng(nowLocation.latitude - 0.0006, nowLocation.longitude),
+                        17.5F))
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "현 위치를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
             }
         }
     }
 
     override fun initObserver() {
+
+        mapsViewModel.mapState.observe(viewLifecycleOwner){
+            when(it){
+                MapState.LOADING -> {
+                    binding.loadingText.visibility = View.VISIBLE
+                    binding.setBtn.visibility = View.INVISIBLE
+                    binding.startButton.visibility = View.INVISIBLE
+                    binding.followBtn.visibility = View.INVISIBLE
+                }
+                MapState.HOME -> {
+                    binding.loadingText.visibility = View.VISIBLE
+                    binding.setBtn.visibility = View.VISIBLE
+                    binding.startButton.visibility = View.VISIBLE
+                    binding.followBtn.visibility = View.VISIBLE
+                }
+                MapState.RUNNING -> {
+                    binding.loadingText.visibility = View.VISIBLE
+                }
+            }
+        }
+
         mainViewModel.error.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         })
@@ -232,7 +249,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     override fun onResume() {
         super.onResume()
-        binding.startButton.visibility = View.INVISIBLE
+        binding.btnStartStop.visibility = View.INVISIBLE
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
