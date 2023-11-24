@@ -28,6 +28,7 @@
             <TextView
                 android:id="@+id/adasdasdadad"
                 android:textSize="18dp"
+                android:paddingTop="10dp"
                 android:gravity="center"
                 style="@style/myEngFont"
                 android:background="#00FFFFFF"

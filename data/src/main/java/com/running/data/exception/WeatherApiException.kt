@@ -1,7 +1,6 @@
 package com.jaehyeon.data.exception
 
 sealed class WeatherApiException(message: String): Throwable(message = message) {
-
     class ApplicationErrorException(message: String): WeatherApiException(message)
     class DataBaseErrorException(message: String): WeatherApiException(message)
     class NoDataErrorException(message: String): WeatherApiException(message)

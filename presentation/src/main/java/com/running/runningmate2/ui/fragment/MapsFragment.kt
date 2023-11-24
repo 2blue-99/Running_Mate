@@ -49,37 +49,16 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private var start: Boolean = false
     private var myNowLati: Double? = null
     private var myNowLong: Double? = null
-    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var weatherData: DomainWeather? = null
     private var static = false
 
     override fun initData() {
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-            if (it[Manifest.permission.ACCESS_FINE_LOCATION] == true && it[Manifest.permission.ACCESS_COARSE_LOCATION] == true)
-            else {
-                Toast.makeText(
-                    requireContext(),
-                    "위치 이용에 동의를 하셔야 이용 할 수 있습니다. :)",
-                    Toast.LENGTH_SHORT
-                ).show()
-                requireActivity().finish()
-            }
-        }
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
         static = false
     }
 
     override fun initUI() {
         binding.loadingText.visibility = View.VISIBLE
         binding.setBtn.visibility = View.INVISIBLE
-
         binding.startButton.visibility = View.INVISIBLE
         binding.followBtn.visibility = View.INVISIBLE
 
