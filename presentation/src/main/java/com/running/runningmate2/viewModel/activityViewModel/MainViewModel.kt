@@ -32,8 +32,7 @@ class MainViewModel @Inject constructor(
     private val localDataUseCase: LocalDataUseCase,
     private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel() {
-    private val _getWeatherData = MutableLiveData<DomainWeather?>()
-    val getWeatherData: LiveData<DomainWeather?> get() = _getWeatherData
+
 
 
     private val _error = MutableLiveData<Event<String>>()
@@ -43,7 +42,6 @@ class MainViewModel @Inject constructor(
     val success: LiveData<Event<Unit>> get() = _success
 
     var savedData: RunningData? = null
-    private lateinit var myDataList: DomainWeather
 
 
     @SuppressLint("SimpleDateFormat")
@@ -96,29 +94,6 @@ class MainViewModel @Inject constructor(
             put("base_time", baseTime)
             put("nx", locate?.nx?.toInt().toString() ?: "55")
             put("ny", locate?.ny?.toInt().toString() ?: "127")
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getWeatherData(location: Location) {
-        modelScope.launch {
-            try {
-                val data = createRequestParams(location)
-                myDataList = getWeatherUseCase(data)
-                _getWeatherData.postValue(myDataList)
-            } catch (e: Exception) {
-                val fakeData = DomainWeather(
-                    temperatures = 0.0.toString(),
-                    rn1 = 0.0.toString(),
-                    eastWestWind = 0.0.toString(),
-                    southNorthWind = 0.0.toString(),
-                    humidity = 0.0.toString(),
-                    rainType = 0.0.toString(),
-                    windDirection = 0.0.toString(),
-                    windSpeed = 0.0.toString()
-                )
-                _getWeatherData.postValue(fakeData)
-            }
         }
     }
     suspend fun insertDB(runningData: RunningData) {

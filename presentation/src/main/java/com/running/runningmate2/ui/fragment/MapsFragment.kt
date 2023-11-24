@@ -161,11 +161,11 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             binding.fake.text = "\n"
         })
 
-        mainViewModel.getWeatherData.observe(viewLifecycleOwner) { weather ->
+        mapsViewModel.weatherData.observe(viewLifecycleOwner) { weather ->
             weatherData = weather
         }
 
-        mainViewModel.getWeatherData.observe(viewLifecycleOwner) { myData ->
+        mapsViewModel.weatherData.observe(viewLifecycleOwner) { myData ->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
 //            binding.startButton.visibility = View.VISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
@@ -260,7 +260,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         mMap = googleMap
         mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
             if (locations.size > 0 && weatherData == null) {
-                mainViewModel.getWeatherData(locations.first())
+                mapsViewModel.getWeatherData(locations.first())
                 binding.weatherView.weatherTem
             }
 
