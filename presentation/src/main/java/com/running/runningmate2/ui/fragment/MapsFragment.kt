@@ -31,10 +31,12 @@ import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.EventObserver
 import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.TimeHelper
+import com.running.runningmate2.utils.WeatherIconHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.round
 import java.util.*
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
@@ -159,62 +161,18 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 //        }
 
         mapsViewModel.weatherData.observe(viewLifecycleOwner) { myData ->
+
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-//            binding.startButton.visibility = View.VISIBLE
             binding.weatherView.weatherIcon.visibility = View.VISIBLE
-            if (myData?.temperatures == null) {
-                binding.weatherView.weatherTem.text = "loading.."
-            } else
-                binding.weatherView.weatherTem.text =
-                    "${myData.temperatures.toDouble()?.let { round(it) }} ºc"
 
-            if (myData?.humidity == null) {
-                binding.weatherView.humidity.text = "loading.."
-            } else
-                binding.weatherView.humidity.text = "${myData.humidity} %"
+            if(myData?.temperatures != null) binding.weatherView.weatherTem.text = "${myData.temperatures.toDouble().let { it.roundToInt() }} ºc"
+            else binding.weatherView.weatherTem.text = "loading.."
 
-            when (myData?.rainType?.toDouble()?.toInt()) {
-                //0 없음, 1 장대비, 2367 눈, 5 비
-                0 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic___weather_suncloude
-                )
+            if (myData?.humidity != null)  binding.weatherView.humidity.text = "${myData.humidity} %"
+            else binding.weatherView.humidity.text = "loading.."
 
-                1 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic___weather__strongrain
-                )
-
-                2 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic__weather_snow
-                )
-
-                3 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic__weather_snow
-                )
-
-                5 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic___weather_rain
-                )
-
-                6 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic__weather_snow
-                )
-
-                7 -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic__weather_snow
-                )
-
-                else -> binding.weatherView.weatherIcon.background = ContextCompat.getDrawable(
-                    MyApplication.getApplication(),
-                    R.drawable.ic___weather_suncloude
-                )
-            }
+            if(myData?.rainType != null) binding.weatherView.weatherIcon.background = WeatherIconHelper(myData.rainType.toDouble().toInt())
+            else binding.weatherView.weatherIcon.background = WeatherIconHelper(-1)
         }
 
         mapsViewModel.time.observe(viewLifecycleOwner) { time ->
