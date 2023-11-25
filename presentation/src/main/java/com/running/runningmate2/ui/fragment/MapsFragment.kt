@@ -321,7 +321,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             nowPointMarker = mMap.addMarker(
                 MarkerOptions()
                     .position(startLocate)
-                    .title("현재 위치")
+                    .title("현재  위치")
                     .alpha(0.9F)
                     .icon(
                         BitmapHelper(
