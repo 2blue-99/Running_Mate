@@ -9,7 +9,9 @@ class ListLiveData<T>: MutableLiveData<ArrayList<T>>(){
 
     fun add(item: T){
         val items = value
-        items?.add(item)
+        if(items?.size!! > 2)
+            items.removeFirst()
+        items.add(item)
         value = items
     }
 

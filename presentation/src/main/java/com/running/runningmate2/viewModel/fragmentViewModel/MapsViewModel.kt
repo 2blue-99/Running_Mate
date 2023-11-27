@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import com.running.domain.SavedData.DomainWeather
+import com.running.domain.state.ResourceState
 import com.running.domain.usecase.GetWeatherUseCase
 import com.running.domain.usecase.LocationUseCase
 import com.running.runningmate2.base.BaseViewModel
@@ -29,6 +30,7 @@ import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.WeatherRequestMaker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -40,8 +42,6 @@ class MapsViewModel @Inject constructor(
     private val locationUseCase: LocationUseCase,
     private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel(), SensorEventListener {
-    private val _location = ListLiveData<Location>()
-    val location: LiveData<ArrayList<Location>> get() = _location
 
     private val _distance = MutableLiveData<Double>()
     val distance: LiveData<Double> get() = _distance
@@ -73,10 +73,6 @@ class MapsViewModel @Inject constructor(
     val weatherData: LiveData<DomainWeather?> get() = _weatherData
     fun getWeatherData() = weatherData.value ?: null
 
-    private val _mapState = MutableLiveData<MapState>()
-    val mapState: LiveData<MapState> get() = _mapState
-    fun getMapState() = mapState.value
-
     private val _error = MutableLiveData<Event<String>>()
     val error: LiveData<Event<String>> get() = _error
 
@@ -101,13 +97,31 @@ class MapsViewModel @Inject constructor(
     private var skip = 300L
     private var myShakeTime = 0L
 
+
+
+    private val _mapState = MutableLiveData<MapState>()
+    val mapState: LiveData<MapState> get() = _mapState
+    fun getMapState() = mapState.value
+
+    private val _location = ListLiveData<ResourceState<Location>>()
+    val location: LiveData<ArrayList<ResourceState<Location>>> get() = _location
+
+
+
+
     init {
         modelScope.launch {
-            locationUseCase.getLocationDataStream().collect {
-                Log.e("TAG", "init $it", )
+            locationUseCase.getLocationDataStream().onEach {
+                when(it){
+                    is ResourceState.Success ->{
+                        _mapState.value = MapState.RUNNING
+                    }
+                    else -> {}
+                }
                 _location.add(it)
-                _location.clear()
-                _setNowBtn.value = it
+//                _location.add(it)
+//                _location.clear()
+//                _setNowBtn.value = it
             }
         }
     }
@@ -326,10 +340,10 @@ class MapsViewModel @Inject constructor(
         sensorManager.unregisterListener(this)
     }
 
-    fun removeLocation(){
-        onCleared()
-        locationUseCase.removeLocationDataStream()
-    }
+//    fun removeLocation(){
+//        onCleared()
+//        locationUseCase.removeLocationDataStream()
+//    }
 
     fun setData(weight: String) {
         try {

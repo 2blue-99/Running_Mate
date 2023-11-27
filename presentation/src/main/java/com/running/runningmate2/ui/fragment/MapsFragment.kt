@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.android.ktx.addPolyline
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.model.RunningData
+import com.running.domain.state.ResourceState
 import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.R
@@ -105,7 +106,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         //현재 위치로 줌 해주는 버튼
         binding.setBtn.setOnClickListener {
             Toast.makeText(requireContext(), "현 위치로", Toast.LENGTH_SHORT).show()
-            val nowLocation = mapsViewModel.getNowLocation()
+            val nowLocation = mapsViewModel.location.value?.last()
             when(mapsViewModel.mapState.value){
                 MapState.HOME -> {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
@@ -200,42 +201,49 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mapsViewModel.location.observe(viewLifecycleOwner) { locations ->
-            if (locations.size > 0 && mapsViewModel.getWeatherData() == null) {
-                mapsViewModel.getWeatherData(locations.first())
-                binding.weatherView.weatherTem
-            }
+        mapsViewModel.location.observe(viewLifecycleOwner) { response ->
+            when(val location = response.last()){
+                is ResourceState.Success -> {
+                    // 성공 처리
+                    mapsViewModel.getWeatherData(location.data)
+//                    binding.weatherView.weatherTem
 
-            if (locations.isNotEmpty()) {
-                binding.loadingText.visibility = View.INVISIBLE
-                binding.btnStartStop.visibility = View.VISIBLE
+                    binding.setBtn.visibility = View.VISIBLE
 
-                binding.setBtn.visibility = View.VISIBLE
+                    if()
 
-                myNowLati = locations.last().latitude
-                myNowLong = locations.last().longitude
 
-                LatLng(locations.last().latitude, locations.last().longitude).also {
-                    if (start) {
-                        mapsViewModel.setLatLng(it)
-                    } else {
-                        if (locations.size == 1) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
-                        }
-                        mMap.clear()
-                        mainMarker = mMap.addMarker(
-                            MarkerOptions()
-                                .position(LatLng(it.latitude, it.longitude))
-                                .title("pureum")
-                                .alpha(0.9F)
-                                .icon(
-                                    BitmapHelper(
-                                        requireContext(),
-                                        R.drawable.ic_twotone_mylocate
+
+//                    myNowLati = locations.last().latitude
+//                    myNowLong = locations.last().longitude
+
+                    LatLng(locations.last().latitude, locations.last().longitude).also {
+                        if (start) {
+                            mapsViewModel.setLatLng(it)
+                        } else {
+                            if (locations.size == 1) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 17F))
+                            }
+                            mMap.clear()
+                            mainMarker = mMap.addMarker(
+                                MarkerOptions()
+                                    .position(LatLng(it.latitude, it.longitude))
+                                    .title("location")
+                                    .alpha(0.9F)
+                                    .icon(
+                                        BitmapHelper(
+                                            requireContext(),
+                                            R.drawable.ic_twotone_mylocate
+                                        )
                                     )
-                                )
-                        )
+                            )
+                        }
                     }
+                }
+                else -> {
+                    // 실패, 로딩 처리
+                    binding.loadingText.visibility = View.INVISIBLE
+                    binding.btnStartStop.visibility = View.VISIBLE
                 }
             }
         }
@@ -336,6 +344,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     override fun onStop() {
         super.onStop()
-        mapsViewModel.removeLocation()
+//        mapsViewModel.removeLocation()
     }
 }
