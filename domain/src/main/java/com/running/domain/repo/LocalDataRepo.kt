@@ -9,6 +9,6 @@ import com.running.domain.model.RunningData
 interface LocalDataRepo {
     suspend fun insertData(userData : RunningData)
     fun readAllData(): List<RunningData>
-    suspend fun deleteAllData()
-    suspend fun deleteData(id : Int)
+//    suspend fun deleteAllData()
+    suspend fun deleteData(id : Int): Int
 }

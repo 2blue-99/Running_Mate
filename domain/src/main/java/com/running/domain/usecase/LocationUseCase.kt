@@ -12,7 +12,7 @@ class LocationUseCase(
     private val locationDataRepo: LocationDataRepo
 ) {
     fun getLocationDataStream(): Flow<Location> =
-        locationDataRepo.getLocationDataStream
+        locationDataRepo.startLocationDataStream()
     fun removeLocationDataStream() =
         locationDataRepo.removeLocationDataStream()
 }

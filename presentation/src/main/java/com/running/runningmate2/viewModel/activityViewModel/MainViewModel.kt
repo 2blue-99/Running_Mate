@@ -28,9 +28,7 @@ import kotlin.collections.HashMap
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getWeatherUseCase: GetWeatherUseCase,
     private val localDataUseCase: LocalDataUseCase,
-    private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel() {
 
     var savedData: RunningData? = null

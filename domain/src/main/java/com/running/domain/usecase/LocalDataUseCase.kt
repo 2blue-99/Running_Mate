@@ -16,7 +16,6 @@ class LocalDataUseCase(
     fun readAllData() =
         localDataRepo.readAllData()
 
-    suspend fun deleteData(id: Int) =
-        localDataRepo.deleteData(id)
+    suspend fun deleteData(id: Int): Int = localDataRepo.deleteData(id)
 
 }

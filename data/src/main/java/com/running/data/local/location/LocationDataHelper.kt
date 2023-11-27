@@ -10,4 +10,5 @@ import kotlinx.coroutines.flow.Flow
 interface LocationDataHelper {
     val getLocationDataStream: Flow<Location>
     fun removeLocationDataStream()
+    fun startLocationDataStream(): Flow<Location>
 }

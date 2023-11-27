@@ -47,18 +47,17 @@ class LocationDataHelperImpl @Inject constructor(
         }
     }
 
-    private fun startLocationDataStream() {
+    override fun startLocationDataStream() = flow<Location> {
         val locationRequest: LocationRequest = LocationRequest.create().apply {
             interval = 1000L
             fastestInterval = 1000L
             priority = Priority.PRIORITY_HIGH_ACCURACY
         }
-
         callback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 p0.lastLocation?.let {
                     CoroutineScope(Dispatchers.IO).launch {
-                        _data.emit(it)
+                        emit(it) // GPS 정보
                     }
                 }
             }
@@ -69,6 +68,7 @@ class LocationDataHelperImpl @Inject constructor(
             callback,
             null
         )
+
     }
     override fun removeLocationDataStream() {
         fusedLocationClient.removeLocationUpdates(callback)

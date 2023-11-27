@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
  * pureum
  */
 interface LocationDataRepo {
-    var getLocationDataStream: Flow<Location>
+//    var getLocationDataStream: Flow<Location>
+    fun startLocationDataStream(): Flow<Location>
     fun removeLocationDataStream()
 }

@@ -10,17 +10,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MyDao {
     @Insert
-    suspend fun insertData(userData : RoomData)
+    fun insertData(userData : RoomData)
 
     @Query("select * from RoomData")
     fun readAllData(): List<RoomData>
 
-    @Query("DELETE FROM RoomData")
-    suspend fun deleteAllData()
+//    @Query("DELETE FROM RoomData")
+//    suspend fun deleteAllData()
 
     @Query("Delete from RoomData Where id = :id")
-    suspend fun deleteData(id : Int)
+    fun deleteData(id : Int):Int
 
-    @Delete
-    suspend fun delete(userData : RoomData)
+//    @Delete
+//    suspend fun delete(userData : RoomData)
 }

@@ -21,9 +21,8 @@ class LocalDataRepoImpl @Inject constructor(
         roomMyDao.readAllData().map { it.toLocalData() }
 
 
-    override suspend fun deleteAllData() =
-        roomMyDao.deleteAllData()
+//    override suspend fun deleteAllData() =
+//        roomMyDao.deleteAllData()
 
-    override suspend fun deleteData(id: Int) =
-        roomMyDao.deleteData(id)
+    override suspend fun deleteData(id: Int) = roomMyDao.deleteData(id)
 }

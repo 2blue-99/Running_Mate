@@ -96,10 +96,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     override fun initListener() {
         binding.btnStartStop.setOnClickListener {
-            when(mapsViewModel.getMapState()){
-                MapState.HOME -> showStartBottomSheet()
-                MapState.RUNNING -> stopRunning()
-            }
+//            when(mapsViewModel.getMapState()){
+//                MapState.HOME -> showStartBottomSheet()
+//                MapState.RUNNING -> stopRunning()
+//            }
         }
 
         //현재 위치로 줌 해주는 버튼
