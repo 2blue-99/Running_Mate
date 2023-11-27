@@ -8,7 +8,5 @@ import kotlinx.coroutines.flow.Flow
  * pureum
  */
 interface LocationDataHelper {
-    val getLocationDataStream: Flow<Location>
-    fun removeLocationDataStream()
-    fun startLocationDataStream(): Flow<Location>
+    suspend fun startLocationDataStream():Location?
 }

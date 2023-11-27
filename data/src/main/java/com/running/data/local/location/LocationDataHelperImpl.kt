@@ -1,6 +1,7 @@
 package com.running.data.local.location
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -25,7 +26,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 /**
  * 2023-11-21
@@ -34,43 +38,39 @@ import javax.inject.Inject
 class LocationDataHelperImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : LocationDataHelper {
-    private lateinit var callback: LocationCallback
     private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    override suspend fun startLocationDataStream(): Location? {
 
-    private var _data = MutableSharedFlow<Location>()
-    val data : SharedFlow<Location> get() = _data
+        val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-    override val getLocationDataStream = flow {
-        startLocationDataStream()
-        data.collect {
-            emit(it)
+        val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
+            return null
         }
-    }
 
-    override fun startLocationDataStream() = flow<Location> {
-        val locationRequest: LocationRequest = LocationRequest.create().apply {
-            interval = 1000L
-            fastestInterval = 1000L
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-        }
-        callback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                p0.lastLocation?.let {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        emit(it) // GPS 정보
-                    }
+        return suspendCancellableCoroutine { cont ->
+            fusedLocationClient.lastLocation.apply {
+                addOnCompleteListener {
+                    cont.resume(result)
+                }
+                addOnFailureListener {
+                    cont.resume(null)
+                }
+
+                addOnCanceledListener {
+                    cont.cancel()
                 }
             }
         }
-
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            callback,
-            null
-        )
-
-    }
-    override fun removeLocationDataStream() {
-        fusedLocationClient.removeLocationUpdates(callback)
     }
 }

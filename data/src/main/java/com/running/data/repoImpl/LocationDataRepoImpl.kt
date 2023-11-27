@@ -13,11 +13,6 @@ import javax.inject.Inject
 class LocationDataRepoImpl @Inject constructor(
     private val locationDataHelper: LocationDataHelper
 ): LocationDataRepo {
-    override fun startLocationDataStream(): Flow<Location> =
+    override suspend fun startLocationDataStream() =
         locationDataHelper.startLocationDataStream()
-
-    override fun removeLocationDataStream() {
-        locationDataHelper.removeLocationDataStream()
-    }
-
 }

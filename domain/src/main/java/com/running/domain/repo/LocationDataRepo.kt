@@ -9,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LocationDataRepo {
 //    var getLocationDataStream: Flow<Location>
-    fun startLocationDataStream(): Flow<Location>
-    fun removeLocationDataStream()
+    suspend fun startLocationDataStream(): Location?
 }
