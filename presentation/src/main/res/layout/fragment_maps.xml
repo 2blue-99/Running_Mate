@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -23,20 +22,13 @@
             app:layout_constraintVertical_bias="0.0"
             tools:context=".ui.fragment.MapsFragment" />
 
-        <TextView
-            android:id="@+id/loadingText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.80"
-            android:background="#000000"
-            android:gravity="center"
-            android:text="Loading"
-            android:textColor="@color/white"
-            android:textSize="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+        <include
+            layout="@layout/progressbar_loading"
+            android:id="@+id/progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/map"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/map" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/weatherLinearLayout"
@@ -57,14 +49,16 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/textConstraint"
-            android:layout_width="350dp"
+            android:layout_width="0dp"
             android:layout_height="155dp"
-            android:layout_marginTop="460dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="50dp"
             android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/map">
+            app:layout_constraintStart_toStartOf="parent">
 
             <include
                 android:id="@+id/runing_box"
@@ -82,14 +76,14 @@
 
         <LinearLayout
             android:id="@+id/linearLayout8"
+            android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textConstraint">
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/setBtn"
@@ -132,17 +126,5 @@
                 tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/fake"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20sp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/map"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

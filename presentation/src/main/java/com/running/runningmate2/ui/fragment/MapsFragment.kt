@@ -43,16 +43,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private var isStatic = true
     private var initMap = false
 
-    override fun initData() {
-        Log.e("TAG", "initData: ", )
-    }
+    override fun initData() {}
 
     override fun initUI() {
-        Log.e("TAG", "initUI: ", )
-
-        // TODO?
-        binding.fake.text = "\n\n\n\n"
-
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
@@ -109,22 +102,23 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         viewModel.mapState.observe(viewLifecycleOwner){
             when(it){
                 MapState.LOADING -> {
-                    binding.loadingText.visibility = View.VISIBLE
+                    binding.progressBar.root.visibility = View.VISIBLE
                     binding.setBtn.visibility = View.INVISIBLE
                     binding.btnStartStop.visibility = View.INVISIBLE
                     binding.followBtn.visibility = View.INVISIBLE
                 }
                 MapState.HOME -> {
-                    binding.btnStartStop.text = "START"
-                    binding.loadingText.visibility = View.INVISIBLE
-                    binding.setBtn.visibility = View.VISIBLE
-                    binding.btnStartStop.visibility = View.VISIBLE
-                    binding.followBtn.visibility = View.VISIBLE
+                    if(initMap) {
+                        binding.btnStartStop.text = "START"
+                        binding.progressBar.root.visibility = View.INVISIBLE
+                        binding.setBtn.visibility = View.VISIBLE
+                        binding.btnStartStop.visibility = View.VISIBLE
+                        binding.followBtn.visibility = View.VISIBLE
+                    }
                 }
                 MapState.RUNNING -> {
                     binding.btnStartStop.text = "STOP"
-
-                    binding.loadingText.visibility = View.INVISIBLE
+                    binding.progressBar.root.visibility = View.INVISIBLE
                     binding.setBtn.visibility = View.VISIBLE
                     binding.btnStartStop.visibility = View.VISIBLE
                     binding.followBtn.visibility = View.VISIBLE
@@ -149,7 +143,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         viewModel.success.observe(viewLifecycleOwner, EventObserver {
             runningStart()
             binding.btnStartStop.text = "Stop"
-            binding.fake.text = "\n"
         })
 
         viewModel.weatherData.observe(viewLifecycleOwner) { myData ->
@@ -246,13 +239,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             initMap = true
         }
     }
-
-    private fun firstMoveCamera(location: LatLng, zoom: Float){
-        mMap?.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(location, zoom)
-        )
-    }
-
     private fun addMarker(location: LatLng): Marker? {
         mMap?.clear()
         return mMap?.addMarker(

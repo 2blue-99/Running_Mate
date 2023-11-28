@@ -27,6 +27,7 @@ import com.running.runningmate2.utils.Event
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
+import com.running.runningmate2.utils.MapState.HOME
 import com.running.runningmate2.utils.WeatherRequestMaker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -96,17 +97,15 @@ class MapsViewModel @Inject constructor(
 
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
-    fun getLastLocation() = _location.value?.last()
-
-
-
+    fun getLastLocation(): Location? = _location.value?.last()
 
     init {
         locationUseCase.getLocationDataStream().onEach {
+            Log.e("TAG", "$it: ", )
             when (it) {
                 is ResourceState.Success -> {
                     _location.add(it.data)
-                    _mapState.value = MapState.HOME
+                    if(_mapState.value != HOME) _mapState.value = HOME
                 }
                 else -> {
                     _mapState.value = MapState.LOADING
