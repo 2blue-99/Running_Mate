@@ -85,7 +85,7 @@ class MainViewModel @Inject constructor(
             put("ny", locate?.ny?.toInt().toString() ?: "127")
         }
     }
-    suspend fun insertDB(runningData: RunningData) {
+    fun insertDB(runningData: RunningData) {
         savedData = runningData
         ioScope.launch {
             localDataUseCase.insertData(runningData)

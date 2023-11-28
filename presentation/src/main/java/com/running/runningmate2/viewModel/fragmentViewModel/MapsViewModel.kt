@@ -101,10 +101,13 @@ class MapsViewModel @Inject constructor(
 
     private val _mapState = MutableLiveData<MapState>()
     val mapState: LiveData<MapState> get() = _mapState
-    fun getMapState() = mapState.value
+    fun changeState(state: MapState){
+        _mapState.value = state
+    }
 
-    private val _location = ListLiveData<ResourceState<Location>>()
-    val location: LiveData<ArrayList<ResourceState<Location>>> get() = _location
+    private val _location = ListLiveData<Location>()
+    val location: LiveData<ArrayList<Location>> get() = _location
+    fun getLastLocation() = _location.value?.last()
 
 
 
@@ -115,13 +118,12 @@ class MapsViewModel @Inject constructor(
                 when(it){
                     is ResourceState.Success ->{
                         _mapState.value = MapState.RUNNING
+                        _location.add(it.data)
                     }
-                    else -> {}
+                    else -> {
+                        _mapState.value = MapState.LOADING
+                    }
                 }
-                _location.add(it)
-//                _location.add(it)
-//                _location.clear()
-//                _setNowBtn.value = it
             }
         }
     }

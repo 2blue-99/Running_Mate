@@ -21,7 +21,7 @@ class LocationUseCase(
                 null -> emit(ResourceState.Error(message = "잘못된 위치 오류"))
                 else -> emit(ResourceState.Success(result))
             }
-            delay(1500L)
+            delay(2000L)
         }
     }
 }

@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.running.runningmate2.databinding.DialogBottomSheetBinding
 
-class BottomSheet(
+class StartBottomSheet(
     val weight:Int,
    val onClick: (String) -> Unit,
 ) : BottomSheetDialogFragment() {
