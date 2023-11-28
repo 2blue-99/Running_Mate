@@ -30,6 +30,7 @@ import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.WeatherRequestMaker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -51,11 +52,6 @@ class MapsViewModel @Inject constructor(
 
     private val _fixDisplayBtn = MutableLiveData<LatLng>()
     val fixDisplayBtn: LiveData<LatLng> get() = _fixDisplayBtn
-
-    private val _setNowBtn = MutableLiveData<Location>()
-    val setNowBtn: LiveData<Location> get() = _setNowBtn
-    fun getNowLocation(): Location = _setNowBtn.value?: Location(null)
-
     // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
     private val _latLng = ListLiveData<LatLng>()
     val latLng: LiveData<ArrayList<LatLng>> get() = _latLng
@@ -63,7 +59,7 @@ class MapsViewModel @Inject constructor(
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
 
-    private val _step = MutableLiveData<Int>(0)
+    private val _step = MutableLiveData(0)
     val step: LiveData<Int> get() = _step
 
     private val _notify = MutableLiveData<Unit>()
@@ -71,10 +67,7 @@ class MapsViewModel @Inject constructor(
 
     private val _weatherData = MutableLiveData<DomainWeather?>()
     val weatherData: LiveData<DomainWeather?> get() = _weatherData
-    fun getWeatherData() = weatherData.value ?: null
-
-    private val _error = MutableLiveData<Event<String>>()
-    val error: LiveData<Event<String>> get() = _error
+    fun getWeatherData() = weatherData.value
 
     private val _success = MutableLiveData<Event<Unit>>()
     val success: LiveData<Event<Unit>> get() = _success
@@ -97,13 +90,9 @@ class MapsViewModel @Inject constructor(
     private var skip = 300L
     private var myShakeTime = 0L
 
-
-
     private val _mapState = MutableLiveData<MapState>()
     val mapState: LiveData<MapState> get() = _mapState
-    fun changeState(state: MapState){
-        _mapState.value = state
-    }
+    fun changeState(state: MapState){ _mapState.value = state }
 
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
@@ -113,19 +102,17 @@ class MapsViewModel @Inject constructor(
 
 
     init {
-        modelScope.launch {
-            locationUseCase.getLocationDataStream().onEach {
-                when(it){
-                    is ResourceState.Success ->{
-                        _mapState.value = MapState.RUNNING
-                        _location.add(it.data)
-                    }
-                    else -> {
-                        _mapState.value = MapState.LOADING
-                    }
+        locationUseCase.getLocationDataStream().onEach {
+            when (it) {
+                is ResourceState.Success -> {
+                    _location.add(it.data)
+                    _mapState.value = MapState.HOME
+                }
+                else -> {
+                    _mapState.value = MapState.LOADING
                 }
             }
-        }
+        }.launchIn(modelScope)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -352,7 +339,7 @@ class MapsViewModel @Inject constructor(
             sharedPreferenceHelperImpl.saveWeight(weight.toInt())
             _success.value = Event(Unit)
         } catch (t: Throwable) {
-            _error.value = Event("실수 형태로 입력하세요.")
+//            _error.value = Event("실수 형태로 입력하세요.")
         }
     }
 

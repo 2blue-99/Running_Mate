@@ -40,7 +40,6 @@ class LocationDataHelperImpl @Inject constructor(
 ) : LocationDataHelper {
     private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     override suspend fun startLocationDataStream(): Location? {
-
         val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION

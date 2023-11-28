@@ -8,6 +8,5 @@ import kotlinx.coroutines.flow.Flow
  * pureum
  */
 interface LocationDataRepo {
-//    var getLocationDataStream: Flow<Location>
     suspend fun startLocationDataStream(): Location?
 }
