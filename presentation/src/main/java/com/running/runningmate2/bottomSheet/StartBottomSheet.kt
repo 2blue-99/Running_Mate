@@ -29,10 +29,12 @@ class StartBottomSheet(
         super.onCreateView(inflater, container, savedInstanceState)
 
         binding.includedWeight.bottomTitle.text = "체중"
-        binding.includedDistance.bottomTitle.text = "목표 거리"
-        binding.includedStep.bottomTitle.text = "목표 걸음"
         binding.includedWeight.dataType.text = "Kg"
+
+        binding.includedDistance.bottomTitle.text = "목표 거리"
         binding.includedDistance.dataType.text = "Km"
+
+        binding.includedStep.bottomTitle.text = "목표 걸음"
         binding.includedStep.dataType.text = "걸음"
 
         if(weight != 0) binding.includedWeight.inputEdit.setText("$weight")

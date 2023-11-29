@@ -2,14 +2,10 @@ package com.running.runningmate2.ui.activity
 
 import android.Manifest
 import android.content.Intent
-import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,9 +15,7 @@ import com.running.runningmate2.databinding.ActivityMainBinding
 import com.running.runningmate2.ui.fragment.MapsFragment
 import com.running.runningmate2.ui.fragment.RecordFragment
 import com.running.runningmate2.ui.fragment.ResultFragment
-import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -53,7 +47,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun initUI() {
         loadFragment(MapsFragment())
         binding.customToolbar.bringToFront()
-        bottomNav = findViewById(R.id.bottomNav)
+        bottomNav = findViewById(R.id.bottomBar)
     }
 
     override fun initListener() {
@@ -84,9 +78,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     override fun initObserver() {}
-
-
-
     private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.myFragMent, fragment)
@@ -96,9 +87,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun changeFragment(index: Int) {
         when (index) {
-            // Map 로딩
+            // Map 로딩 + 런닝
             1 -> {
-                binding.bottomNav.visibility = View.INVISIBLE
+                binding.bottomBar.visibility = View.INVISIBLE
             }
             // 결과 페이지
             2 -> {
@@ -109,7 +100,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
             // 메인 페이지
             3 -> {
-                binding.bottomNav.visibility = View.VISIBLE
+                binding.bottomBar.visibility = View.VISIBLE
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.myFragMent, MapsFragment())
@@ -118,3 +109,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 }
+

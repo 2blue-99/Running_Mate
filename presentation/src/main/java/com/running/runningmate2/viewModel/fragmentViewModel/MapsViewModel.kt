@@ -9,9 +9,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -32,7 +30,6 @@ import com.running.runningmate2.utils.MapState.LOADING
 import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -99,6 +96,12 @@ class MapsViewModel @Inject constructor(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
     fun getNowLocation(): Location? = _location.value?.last()
+    fun getNowLatLng(): LatLng? {
+        _location.value?.last()?.let {
+            return LatLng(it.latitude, it.longitude)
+        }
+        return null
+    }
 
     init {
         locationUseCase.getLocationDataStream().onEach {
@@ -134,7 +137,7 @@ class MapsViewModel @Inject constructor(
         calculatorDistance(value)
     }
 
-    fun myTime() {
+    fun startTime() {
         Log.e(javaClass.simpleName, "myTime")
         viewModelScope.launch {
             while (true) {
@@ -170,7 +173,7 @@ class MapsViewModel @Inject constructor(
         }
     }
 
-    fun myStep() {
+    fun startStep() {
         senSor(MyApplication.getApplication())
         notify.observeForever {
             Log.e("TAG", "viewModel count: $it")
@@ -264,12 +267,9 @@ class MapsViewModel @Inject constructor(
         sensorManager.unregisterListener(this)
     }
     fun setData(weight: String) {
-        try {
             sharedPreferenceHelperImpl.saveWeight(weight.toInt())
             _success.value = Event(Unit)
-        } catch (t: Throwable) {
-//            _error.value = Event("실수 형태로 입력하세요.")
-        }
     }
+    fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
 }

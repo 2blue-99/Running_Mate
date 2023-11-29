@@ -5,7 +5,6 @@ import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -117,6 +116,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     binding.setBtn.visibility = View.VISIBLE
                     binding.btnStartStop.visibility = View.VISIBLE
                     binding.followBtn.visibility = View.VISIBLE
+                    binding.runingBox.root.visibility = View.VISIBLE
                 }
                 MapState.END -> {
                     val result = RunningData(
@@ -167,6 +167,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             when(weatherResourceState){
                 is ResourceState.Success ->{
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
+
                     binding.weatherView.weatherLayout.visibility = View.VISIBLE
                     changeWeather(weatherResourceState.data)
                 }
@@ -222,7 +223,26 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     private fun showStartBottomSheet(){
         val startBottomSheet = StartBottomSheet(viewModel.getWeight()) {
+            //입력 바텀시트가 내려간 후,
+            //바텀 시트 내려가기
+            viewModel.saveWeight(it)
+            //거리 계산
+            viewModel.changeState(MapState.RUNNING)
+            (activity as MainActivity).changeFragment(1)
+//            viewModel.getNowLatLng()?.let { initMap(it) }
+            moveNowLocation()
+            //칼로리 계산
+            //화면 확대, 화면 정중앙으로 오기
+            //측정 컴포넌트 표시
+
+            viewModel.startTime()
+            viewModel.startStep()
+
+
+
             viewModel.setData(it)
+
+
         }
         startBottomSheet.show(parentFragmentManager, startBottomSheet.tag)
     }
@@ -275,35 +295,33 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         )
     }
 
-    private fun runningStart() {
-        mMap?.clear()
-        (activity as MainActivity).changeFragment(1)
-        viewModel.myTime()
-        viewModel.myStep()
-
-        //이동고정 버튼
-        binding.followBtn.visibility = View.VISIBLE
-
-        AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
-
-        //빠르게 줌하기 위해 사용
-        if (myNowLong != null && myNowLong != null) {
-            val startZoom = LatLng(myNowLati!! - 0.0006, myNowLong!!)
-            val startLocate = LatLng(myNowLati!!, myNowLong!!)
-            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(startZoom, 17.5F))
-            nowPointMarker = mMap?.addMarker(
-                MarkerOptions()
-                    .position(startLocate)
-                    .title("현재 위치")
-                    .alpha(0.9F)
-                    .icon(
-                        BitmapHelper(
-                            requireContext(),
-                            R.drawable.ic_twotone_mylocate
-                        )
-                    )
-            )
-        }
-        binding.textConstraint.visibility = View.VISIBLE
-    }
+//    private fun runningStart() {
+//        mMap?.clear()
+//        (activity as MainActivity).changeFragment(1)
+//
+//        //이동고정 버튼
+//        binding.followBtn.visibility = View.VISIBLE
+//
+//        AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
+//
+//        //빠르게 줌하기 위해 사용
+//        if (myNowLong != null && myNowLong != null) {
+//            val startZoom = LatLng(myNowLati!! - 0.0006, myNowLong!!)
+//            val startLocate = LatLng(myNowLati!!, myNowLong!!)
+//            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(startZoom, 17.5F))
+//            nowPointMarker = mMap?.addMarker(
+//                MarkerOptions()
+//                    .position(startLocate)
+//                    .title("현재 위치")
+//                    .alpha(0.9F)
+//                    .icon(
+//                        BitmapHelper(
+//                            requireContext(),
+//                            R.drawable.ic_twotone_mylocate
+//                        )
+//                    )
+//            )
+//        }
+//        binding.textConstraint.visibility = View.VISIBLE
+//    }
 }
