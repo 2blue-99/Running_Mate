@@ -46,7 +46,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private var initMap = false
 
     override fun initData() {}
-
     override fun initUI() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
@@ -153,6 +152,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                             nowPointMarker = addMarker(LatLng)
                             addPolyline(location.first(), location.last())
                         }
+                        MapState.LOADING -> {
+
+                        }
                         else -> {
                             showShortToast("위치를 불러올 수 없습니다.")
                         }
@@ -165,17 +167,17 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             when(weatherResourceState){
                 is ResourceState.Success ->{
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-                    binding.weatherView.weatherIcon.visibility = View.VISIBLE
+                    binding.weatherView.weatherLayout.visibility = View.VISIBLE
                     changeWeather(weatherResourceState.data)
                 }
                 is ResourceState.Error -> {
                     showShortToast("날씨 호출에 실패했습니다..")
                     binding.weatherView.loadingIcon.visibility = View.VISIBLE
-                    binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+                    binding.weatherView.weatherLayout.visibility = View.INVISIBLE
                 }
                 is ResourceState.Loading -> {
                     binding.weatherView.loadingIcon.visibility = View.VISIBLE
-                    binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+                    binding.weatherView.weatherLayout.visibility = View.INVISIBLE
                 }
             }
         }
