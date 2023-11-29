@@ -1,12 +1,14 @@
 package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -24,7 +26,6 @@ import com.running.runningmate2.bottomSheet.StartBottomSheet
 import com.running.runningmate2.databinding.FragmentMapsBinding
 import com.running.runningmate2.utils.BitmapHelper
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
-import com.running.runningmate2.utils.EventObserver
 import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.utils.WeatherIconHelper
@@ -40,7 +41,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private val mainViewModel: MainViewModel by activityViewModels()
     private var myNowLati: Double? = null
     private var myNowLong: Double? = null
-    private var isStatic = true
+    private var isStatic = false
     private var initMap = false
 
     override fun initData() {}
@@ -53,8 +54,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         // 스타트, 스탑 버튼
         binding.btnStartStop.setOnClickListener {
             when(viewModel.mapState.value){
-                MapState.HOME -> showStartBottomSheet()
-                MapState.RUNNING -> {}
+                MapState.HOME -> {
+                    showStartBottomSheet()
+                    //viewModel.changeState(MapState.RUNNING)
+                }
+                MapState.RUNNING -> {
+                    //viewModel.changeState(MapState.END)
+                }
                 else -> {}
             }
         }
@@ -62,37 +68,23 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         //현재 위치로 줌 해주는 버튼
         binding.setBtn.setOnClickListener {
             showShortToast("내 위치로 이동")
-            viewModel.getLastLocation()?.let { location ->
-                when(viewModel.mapState.value){
-                    MapState.HOME -> moveCamera(LatLng(location.latitude, location.longitude), 17F)
-                    MapState.RUNNING -> moveCamera(LatLng(location.latitude - 0.0006, location.longitude), 17.5F)
-                    else -> { }
-                }
-            }
+            moveNowLocation()
         }
 
         // 위치 고정 버튼
         binding.followBtn.setOnClickListener {
+            //미고정 시
             if(!isStatic) {
                 isStatic = !isStatic
+                moveNowLocation()
                 Toast.makeText(requireContext(), "화면 고정 기능 ON", Toast.LENGTH_SHORT).show()
-                viewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
-                    moveCamera(LatLng(locations.latitude - 0.0003, locations.longitude), 18F)
-                }
-                binding.followBtn.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.shape_click_btn)
+                changeStaticBtn(R.drawable.shape_click_btn)
             }
-
-
+            // 고정 시
             else {
                 isStatic = !isStatic
                 Toast.makeText(requireContext(), "화면 고정 기능 OFF", Toast.LENGTH_SHORT).show()
-                viewModel.fixDisplayBtn.observe(viewLifecycleOwner) { locations ->
-                    moveCamera(LatLng(locations.latitude - 0.0006, locations.longitude), 17.5F)
-                }
-                viewModel.fixDisplayBtn.removeObservers(viewLifecycleOwner)
-                binding.followBtn.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.shape_set_btn)
+                changeStaticBtn(R.drawable.shape_set_btn)
             }
         }
     }
@@ -100,6 +92,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     override fun initObserver() {
         // UI 수정
         viewModel.mapState.observe(viewLifecycleOwner){
+            Log.e("TAG", "initObserver: mapState $it", )
             when(it){
                 MapState.LOADING -> {
                     binding.progressBar.root.visibility = View.VISIBLE
@@ -108,13 +101,11 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     binding.followBtn.visibility = View.INVISIBLE
                 }
                 MapState.HOME -> {
-                    if(initMap) {
-                        binding.btnStartStop.text = "START"
-                        binding.progressBar.root.visibility = View.INVISIBLE
-                        binding.setBtn.visibility = View.VISIBLE
-                        binding.btnStartStop.visibility = View.VISIBLE
-                        binding.followBtn.visibility = View.VISIBLE
-                    }
+                    binding.btnStartStop.text = "START"
+                    binding.progressBar.root.visibility = View.INVISIBLE
+                    binding.setBtn.visibility = View.VISIBLE
+                    binding.btnStartStop.visibility = View.VISIBLE
+                    binding.followBtn.visibility = View.VISIBLE
                 }
                 MapState.RUNNING -> {
                     binding.btnStartStop.text = "STOP"
@@ -139,11 +130,31 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 }
             }
         }
+        //GPS 현 위치 옵져버 / 마커 찍기, 카메라 무빙
+        viewModel.location.observe(viewLifecycleOwner) { location ->
+            mMap?.let {
+                LatLng(location.last().latitude, location.last().longitude).let { LatLng ->
+                    when(viewModel.mapState.value){
+                        MapState.HOME -> {
+                            addMarker(LatLng)
+                            if(!initMap) initMap(LatLng)
+                            if(isStatic) moveCamera(LatLng, 17F)
 
-        viewModel.success.observe(viewLifecycleOwner, EventObserver {
-            runningStart()
-            binding.btnStartStop.text = "Stop"
-        })
+                        }
+                        MapState.RUNNING -> {
+                            viewModel.setLatLng(LatLng)
+                            if(isStatic) moveCamera(LatLng, 17F)
+                            nowPointMarker?.remove()
+                            nowPointMarker = addMarker(LatLng)
+                            addPolyline(location.first(), location.last())
+                        }
+                        else -> {
+                            showShortToast("위치를 불러올 수 없습니다.")
+                        }
+                    }
+                }
+            }
+        }
 
         viewModel.weatherData.observe(viewLifecycleOwner) { myData ->
             binding.weatherView.loadingIcon.visibility = View.INVISIBLE
@@ -175,36 +186,19 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         viewModel.step.observe(viewLifecycleOwner) {
             if (it != null) binding.runingBox.runStepText.text = "$it 걸음"
         }
-        //GPS 현 위치 옵져버
-        viewModel.location.observe(viewLifecycleOwner) { location ->
-            mMap?.let {
-                LatLng(location.last().latitude, location.last().longitude).let { LatLng ->
-                    when(viewModel.mapState.value){
-                        MapState.HOME -> {
-                            addMarker(LatLng)
-                            if(isStatic){
-                                isStatic = false
-                                moveCamera(LatLng(location.last().latitude, location.last().longitude), 17F)
-                            }
-                        }
-                        MapState.RUNNING -> {
-                            viewModel.setLatLng(LatLng)
-                            if(isStatic){
-                                moveCamera(LatLng(location.last().latitude, location.last().longitude), 17F)
-                            }
-                            nowPointMarker?.remove()
-                            nowPointMarker = addMarker(LatLng)
-                            addPolyline(location.first(), location.last())
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+    }
+
+    private fun changeStaticBtn(@DrawableRes icon: Int){
+        binding.followBtn.background = ContextCompat.getDrawable(requireContext(), icon)
+    }
+
+    private fun initMap(location: LatLng){
+        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17F))
+        initMap = true
     }
 
     private fun showStartBottomSheet(){
@@ -231,13 +225,20 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
     }
 
-    private fun moveCamera(location: LatLng, zoom: Float){
-        if(initMap)
-            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
-        else {
-            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
-            initMap = true
+    private fun moveNowLocation(){
+        viewModel.getNowLocation()?.let { location ->
+            when(viewModel.mapState.value){
+                MapState.HOME ->
+                    moveCamera(LatLng(location.latitude, location.longitude), 17F)
+                MapState.RUNNING ->
+                    moveCamera(LatLng(location.latitude - 0.0006, location.longitude), 17.5F)
+                else -> {}
+            }
         }
+    }
+
+    private fun moveCamera(location: LatLng, zoom: Float){
+            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
     }
     private fun addMarker(location: LatLng): Marker? {
         mMap?.clear()
