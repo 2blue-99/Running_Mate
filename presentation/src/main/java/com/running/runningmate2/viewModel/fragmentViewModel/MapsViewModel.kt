@@ -96,12 +96,14 @@ class MapsViewModel @Inject constructor(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
     fun getNowLocation(): Location? = _location.value?.last()
-    fun getNowLatLng(): LatLng? {
-        _location.value?.last()?.let {
-            return LatLng(it.latitude, it.longitude)
-        }
-        return null
-    }
+
+    var loading: Boolean = false
+//    fun getNowLatLng(): LatLng? {
+//        _location.value?.last()?.let {
+//            return LatLng(it.latitude, it.longitude)
+//        }
+//        return null
+//    }
 
     init {
         locationUseCase.getLocationDataStream().onEach {
@@ -122,7 +124,15 @@ class MapsViewModel @Inject constructor(
     fun getWeatherData() {
         modelScope.launch {
             WeatherHelper.makeRequest(_location.value?.last()).let { request ->
-                getWeatherUseCase(request).collect {
+                getWeatherUseCase(request).onEach {
+                    when(it){
+                        is ResourceState.Success -> {
+                            loading = false
+                            _weatherData.postValue(it)
+                        }
+                        else ->
+                            loading = true
+                    }
                     _weatherData.postValue(it)
                 }
             }

@@ -1,5 +1,6 @@
 package com.running.runningmate2.ui.fragment
 
+import android.app.Activity
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -27,6 +28,7 @@ import com.running.runningmate2.databinding.FragmentMapsBinding
 import com.running.runningmate2.utils.BitmapHelper
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.MapState
+import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.utils.WeatherHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
@@ -88,7 +90,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         binding.weatherView.root.setOnClickListener {
-            viewModel.getWeatherData()
+            if(!viewModel.loading)
+                viewModel.getWeatherData()
         }
     }
 
