@@ -29,21 +29,21 @@ import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.MapState.HOME
 import com.running.runningmate2.utils.MapState.LOADING
-import com.running.runningmate2.utils.WeatherRequestMaker
+import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val sharedPreferences: SharedPreferenceHelperImpl,
-    private val locationUseCase: LocationUseCase,
-    private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
+        private val locationUseCase: LocationUseCase,
+        private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel(), SensorEventListener {
 
     private val _distance = MutableLiveData<Double>()
@@ -67,9 +67,9 @@ class MapsViewModel @Inject constructor(
     private val _notify = MutableLiveData<Unit>()
     val notify: LiveData<Unit> get() = _notify
 
-    private val _weatherData = MutableLiveData<DomainWeather?>()
-    val weatherData: LiveData<DomainWeather?> get() = _weatherData
-    fun getWeatherData() = weatherData.value
+    private val _weatherData = MutableLiveData<ResourceState<DomainWeather>>()
+    val weatherData: LiveData<ResourceState<DomainWeather>> get() = _weatherData
+//    fun getWeatherData() = weatherData.value
 
     private val _success = MutableLiveData<Event<Unit>>()
     val success: LiveData<Event<Unit>> get() = _success
@@ -116,25 +116,12 @@ class MapsViewModel @Inject constructor(
         }.launchIn(modelScope)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getWeatherData(location: Location) {
+    fun getWeatherData() {
         modelScope.launch {
-            try {
-                val data = WeatherRequestMaker(location)
-                val weatherRes = getWeatherUseCase(data)
-                _weatherData.postValue(weatherRes)
-            } catch (e: Exception) {
-                val fakeData = DomainWeather(
-                    temperatures = 0.0.toString(),
-                    rn1 = 0.0.toString(),
-                    eastWestWind = 0.0.toString(),
-                    southNorthWind = 0.0.toString(),
-                    humidity = 0.0.toString(),
-                    rainType = 0.0.toString(),
-                    windDirection = 0.0.toString(),
-                    windSpeed = 0.0.toString()
-                )
-                _weatherData.postValue(fakeData)
+            WeatherHelper.makeRequest(_location.value?.last()).let { request ->
+                getWeatherUseCase(request).collect {
+                    _weatherData.postValue(it)
+                }
             }
         }
     }
@@ -276,12 +263,6 @@ class MapsViewModel @Inject constructor(
     private fun killSensor() {
         sensorManager.unregisterListener(this)
     }
-
-//    fun removeLocation(){
-//        onCleared()
-//        locationUseCase.removeLocationDataStream()
-//    }
-
     fun setData(weight: String) {
         try {
             sharedPreferenceHelperImpl.saveWeight(weight.toInt())
@@ -290,6 +271,5 @@ class MapsViewModel @Inject constructor(
 //            _error.value = Event("실수 형태로 입력하세요.")
         }
     }
-
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
 }

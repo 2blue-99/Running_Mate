@@ -1,15 +1,15 @@
 package com.running.data.remote.dataSourceImpl
 
-import android.util.Log
+import com.running.data.exception.errorHandler
 import com.running.data.remote.dataSource.WeatherDataSource
 import com.running.data.remote.model.WeatherData
-import retrofit2.Retrofit
+import com.running.data.state.ResponseState
+import com.running.domain.state.ResourceState
 import javax.inject.Inject
 
 class WeatherDataSourceImpl @Inject constructor(
-    private val retrofit: Retrofit
-): WeatherDataSource {
-    override suspend fun getWeatherData(data: HashMap<String, String>): WeatherData =
-        retrofit.create(WeatherDataSource::class.java).getWeatherData(data)
-
+    private val dataSource: WeatherDataSource
+) {
+    suspend fun getWeatherData(data: HashMap<String, String>): ResponseState<WeatherData> =
+        dataSource.getWeatherData(data).errorHandler()
 }

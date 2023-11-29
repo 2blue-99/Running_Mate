@@ -1,7 +1,6 @@
 package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
@@ -18,7 +17,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.ktx.addPolyline
+import com.running.domain.SavedData.DomainWeather
 import com.running.domain.model.RunningData
+import com.running.domain.state.ResourceState
 import com.running.runningmate2.ui.activity.MainActivity
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
@@ -28,7 +29,7 @@ import com.running.runningmate2.utils.BitmapHelper
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.TimeHelper
-import com.running.runningmate2.utils.WeatherIconHelper
+import com.running.runningmate2.utils.WeatherHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
@@ -86,6 +87,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 Toast.makeText(requireContext(), "화면 고정 기능 OFF", Toast.LENGTH_SHORT).show()
                 changeStaticBtn(R.drawable.shape_set_btn)
             }
+        }
+
+        binding.weatherView.root.setOnClickListener {
+            viewModel.getWeatherData()
         }
     }
 
@@ -155,19 +160,24 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 }
             }
         }
-
-        viewModel.weatherData.observe(viewLifecycleOwner) { myData ->
-            binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-            binding.weatherView.weatherIcon.visibility = View.VISIBLE
-
-            if(myData?.temperatures != null) binding.weatherView.weatherTem.text = "${myData.temperatures.toDouble().let { it.roundToInt() }} ºc"
-            else binding.weatherView.weatherTem.text = "loading.."
-
-            if (myData?.humidity != null)  binding.weatherView.humidity.text = "${myData.humidity} %"
-            else binding.weatherView.humidity.text = "loading.."
-
-            if(myData?.rainType != null) binding.weatherView.weatherIcon.background = WeatherIconHelper(myData.rainType.toDouble().toInt())
-            else binding.weatherView.weatherIcon.background = WeatherIconHelper(-1)
+        // 날씨 정보 옵져버
+        viewModel.weatherData.observe(viewLifecycleOwner) { weatherResourceState ->
+            when(weatherResourceState){
+                is ResourceState.Success ->{
+                    binding.weatherView.loadingIcon.visibility = View.INVISIBLE
+                    binding.weatherView.weatherIcon.visibility = View.VISIBLE
+                    changeWeather(weatherResourceState.data)
+                }
+                is ResourceState.Error -> {
+                    showShortToast("날씨 호출에 실패했습니다..")
+                    binding.weatherView.loadingIcon.visibility = View.VISIBLE
+                    binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+                }
+                is ResourceState.Loading -> {
+                    binding.weatherView.loadingIcon.visibility = View.VISIBLE
+                    binding.weatherView.weatherIcon.visibility = View.INVISIBLE
+                }
+            }
         }
 
         viewModel.time.observe(viewLifecycleOwner) { time ->
@@ -192,12 +202,19 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         mMap = googleMap
     }
 
+    private fun changeWeather(data: DomainWeather){
+        binding.weatherView.weatherTem.text = "${data.temperatures.toDouble().let { it.roundToInt() }} ºc"
+        binding.weatherView.humidity.text = "${data.humidity} %"
+        binding.weatherView.weatherIcon.background = WeatherHelper.makeIcon(data.rainType.toDouble().toInt())
+    }
+
     private fun changeStaticBtn(@DrawableRes icon: Int){
         binding.followBtn.background = ContextCompat.getDrawable(requireContext(), icon)
     }
 
     private fun initMap(location: LatLng){
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17F))
+        viewModel.getWeatherData()
+        moveCamera(location, 17F)
         initMap = true
     }
 

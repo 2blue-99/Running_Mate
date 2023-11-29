@@ -3,6 +3,7 @@ package com.running.data.di
 import com.running.data.local.location.LocationDataHelper
 import com.running.data.local.room.AppDataBase
 import com.running.data.remote.dataSource.WeatherDataSource
+import com.running.data.remote.dataSourceImpl.WeatherDataSourceImpl
 import com.running.data.repoImpl.WeatherDataDataRepoImpl
 import com.running.data.repoImpl.LocalDataRepoImpl
 import com.running.data.repoImpl.LocationDataRepoImpl
@@ -25,7 +26,7 @@ object RepoModule {
 
     @Singleton
     @Provides
-    fun provideWeatherRepo(dataSource: WeatherDataSource): WeatherDataRepo =
+    fun provideWeatherRepo(dataSource: WeatherDataSourceImpl): WeatherDataRepo =
         WeatherDataDataRepoImpl(dataSource)
 
     @Singleton
