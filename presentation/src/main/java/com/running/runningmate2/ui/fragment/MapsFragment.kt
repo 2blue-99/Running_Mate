@@ -166,13 +166,14 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
         // 날씨 정보 옵져버
-        viewModel.weatherData.observe(viewLifecycleOwner) { weatherResourceState ->
-            when(weatherResourceState){
+        viewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
+            Log.e("TAG", "initObserver weather : $weatherState", )
+            when(weatherState){
                 is ResourceState.Success ->{
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
 
                     binding.weatherView.weatherLayout.visibility = View.VISIBLE
-                    changeWeather(weatherResourceState.data)
+                    changeWeather(weatherState.data)
                 }
                 is ResourceState.Error -> {
                     showShortToast("날씨 호출에 실패했습니다..")

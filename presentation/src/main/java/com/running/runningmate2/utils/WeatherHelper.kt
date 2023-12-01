@@ -62,7 +62,6 @@ object WeatherHelper {
 
     fun makeRequest(myLocation: Location?): HashMap<String, String> {
         val now = LocalDateTime.now()
-        Log.e("TAG", "now : $now")
         val baseTime = when {
             now.hour > 11 -> {
                 if (now.minute < 40) "${now.hour - 1}00"

@@ -1,5 +1,6 @@
 package com.running.data.exception
 
+import android.util.Log
 import com.running.data.state.ResponseState
 import com.running.domain.util.Constants
 import okhttp3.internal.http2.ErrorCode
@@ -9,6 +10,7 @@ import java.io.IOException
 
 inline fun <reified T: Any> Response<T>.errorHandler(): ResponseState<T> {
     return try{
+        Log.e("TAG", "errorHandler: $this", )
         when(this.code()){
             Constants.CODE_UN_AUTHORIZE -> ResponseState.Error(message = "404 Err")
             Constants.CODE_BAD_REQUEST -> ResponseState.Error(message = "401 Err")

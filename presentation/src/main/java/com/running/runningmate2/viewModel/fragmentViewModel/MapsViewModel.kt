@@ -33,6 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.lang.Math.sqrt
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,7 +67,6 @@ class MapsViewModel @Inject constructor(
 
     private val _weatherData = MutableLiveData<ResourceState<DomainWeather>>()
     val weatherData: LiveData<ResourceState<DomainWeather>> get() = _weatherData
-//    fun getWeatherData() = weatherData.value
 
     private val _success = MutableLiveData<Event<Unit>>()
     val success: LiveData<Event<Unit>> get() = _success
@@ -98,12 +98,6 @@ class MapsViewModel @Inject constructor(
     fun getNowLocation(): Location? = _location.value?.last()
 
     var loading: Boolean = false
-//    fun getNowLatLng(): LatLng? {
-//        _location.value?.last()?.let {
-//            return LatLng(it.latitude, it.longitude)
-//        }
-//        return null
-//    }
 
     init {
         locationUseCase.getLocationDataStream().onEach {
@@ -134,7 +128,7 @@ class MapsViewModel @Inject constructor(
                             loading = true
                     }
                     _weatherData.postValue(it)
-                }
+                }.launchIn(modelScope)
             }
         }
     }
@@ -193,11 +187,6 @@ class MapsViewModel @Inject constructor(
             }
         }
     }
-
-    fun stepInit() {
-        killSensor()
-    }
-
     private fun calculatorDistance(value: LatLng) {
         locationData.add(value)
         if (locationData.size > 1) {
@@ -226,7 +215,6 @@ class MapsViewModel @Inject constructor(
             }
         }
     }
-
     @SuppressLint("ServiceCast")
     fun senSor(application: Application) {
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -241,15 +229,13 @@ class MapsViewModel @Inject constructor(
         )
 
     }
-
-
     override fun onSensorChanged(event: SensorEvent?) {
         val x: Float = event?.values?.get(0) as Float
         val y: Float = event.values?.get(1) as Float
         val z: Float = event.values?.get(2) as Float
 
         accelLast = accelCurrent
-        accelCurrent = Math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+        accelCurrent = kotlin.math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
 
         val delta: Float = accelCurrent - accelLast
 
@@ -258,28 +244,20 @@ class MapsViewModel @Inject constructor(
         System.currentTimeMillis()
         if (accel > 15) {
             val currentTime = System.currentTimeMillis()
-            if (myShakeTime + skip > currentTime) {
-                return
-            }
+            if (myShakeTime + skip > currentTime) return
             myShakeTime = currentTime
             notifySensorChange()
-
         }
     }
 
-    private fun notifySensorChange() {
-        _notify.value = Unit
-    }
-
+    private fun notifySensorChange() { _notify.value = Unit }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-    private fun killSensor() {
-        sensorManager.unregisterListener(this)
-    }
+    private fun killSensor() { sensorManager.unregisterListener(this) }
     fun setData(weight: String) {
             sharedPreferenceHelperImpl.saveWeight(weight.toInt())
             _success.value = Event(Unit)
     }
     fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
+    fun stepInit() { killSensor() }
 }
