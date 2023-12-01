@@ -1,5 +1,6 @@
 package com.running.runningmate2.ui.fragment
 
+import android.app.Activity
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -59,18 +60,18 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     //viewModel.changeState(MapState.RUNNING)
                 }
                 MapState.RUNNING -> {
-                    //viewModel.changeState(MapState.END)
+                    // TODO 저장
+
+                    (activity as MainActivity).changeFragment(2)
                 }
                 else -> {}
             }
         }
-
         //현재 위치로 줌 해주는 버튼
         binding.setBtn.setOnClickListener {
             showShortToast("내 위치로 이동")
             moveNowLocation()
         }
-
         // 위치 고정 버튼
         binding.followBtn.setOnClickListener {
             //미고정 시
@@ -197,6 +198,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.step.observe(viewLifecycleOwner) {
+            Log.e("TAG", "initObserver step: $it", )
             if (it != null) binding.runingBox.runStepText.text = "$it 걸음"
         }
     }
@@ -229,9 +231,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             moveNowLocation()
             viewModel.startTime()
             viewModel.startStep()
-            viewModel.setData(it)
-
-
         }
         startBottomSheet.show(parentFragmentManager, startBottomSheet.tag)
     }

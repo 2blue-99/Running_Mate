@@ -8,12 +8,10 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
-import android.location.LocationManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
 import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.state.ResourceState
@@ -21,7 +19,6 @@ import com.running.domain.usecase.GetWeatherUseCase
 import com.running.domain.usecase.LocationUseCase
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
-import com.running.runningmate2.utils.Event
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
@@ -54,15 +51,9 @@ class MapsViewModel @Inject constructor(
     private val _step = MutableLiveData(0)
     val step: LiveData<Int> get() = _step
 
-    private val _notify = MutableLiveData<Unit>()
-    val notify: LiveData<Unit> get() = _notify
-
     private val _weatherData = MutableLiveData<ResourceState<DomainWeather>>()
     val weatherData: LiveData<ResourceState<DomainWeather>> get() = _weatherData
     fun isWeatherLoading() = _weatherData.value is ResourceState.Loading
-
-    private val _success = MutableLiveData<Event<Unit>>()
-    val success: LiveData<Event<Unit>> get() = _success
 
     private var _second = 0
     private var _minute = 0
@@ -120,7 +111,6 @@ class MapsViewModel @Inject constructor(
             }
         }
     }
-
     fun startTime() {
         Log.e(javaClass.simpleName, "myTime")
         viewModelScope.launch {
@@ -159,13 +149,13 @@ class MapsViewModel @Inject constructor(
 
     fun startStep() {
         senSor(MyApplication.getApplication())
-        notify.observeForever {
-            Log.e("TAG", "viewModel count: $it")
-            _step.value?.let {
-                Log.e("TAG", " _step.value : $it")
-                _step.value = it + 1
-            }
-        }
+//        step.observeForever {
+//            Log.e("TAG", "viewModel count: $it")
+//            _step.value?.let {
+//                Log.e("TAG", " _step.value : $it")
+//                _step.value = it + 1
+//            }
+//        }
     }
     fun calculateDistance() {
         if(_location.size() > 1){
@@ -203,25 +193,18 @@ class MapsViewModel @Inject constructor(
         accelLast = accelCurrent
         accelCurrent = kotlin.math.sqrt((x * x + y * y + z * z).toDouble()).toFloat()
 
-        val delta: Float = accelCurrent - accelLast
+        accel = accel * 0.9f + accelCurrent - accelLast
 
-        accel = accel * 0.9f + delta
-
-        System.currentTimeMillis()
         if (accel > 15) {
             val currentTime = System.currentTimeMillis()
             if (myShakeTime + skip > currentTime) return
             myShakeTime = currentTime
-            notifySensorChange()
+            _step.value = _step.value?.plus(1)
         }
     }
-
-    private fun notifySensorChange() { _notify.value = Unit }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-    private fun killSensor() { sensorManager.unregisterListener(this) }
-    fun setData(weight: String) {
-            sharedPreferenceHelperImpl.saveWeight(weight.toInt())
-            _success.value = Event(Unit)
+    private fun killSensor() {
+        sensorManager.unregisterListener(this)
     }
     fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
