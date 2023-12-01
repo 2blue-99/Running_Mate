@@ -1,10 +1,16 @@
 package com.running.runningmate2.utils
 
+import android.location.Location
 import androidx.lifecycle.MutableLiveData
 
 class ListLiveData<T>: MutableLiveData<ArrayList<T>>(){
     init {
         value = arrayListOf()
+    }
+
+    fun set(item: T){
+        value?.clear()
+        value?.add(item)
     }
 
     fun add(item: T){
@@ -15,18 +21,8 @@ class ListLiveData<T>: MutableLiveData<ArrayList<T>>(){
         value = items
     }
 
-    fun addAll(itemList: List<T>){
-        val items = value
-        items?.addAll(itemList)
-        value = items
-    }
+    fun size():Int = value?.size ?: 0
 
-    fun clear() {
-        val items = value
-        if(items?.size!! > 2){
-            items.removeAt(0)
-        }
-
-        value = items
-    }
+    fun getFirst():T = value?.first()!!
+    fun getSecond():T = value?.last()!!
 }

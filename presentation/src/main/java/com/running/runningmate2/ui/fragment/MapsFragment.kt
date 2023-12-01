@@ -108,22 +108,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
 
-        // UI 수정
         viewModel.mapState.observe(viewLifecycleOwner){
             when(it){
                 MapState.RESUME -> {
                     binding.btnStartStop.text = "START"
-//                    binding.progressBar.root.visibility = View.INVISIBLE
-//                    binding.setBtn.visibility = View.VISIBLE
-//                    binding.btnStartStop.visibility = View.VISIBLE
-//                    binding.followBtn.visibility = View.VISIBLE
                 }
                 MapState.RUNNING -> {
                     binding.btnStartStop.text = "STOP"
-//                    binding.progressBar.root.visibility = View.INVISIBLE
-//                    binding.setBtn.visibility = View.VISIBLE
-//                    binding.btnStartStop.visibility = View.VISIBLE
-//                    binding.followBtn.visibility = View.VISIBLE
                     binding.runingBox.root.visibility = View.VISIBLE
                 }
                 MapState.END -> {
@@ -154,7 +145,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
                         }
                         MapState.RUNNING -> {
-                            viewModel.setLatLng(LatLng)
+                            viewModel.calculateDistance()
                             if(isStatic) moveCamera(LatLng, 17F)
                             nowPointMarker?.remove()
                             nowPointMarker = addMarker(LatLng)
@@ -169,21 +160,24 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
         // 날씨 정보 옵져버
         viewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
+            Log.e("TAG", "viewModel.weatherData.observe: $weatherState", )
             when(weatherState){
                 is ResourceState.Success ->{
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-
                     binding.weatherView.weatherLayout.visibility = View.VISIBLE
+                    binding.weatherView.txtClickRetry.visibility = View.INVISIBLE
                     changeWeather(weatherState.data)
                 }
                 is ResourceState.Error -> {
                     showShortToast("날씨 호출에 실패했습니다..")
-                    binding.weatherView.loadingIcon.visibility = View.VISIBLE
+                    binding.weatherView.loadingIcon.visibility = View.INVISIBLE
                     binding.weatherView.weatherLayout.visibility = View.INVISIBLE
+                    binding.weatherView.txtClickRetry.visibility = View.VISIBLE
                 }
                 is ResourceState.Loading -> {
                     binding.weatherView.loadingIcon.visibility = View.VISIBLE
                     binding.weatherView.weatherLayout.visibility = View.INVISIBLE
+                    binding.weatherView.txtClickRetry.visibility = View.INVISIBLE
                 }
             }
         }
