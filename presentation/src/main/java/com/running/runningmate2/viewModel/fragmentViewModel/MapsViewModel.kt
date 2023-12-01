@@ -28,6 +28,7 @@ import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -46,12 +47,6 @@ class MapsViewModel @Inject constructor(
 
     private val _calorie = MutableLiveData<Double>()
     val calorie: LiveData<Double> get() = _calorie
-
-    private val _fixDisplayBtn = MutableLiveData<LatLng>()
-    val fixDisplayBtn: LiveData<LatLng> get() = _fixDisplayBtn
-    // Location 을 Polyline을 그리기 위해 LatLng 로 바꿔 관리.
-    private val _latLng = ListLiveData<LatLng>()
-    val latLng: LiveData<ArrayList<LatLng>> get() = _latLng
 
     private val _time = MutableLiveData<String>()
     val time: LiveData<String> get() = _time
@@ -75,11 +70,6 @@ class MapsViewModel @Inject constructor(
     private var second = ""
     private var minute = ""
     private var hour = ""
-    private var calorieHap = 0.0
-    private val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
-    private val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
-    private val locationData = ArrayList<LatLng>()
-    private var distanceHap: Double = 0.0
     private var accel: Float = 0.0f
     private var accelCurrent: Float = 0.0f
     private var accelLast: Float = 0.0f
@@ -100,6 +90,7 @@ class MapsViewModel @Inject constructor(
         locationUseCase.getLocationDataStream().onEach {
             when (it) {
                 is ResourceState.Success -> {
+                    isLoading.value = false
                     _location.add(it.data)
                 }
                 else -> {
@@ -107,6 +98,7 @@ class MapsViewModel @Inject constructor(
                     _location.add(Location(null))
                 }
             }
+            Log.e("TAG", "${_location.value}: ", )
         }.launchIn(modelScope)
     }
 
@@ -122,17 +114,11 @@ class MapsViewModel @Inject constructor(
                             _weatherData.postValue(it)
                         }
                     }
+                }.catch {
+                    _weatherData.postValue(ResourceState.Error(message = "UnHandle Err"))
                 }.launchIn(modelScope)
             }
         }
-    }
-
-    fun setLatLng(value: LatLng) {
-        _latLng.add(value)
-        _latLng.clear()
-        val now = LatLng(value.latitude, value.longitude)
-        _fixDisplayBtn.value = now
-        calculatorDistance(value)
     }
 
     fun startTime() {
@@ -181,34 +167,21 @@ class MapsViewModel @Inject constructor(
             }
         }
     }
-    private fun calculatorDistance(value: LatLng) {
-        locationData.add(value)
-        if (locationData.size > 1) {
-            if (locationData.size == 2) {
-                beforeLocate.latitude = locationData.first().latitude
-                beforeLocate.longitude = locationData.first().longitude
-            }
-            afterLocate.latitude = locationData.last().latitude
-            afterLocate.longitude = locationData.last().longitude
+    fun calculateDistance() {
 
-            var result = beforeLocate.distanceTo(afterLocate).toDouble()
-
+        if(_location.size() > 1){
+            var result = _location.getFirst().distanceTo(_location.getSecond()).toDouble()
             if (result <= 2) result = 0.0
-            Log.e("TAG", " 거리 result : $result")
-
-            distanceHap += result
-            _distance.value = distanceHap
-
-            beforeLocate.latitude = locationData.last().latitude
-            beforeLocate.longitude = locationData.last().longitude
-
-            if (result != 0.0) {
-                val myCalorie = Calorie(sharedPreferences.getWeight()).myCalorie()
-                calorieHap += myCalorie
-                _calorie.value = calorieHap
-            }
+            _distance.value = _distance.value?.plus(result)
+            if (result != 0.0) calculateCalorie()
         }
     }
+
+    private fun calculateCalorie(){
+        val weight = sharedPreferences.getWeight()
+        _calorie.value = _calorie.value?.plus(Calorie(weight).myCalorie())
+    }
+
     @SuppressLint("ServiceCast")
     fun senSor(application: Application) {
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager

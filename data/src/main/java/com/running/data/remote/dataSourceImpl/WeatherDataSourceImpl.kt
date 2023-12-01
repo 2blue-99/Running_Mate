@@ -10,6 +10,7 @@ import javax.inject.Inject
 class WeatherDataSourceImpl @Inject constructor(
     private val dataSource: WeatherDataSource
 ) {
-    suspend fun getWeatherData(data: HashMap<String, String>): ResponseState<WeatherData> =
-        dataSource.getWeatherData(data).errorHandler()
+    suspend fun getWeatherData(data: HashMap<String, String>): ResponseState<WeatherData> {
+        return dataSource.getWeatherData(data).errorHandler()
+    }
 }
