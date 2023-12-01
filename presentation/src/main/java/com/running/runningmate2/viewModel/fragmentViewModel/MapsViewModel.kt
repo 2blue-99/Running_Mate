@@ -168,7 +168,6 @@ class MapsViewModel @Inject constructor(
         }
     }
     fun calculateDistance() {
-
         if(_location.size() > 1){
             var result = _location.getFirst().distanceTo(_location.getSecond()).toDouble()
             if (result <= 2) result = 0.0

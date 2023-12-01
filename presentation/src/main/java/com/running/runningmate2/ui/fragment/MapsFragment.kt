@@ -36,6 +36,7 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
+    private var marker: Marker? = null
     private var nowPointMarker: Marker? = null
     private val viewModel: MapsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -109,6 +110,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.mapState.observe(viewLifecycleOwner){
+            Log.e("TAG", "mapState: $it", )
             when(it){
                 MapState.RESUME -> {
                     binding.btnStartStop.text = "START"
@@ -139,16 +141,15 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 LatLng(location.last().latitude, location.last().longitude).let { LatLng ->
                     when(viewModel.mapState.value){
                         MapState.RESUME -> {
-                            addMarker(LatLng)
+                            marker = addMarker(LatLng)
                             if(!initMap) initMap(LatLng)
                             if(isStatic) moveCamera(LatLng, 17F)
 
                         }
                         MapState.RUNNING -> {
+                            marker = addMarker(LatLng)
                             viewModel.calculateDistance()
-                            if(isStatic) moveCamera(LatLng, 17F)
-                            nowPointMarker?.remove()
-                            nowPointMarker = addMarker(LatLng)
+                            if(isStatic) moveCamera(LatLng, 17.5F)
                             addPolyline(location.first(), location.last())
                         }
                         else -> {
@@ -169,7 +170,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     changeWeather(weatherState.data)
                 }
                 is ResourceState.Error -> {
-                    showShortToast("날씨 호출에 실패했습니다..")
+                    showShortToast("날씨 로딩 실패..")
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
                     binding.weatherView.weatherLayout.visibility = View.INVISIBLE
                     binding.weatherView.txtClickRetry.visibility = View.VISIBLE
@@ -222,24 +223,12 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
 
     private fun showStartBottomSheet(){
         val startBottomSheet = StartBottomSheet(viewModel.getWeight()) {
-            //입력 바텀시트가 내려간 후,
-
-            //바텀 시트 내려가기
-            viewModel.saveWeight(it)
-            //거리 계산
             viewModel.changeState(MapState.RUNNING)
+            viewModel.saveWeight(it)
             (activity as MainActivity).changeFragment(1)
-//            viewModel.getNowLatLng()?.let { initMap(it) }
             moveNowLocation()
-            //칼로리 계산
-            //화면 확대, 화면 정중앙으로 오기
-            //측정 컴포넌트 표시
-
             viewModel.startTime()
             viewModel.startStep()
-
-
-
             viewModel.setData(it)
 
 
@@ -248,15 +237,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun addPolyline(beforeLocation: Location, nowLocation: Location){
-        val beforeLocate = Location(LocationManager.NETWORK_PROVIDER)
-        val afterLocate = Location(LocationManager.NETWORK_PROVIDER)
-        beforeLocate.latitude = beforeLocation.latitude
-        beforeLocate.longitude = beforeLocation.longitude
-        afterLocate.latitude = nowLocation.latitude
-        afterLocate.longitude = nowLocation.longitude
-
         mMap?.addPolyline {
-            add(LatLng(beforeLocate.latitude, beforeLocate.longitude), LatLng(nowLocation.latitude, nowLocation.longitude))
+            add(LatLng(beforeLocation.latitude, beforeLocation.longitude), LatLng(nowLocation.latitude, nowLocation.longitude))
             width(20F)
             startCap(RoundCap())
             endCap(RoundCap())
@@ -280,7 +262,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
     }
     private fun addMarker(location: LatLng): Marker? {
-        mMap?.clear()
+        marker?.remove()
         return mMap?.addMarker(
             MarkerOptions()
                 .position(location)
@@ -294,34 +276,4 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 )
         )
     }
-
-//    private fun runningStart() {
-//        mMap?.clear()
-//        (activity as MainActivity).changeFragment(1)
-//
-//        //이동고정 버튼
-//        binding.followBtn.visibility = View.VISIBLE
-//
-//        AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
-//
-//        //빠르게 줌하기 위해 사용
-//        if (myNowLong != null && myNowLong != null) {
-//            val startZoom = LatLng(myNowLati!! - 0.0006, myNowLong!!)
-//            val startLocate = LatLng(myNowLati!!, myNowLong!!)
-//            mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(startZoom, 17.5F))
-//            nowPointMarker = mMap?.addMarker(
-//                MarkerOptions()
-//                    .position(startLocate)
-//                    .title("현재 위치")
-//                    .alpha(0.9F)
-//                    .icon(
-//                        BitmapHelper(
-//                            requireContext(),
-//                            R.drawable.ic_twotone_mylocate
-//                        )
-//                    )
-//            )
-//        }
-//        binding.textConstraint.visibility = View.VISIBLE
-//    }
 }
