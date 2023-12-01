@@ -25,15 +25,12 @@ import com.running.runningmate2.utils.Event
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
-import com.running.runningmate2.utils.MapState.HOME
-import com.running.runningmate2.utils.MapState.LOADING
 import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Math.sqrt
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,6 +64,7 @@ class MapsViewModel @Inject constructor(
 
     private val _weatherData = MutableLiveData<ResourceState<DomainWeather>>()
     val weatherData: LiveData<ResourceState<DomainWeather>> get() = _weatherData
+    fun isWeatherLoading() = _weatherData.value is ResourceState.Loading
 
     private val _success = MutableLiveData<Event<Unit>>()
     val success: LiveData<Event<Unit>> get() = _success
@@ -96,19 +94,16 @@ class MapsViewModel @Inject constructor(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
     fun getNowLocation(): Location? = _location.value?.last()
-
-    var loading: Boolean = false
+    val loading: LiveData<Boolean> get() = isLoading
 
     init {
         locationUseCase.getLocationDataStream().onEach {
-            Log.e("TAG", "init $it: ", )
             when (it) {
                 is ResourceState.Success -> {
-                    _mapState.value = HOME
                     _location.add(it.data)
                 }
                 else -> {
-                    _mapState.value = LOADING
+                    isLoading.value = true
                     _location.add(Location(null))
                 }
             }
@@ -121,13 +116,12 @@ class MapsViewModel @Inject constructor(
                 getWeatherUseCase(request).onEach {
                     when(it){
                         is ResourceState.Success -> {
-                            loading = false
                             _weatherData.postValue(it)
                         }
-                        else ->
-                            loading = true
+                        else -> {
+                            _weatherData.postValue(it)
+                        }
                     }
-                    _weatherData.postValue(it)
                 }.launchIn(modelScope)
             }
         }

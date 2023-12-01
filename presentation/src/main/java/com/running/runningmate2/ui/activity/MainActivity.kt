@@ -89,7 +89,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         when (index) {
             // Map 로딩 + 런닝
             1 -> {
-                binding.bottomBar.visibility = View.INVISIBLE
+                binding.bottomBar.visibility = View.GONE
             }
             // 결과 페이지
             2 -> {

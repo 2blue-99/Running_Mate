@@ -1,6 +1,5 @@
 package com.running.runningmate2.ui.fragment
 
-import android.app.Activity
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -28,7 +27,6 @@ import com.running.runningmate2.databinding.FragmentMapsBinding
 import com.running.runningmate2.utils.BitmapHelper
 import com.running.runningmate2.viewModel.fragmentViewModel.MapsViewModel
 import com.running.runningmate2.utils.MapState
-import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.utils.WeatherHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
@@ -41,12 +39,12 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private var nowPointMarker: Marker? = null
     private val viewModel: MapsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private var myNowLati: Double? = null
-    private var myNowLong: Double? = null
     private var isStatic = false
     private var initMap = false
 
-    override fun initData() {}
+    override fun initData() {
+        viewModel.changeState(MapState.RESUME)
+    }
     override fun initUI() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
@@ -55,7 +53,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         // 스타트, 스탑 버튼
         binding.btnStartStop.setOnClickListener {
             when(viewModel.mapState.value){
-                MapState.HOME -> {
+                MapState.RESUME -> {
                     showStartBottomSheet()
                     //viewModel.changeState(MapState.RUNNING)
                 }
@@ -90,35 +88,42 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         binding.weatherView.root.setOnClickListener {
-            if(!viewModel.loading)
+            if(!viewModel.isWeatherLoading())
                 viewModel.getWeatherData()
         }
     }
 
     override fun initObserver() {
+        viewModel.loading.observe(viewLifecycleOwner){ loading ->
+            if(loading){
+                binding.progressBar.root.visibility = View.VISIBLE
+                binding.setBtn.visibility = View.INVISIBLE
+                binding.btnStartStop.visibility = View.INVISIBLE
+                binding.followBtn.visibility = View.INVISIBLE
+            }else{
+                binding.progressBar.root.visibility = View.INVISIBLE
+                binding.setBtn.visibility = View.VISIBLE
+                binding.btnStartStop.visibility = View.VISIBLE
+                binding.followBtn.visibility = View.VISIBLE
+            }
+        }
+
         // UI 수정
         viewModel.mapState.observe(viewLifecycleOwner){
-            Log.e("TAG", "initObserver: mapState $it", )
             when(it){
-                MapState.LOADING -> {
-                    binding.progressBar.root.visibility = View.VISIBLE
-                    binding.setBtn.visibility = View.INVISIBLE
-                    binding.btnStartStop.visibility = View.INVISIBLE
-                    binding.followBtn.visibility = View.INVISIBLE
-                }
-                MapState.HOME -> {
+                MapState.RESUME -> {
                     binding.btnStartStop.text = "START"
-                    binding.progressBar.root.visibility = View.INVISIBLE
-                    binding.setBtn.visibility = View.VISIBLE
-                    binding.btnStartStop.visibility = View.VISIBLE
-                    binding.followBtn.visibility = View.VISIBLE
+//                    binding.progressBar.root.visibility = View.INVISIBLE
+//                    binding.setBtn.visibility = View.VISIBLE
+//                    binding.btnStartStop.visibility = View.VISIBLE
+//                    binding.followBtn.visibility = View.VISIBLE
                 }
                 MapState.RUNNING -> {
                     binding.btnStartStop.text = "STOP"
-                    binding.progressBar.root.visibility = View.INVISIBLE
-                    binding.setBtn.visibility = View.VISIBLE
-                    binding.btnStartStop.visibility = View.VISIBLE
-                    binding.followBtn.visibility = View.VISIBLE
+//                    binding.progressBar.root.visibility = View.INVISIBLE
+//                    binding.setBtn.visibility = View.VISIBLE
+//                    binding.btnStartStop.visibility = View.VISIBLE
+//                    binding.followBtn.visibility = View.VISIBLE
                     binding.runingBox.root.visibility = View.VISIBLE
                 }
                 MapState.END -> {
@@ -142,7 +147,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             mMap?.let {
                 LatLng(location.last().latitude, location.last().longitude).let { LatLng ->
                     when(viewModel.mapState.value){
-                        MapState.HOME -> {
+                        MapState.RESUME -> {
                             addMarker(LatLng)
                             if(!initMap) initMap(LatLng)
                             if(isStatic) moveCamera(LatLng, 17F)
@@ -155,9 +160,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                             nowPointMarker = addMarker(LatLng)
                             addPolyline(location.first(), location.last())
                         }
-                        MapState.LOADING -> {
-
-                        }
                         else -> {
                             showShortToast("위치를 불러올 수 없습니다.")
                         }
@@ -167,7 +169,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
         // 날씨 정보 옵져버
         viewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
-            Log.e("TAG", "initObserver weather : $weatherState", )
             when(weatherState){
                 is ResourceState.Success ->{
                     binding.weatherView.loadingIcon.visibility = View.INVISIBLE
@@ -228,6 +229,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private fun showStartBottomSheet(){
         val startBottomSheet = StartBottomSheet(viewModel.getWeight()) {
             //입력 바텀시트가 내려간 후,
+
             //바텀 시트 내려가기
             viewModel.saveWeight(it)
             //거리 계산
@@ -271,7 +273,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     private fun moveNowLocation(){
         viewModel.getNowLocation()?.let { location ->
             when(viewModel.mapState.value){
-                MapState.HOME ->
+                MapState.RESUME ->
                     moveCamera(LatLng(location.latitude, location.longitude), 17F)
                 MapState.RUNNING ->
                     moveCamera(LatLng(location.latitude - 0.0006, location.longitude), 17.5F)
