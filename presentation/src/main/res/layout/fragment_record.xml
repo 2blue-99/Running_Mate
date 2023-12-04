@@ -21,7 +21,7 @@
 
             <include
                 android:id="@+id/include"
-                layout="@layout/recode_page_box"
+                layout="@layout/box_recode"
                 android:layout_width="350dp"
                 android:layout_height="190dp"
                 android:layout_marginTop="30dp"

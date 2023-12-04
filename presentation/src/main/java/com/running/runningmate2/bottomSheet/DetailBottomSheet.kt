@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.running.domain.model.RunningData
-import com.running.runningmate2.databinding.DialogBinding
+import com.running.runningmate2.databinding.BottomSheetRecordBinding
 import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
 
 class DetailBottomSheet(
@@ -20,8 +20,8 @@ class DetailBottomSheet(
 ) : BottomSheetDialogFragment(){
     private val viewModel = recordViewModel
     private lateinit var dlg : BottomSheetDialog
-    private val binding: DialogBinding by lazy {
-        DialogBinding.inflate(layoutInflater)
+    private val binding: BottomSheetRecordBinding by lazy {
+        BottomSheetRecordBinding.inflate(layoutInflater)
     }
 
     @SuppressLint("SetTextI18n")

@@ -30,7 +30,7 @@
 
     <include
         android:id="@+id/included_weight"
-        layout="@layout/user_data_edit_page"
+        layout="@layout/box_start_user_data"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_marginStart="40dp"
@@ -43,7 +43,7 @@
 
     <include
         android:id="@+id/included_distance"
-        layout="@layout/user_data_edit_page"
+        layout="@layout/box_start_user_data"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_marginStart="40dp"
@@ -55,7 +55,7 @@
 
     <include
         android:id="@+id/included_step"
-        layout="@layout/user_data_edit_page"
+        layout="@layout/box_start_user_data"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_marginStart="40dp"

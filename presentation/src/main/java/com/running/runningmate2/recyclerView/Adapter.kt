@@ -5,23 +5,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.running.domain.model.RunningData
-import com.running.runningmate2.databinding.ItemListBinding
+import com.running.runningmate2.databinding.ItemRecordBinding
 
 class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
     var datalist = listOf<RunningData>()
-    @SuppressLint("NotifyDataSetChanged")
-
     set(value) {
-            field = value
+            field = value.reversed()
             notifyDataSetChanged()
         }
 
-    private lateinit var binding: ItemListBinding
+    private lateinit var binding: ItemRecordBinding
     private var itemClickListener : OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        binding = ItemListBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        binding = ItemRecordBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return MyViewHolder(binding)
     }
 
@@ -36,7 +34,7 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
         }
     }
 
-    inner class MyViewHolder(private val binding: ItemListBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class MyViewHolder(private val binding: ItemRecordBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: RunningData, position:Int){
             binding.dateTxt.text= data.now
             binding.dayCountTxt.text= "No.${position + 1}"

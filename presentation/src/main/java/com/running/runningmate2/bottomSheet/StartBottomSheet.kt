@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.running.runningmate2.databinding.DialogBottomSheetBinding
+import com.running.runningmate2.databinding.BottomSheetStartBinding
 
 class StartBottomSheet(
     val weight:Int,
@@ -17,8 +17,8 @@ class StartBottomSheet(
 ) : BottomSheetDialogFragment() {
 
     private lateinit var dlg : BottomSheetDialog
-    private val binding: DialogBottomSheetBinding by lazy{
-        DialogBottomSheetBinding.inflate(layoutInflater)
+    private val binding: BottomSheetStartBinding by lazy{
+        BottomSheetStartBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(

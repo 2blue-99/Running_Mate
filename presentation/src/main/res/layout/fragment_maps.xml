@@ -42,7 +42,7 @@
 
             <include
                 android:id="@+id/weatherView"
-                layout="@layout/weather_view"
+                layout="@layout/box_weather"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
         </LinearLayout>
@@ -51,7 +51,7 @@
         <include
             android:visibility="gone"
             android:id="@+id/runing_box"
-            layout="@layout/running_page_databox"
+            layout="@layout/box_running"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_marginStart="30dp"
