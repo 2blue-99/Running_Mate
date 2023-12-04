@@ -28,20 +28,20 @@ class StartBottomSheet(
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        binding.includedWeight.bottomTitle.text = "체중"
-        binding.includedWeight.dataType.text = "Kg"
+        binding.startBottomSheetWeightBox.inputTitleTxt.text = "체중"
+        binding.startBottomSheetWeightBox.inputTypeTxt.text = "Kg"
 
-        binding.includedDistance.bottomTitle.text = "목표 거리"
-        binding.includedDistance.dataType.text = "Km"
+        binding.startBottomSheetDistenceBox.inputTitleTxt.text = "목표 거리"
+        binding.startBottomSheetDistenceBox.inputTypeTxt.text = "Km"
 
-        binding.includedStep.bottomTitle.text = "목표 걸음"
-        binding.includedStep.dataType.text = "걸음"
+        binding.startBottomSheetStepBox.inputTitleTxt.text = "목표 걸음"
+        binding.startBottomSheetStepBox.inputTypeTxt.text = "걸음"
 
-        if(weight != 0) binding.includedWeight.inputEdit.setText("$weight")
+        if(weight != 0) binding.startBottomSheetWeightBox.inputEditTxt.setText("$weight")
 
-        binding.BottomStartButton.setOnClickListener{
-            if(binding.includedWeight.inputEdit.text.isNotEmpty()){
-                onClick(binding.includedWeight.inputEdit.text.toString())
+        binding.mapsStartBottomSheetStartBtn.setOnClickListener{
+            if(binding.startBottomSheetWeightBox.inputEditTxt.text.isNotEmpty()){
+                onClick(binding.startBottomSheetWeightBox.inputEditTxt.text.toString())
                 dismiss()
                 return@setOnClickListener
             }

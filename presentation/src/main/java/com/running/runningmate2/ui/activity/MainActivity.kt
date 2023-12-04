@@ -46,12 +46,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun initUI() {
         loadFragment(MapsFragment())
-        binding.customToolbar.bringToFront()
-        bottomNav = findViewById(R.id.bottomBar)
+        binding.mainToolbar.bringToFront()
+        bottomNav = findViewById(R.id.main_bottomBar)
     }
 
     override fun initListener() {
-        binding.customToolbar.menu.getItem(0).setOnMenuItemClickListener {
+        binding.mainToolbar.menu.getItem(0).setOnMenuItemClickListener {
             startActivity(Intent(this, OssLicensesMenuActivity::class.java))
             return@setOnMenuItemClickListener true
         }
@@ -80,7 +80,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     override fun initObserver() {}
     private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.myFragMent, fragment)
+        transaction.replace(R.id.main_frameLayout, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }
@@ -88,20 +88,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     fun changeFragment(index: Int) {
         when (index) {
             // Map 로딩 + 런닝
-            1 -> { binding.bottomBar.visibility = View.GONE }
+            1 -> { binding.mainBottomBar.visibility = View.GONE }
             // 결과 페이지
             2 -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.myFragMent, ResultFragment())
+                    .replace(R.id.main_frameLayout, ResultFragment())
                     .commit()
             }
             // 메인 페이지
             3 -> {
-                binding.bottomBar.visibility = View.VISIBLE
+                binding.mainBottomBar.visibility = View.VISIBLE
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.myFragMent, MapsFragment())
+                    .replace(R.id.main_frameLayout, MapsFragment())
                     .commit()
             }
         }

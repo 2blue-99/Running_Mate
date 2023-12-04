@@ -14,7 +14,7 @@
 
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/custom_toolbar"
+            android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/black"
@@ -26,8 +26,7 @@
             app:menu="@menu/toolbar_nav_menu">
 
             <TextView
-                android:id="@+id/adasdasdadad"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:paddingTop="10dp"
                 android:gravity="center"
                 style="@style/myEngFont"
@@ -40,19 +39,19 @@
 
 
         <FrameLayout
-            android:id="@+id/myFragMent"
+            android:id="@+id/main_frameLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+            app:layout_constraintBottom_toTopOf="@+id/main_bottomBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/custom_toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
         </FrameLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomBar"
+            android:id="@+id/main_bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

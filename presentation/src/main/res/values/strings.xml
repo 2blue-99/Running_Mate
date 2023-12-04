@@ -9,5 +9,34 @@
     <string name="record_button_text">기록보기</string>
 
     <string name="result_title">Running\nStart</string>
+    <string name="record_bottomSheet_titleTimeTxt">오늘도 수고했어요!</string>
+    <string name="record_bottomSheet_runningTimeTxt">달린 시간</string>
+    <string name="record_bottomSheet_runningDistenceTxt">달린 거리</string>
+    <string name="record_bottomSheet_runningCalorieTxt">칼로리</string>
+    <string name="record_bottomSheet_runningStepTxt">걸음 수</string>
+    <string name="record_bottomSheet_deleteTxt">삭제</string>
+    <string name="record_bottomSheet_backTxt">뒤로가기</string>
+    <string name="record_box_commentTxt">잘하고 있어요! 이대로 쭉~</string>
+    <string name="record_box_titleTxt">함께 뛴 거리</string>
+    <string name="record_box_distenceTxt">0.0 Km</string>
+    <string name="record_box_timeTxt">총 시간</string>
+    <string name="record_box_calorieTxt">총 Kcal</string>
+    <string name="record_box_runningTxt">총 뛴 날</string>
+    <string name="record_box_stepTxt">총 걸음</string>
+    <string name="maps_startBottomSheet_titleTxt">Running \n Mate</string>
+    <string name="runningBox_timeTxt">Time</string>
+    <string name="runningBox_distenceTxt">Distance</string>
+    <string name="runningBox_calorieTxt">Calorie</string>
+    <string name="runningBox_stepTxt">Step</string>
+    <string name="runningBox_titleTxt">Running\nStart</string>
+    <string name="weather_temperatureTxt">loading..</string>
+    <string name="weather_humidityTxt">습도 :</string>
+    <string name="weather_inputTxt">Click!</string>
+    <string name="maps_mainBtnTxt">Start</string>
+    <string name="result_titleTxt">오늘의 기록</string>
+    <string name="result_timeTxt">Time</string>
+    <string name="result_distenceTxt">Distance</string>
+    <string name="result_calorieTxt">Calorie</string>
+    <string name="result_stepTxt">Step</string>
 
 </resources>

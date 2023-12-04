@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <fragment
-            android:id="@+id/map"
+            android:id="@+id/maps_fragment"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -23,15 +23,14 @@
             tools:context=".ui.fragment.MapsFragment" />
 
         <include
+            android:id="@+id/maps_loading"
             layout="@layout/progressbar_loading"
-            android:id="@+id/progress_bar"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/map"
+            app:layout_constraintEnd_toStartOf="@+id/maps_fragment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/weatherLinearLayout"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
@@ -39,9 +38,8 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
             <include
-                android:id="@+id/weatherView"
+                android:id="@+id/maps_weatherBox"
                 layout="@layout/box_weather"
                 android:layout_width="100dp"
                 android:layout_height="100dp" />
@@ -49,8 +47,8 @@
 
 
         <include
+            android:id="@+id/maps_runningBox"
             android:visibility="gone"
-            android:id="@+id/runing_box"
             layout="@layout/box_running"
             android:layout_width="0dp"
             android:layout_height="150dp"
@@ -73,7 +71,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/setBtn"
+                android:id="@+id/maps_setLocationBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
 
@@ -88,12 +86,12 @@
                 android:orientation="horizontal" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_start_stop"
+                android:id="@+id/maps_changeBtn"
                 style="@style/myEngFont"
                 android:layout_width="200dp"
                 android:layout_height="60dp"
                 android:background="@drawable/my_button"
-                android:text="Start"
+                android:text="@string/maps_mainBtnTxt"
                 android:textColor="#FFFFFF"
                 android:textSize="30dp" />
 
@@ -103,10 +101,9 @@
                 android:orientation="horizontal" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/followBtn"
+                android:id="@+id/maps_fixingBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-
                 android:background="@drawable/shape_set_btn"
                 android:drawableEnd="@drawable/ic_baseline_control_camera_24"
                 android:paddingEnd="12dp"

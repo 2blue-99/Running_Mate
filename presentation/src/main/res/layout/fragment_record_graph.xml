@@ -8,14 +8,13 @@
     </data>
 
     <FrameLayout
-        android:id="@+id/graphFrame"
+        android:id="@+id/record_graph_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".ui.fragment.RecordGraphFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/myConstrain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="5dp"
@@ -23,7 +22,7 @@
 
             <com.github.mikephil.charting.charts.BarChart
                 android:padding="5dp"
-                android:id="@+id/chart"
+                android:id="@+id/record_graph_chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
@@ -31,19 +30,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
             </com.github.mikephil.charting.charts.BarChart>
 
             <TextView
-                android:id="@+id/noData"
+                android:id="@+id/record_graph_emptyTxt"
                 style="@style/myHanFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00ffffff"
                 android:gravity="center"
-                android:text=""
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

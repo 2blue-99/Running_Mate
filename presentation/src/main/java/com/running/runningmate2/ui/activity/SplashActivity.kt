@@ -9,12 +9,13 @@ import com.running.runningmate2.base.BaseActivity
 import com.running.runningmate2.databinding.ActivitySplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
     override fun initData() {
         supportActionBar?.hide()
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch {
             delay(1000L)
             Intent(this@SplashActivity, MainActivity::class.java).also {
                 startActivity(it)

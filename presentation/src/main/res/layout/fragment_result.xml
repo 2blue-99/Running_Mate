@@ -6,7 +6,7 @@
 
     <data>
         <variable
-            name="dataList"
+            name="datas"
             type="com.running.domain.model.RunningData" />
     </data>
 
@@ -67,27 +67,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/run_logo">
 
                 <TextView
-                    android:id="@+id/todayText"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="오늘의 기록"
+                    android:text="@string/result_titleTxt"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/todayData"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{dataList.now}"
+                    android:text="@{datas.now}"
                     android:textColor="@color/white"
-                    android:textSize="17dp" />
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -102,27 +100,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/linear1">
 
                 <TextView
-                    android:id="@+id/timeText"
                     android:textStyle="bold"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Time"
+                    android:text="@string/result_timeTxt"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/timeData"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{dataList.time}"
+                    android:text="@{datas.time}"
                     android:textColor="@color/white"
-                    android:textSize="17dp" />
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -144,18 +140,17 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Distance"
+                    android:text="@string/result_distenceTxt"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/distanceData"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{dataList.distance + ` M`}"
+                    android:text="@{datas.distance + ` M`}"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
             </LinearLayout>
@@ -172,25 +167,23 @@
                 app:layout_constraintTop_toBottomOf="@+id/linear3">
 
                 <TextView
-                    android:id="@+id/calorieText"
                     android:textStyle="bold"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Calorie"
+                    android:text="@string/result_calorieTxt"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/calorieData"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{dataList.calorie}"
+                    android:text="@{datas.calorie}"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
             </LinearLayout>
@@ -214,18 +207,17 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Step"
+                    android:text="@string/result_stepTxt"
                     android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/stepData"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{dataList.step}"
+                    android:text="@{datas.step}"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
             </LinearLayout>

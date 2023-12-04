@@ -1,7 +1,6 @@
 package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.running.domain.model.RunningData
@@ -26,7 +25,7 @@ class RecordRecyclerFragment(
     }
 
     override fun initUI() {
-        binding.myRecyclerView.apply {
+        binding.recordRecyclerView.apply {
             this.adapter = this@RecordRecyclerFragment.adapter
             this.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
@@ -44,17 +43,17 @@ class RecordRecyclerFragment(
     override fun initObserver() {
         viewModel.runningData.observe(viewLifecycleOwner) { data ->
             if(data.isNotEmpty()){
-                binding.myRecyclerView.minimumHeight = 875
-                binding.noData.visibility=View.INVISIBLE
+                binding.recordRecyclerView.minimumHeight = 875
+                binding.recordRecyclerEmptyTxt.visibility=View.INVISIBLE
                 adapter.datalist = data
 
             }
             else{
                 binding.recyclerConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
-                binding.myRecyclerView.minimumHeight = 875
+                binding.recordRecyclerView.minimumHeight = 875
                 adapter.datalist = data
-                binding.noData.visibility=View.VISIBLE
-                binding.noData.text = "기록 데이터가 없어요.."
+                binding.recordRecyclerEmptyTxt.visibility=View.VISIBLE
+                binding.recordRecyclerEmptyTxt.text = "기록 데이터가 없어요.."
             }
         }
     }

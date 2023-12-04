@@ -3,7 +3,7 @@ package com.running.runningmate2.utils
 import android.location.Location
 import kotlin.math.*
 
-object TransLocationUtil {
+object LocationHelper {
 
     data class TransLocation(
         val nx: Double,

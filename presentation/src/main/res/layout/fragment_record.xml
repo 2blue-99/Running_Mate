@@ -14,13 +14,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <include
-                android:id="@+id/include"
+                android:id="@+id/record_recodeBox"
                 layout="@layout/box_recode"
                 android:layout_width="350dp"
                 android:layout_height="190dp"
@@ -31,17 +30,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
-                android:id="@+id/view"
                 android:layout_width="370dp"
                 android:layout_height="3dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/shape_recycler_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/include" />
+                app:layout_constraintTop_toBottomOf="@+id/record_recodeBox" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/changeBotton"
+                android:id="@+id/record_changeBtn"
                 style="@style/myHanFont"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
@@ -50,7 +48,7 @@
                 android:background="@drawable/my_button"
                 android:text="@string/record_button_text"
                 android:textColor="@color/white"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -59,8 +57,8 @@
                 android:layout_height="match_parent">
 
                 <FrameLayout
+                    android:id="@+id/record_graphFrame"
                     android:visibility="visible"
-                    android:id="@+id/graphFrameLayout"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginStart="30dp"
@@ -80,13 +78,13 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/graphFrameLayout" >
+                    app:layout_constraintTop_toBottomOf="@+id/record_graphFrame" >
 
                 </LinearLayout>
 
                 <FrameLayout
+                    android:id="@+id/record_recyclerFrame"
                     android:visibility="visible"
-                    android:id="@+id/recyclerFrameLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -106,7 +104,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerFrameLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/record_recyclerFrame" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

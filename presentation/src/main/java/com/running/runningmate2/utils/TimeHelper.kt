@@ -9,6 +9,13 @@ import java.util.Calendar
  * pureum
  */
 class TimeHelper {
+    private var _second = 0
+    private var _minute = 0
+    private var _hour = 0
+    private var second = ""
+    private var minute = ""
+    private var hour = ""
+
     fun getTime(): String = "${LocalDate.now()} ${LocalTime.now().hour}:${LocalTime.now().minute}"
 
 
@@ -22,4 +29,34 @@ class TimeHelper {
             "6" -> "금"
             else -> "토"
         }
+
+    fun getCustomTime():String{
+        _second++
+        if (_second == 60) {
+            _second = 0
+            _minute++
+        } else if (_minute == 60) {
+            _hour++
+            _minute = 0
+        }
+
+        if (_second.toString().length == 1)
+            second = "0$_second"
+        else
+            second = "$_second"
+
+
+        if (_minute.toString().length == 1)
+            minute = "0$_minute"
+        else
+            minute = "$_minute"
+
+
+        if (_hour.toString().length == 1)
+            hour = "0$_hour"
+        else
+            hour = "$_hour"
+
+        return "$hour:$minute:$second"
+    }
 }

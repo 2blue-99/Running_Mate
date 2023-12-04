@@ -1,9 +1,7 @@
 package com.running.runningmate2.ui.fragment
 
-import android.app.Activity
 import android.graphics.Color
 import android.location.Location
-import android.location.LocationManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -48,32 +46,29 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
     override fun initUI() {
         viewModel.startSteam()
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.maps_fragment) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
     override fun initListener() {
         // 스타트, 스탑 버튼
-        binding.btnStartStop.setOnClickListener {
+        binding.mapsChangeBtn.setOnClickListener {
             when(viewModel.mapState.value){
                 MapState.RESUME -> {
                     showStartBottomSheet()
-                    //viewModel.changeState(MapState.RUNNING)
                 }
                 MapState.RUNNING -> {
-                    // TODO 저장
-//                    (activity as MainActivity).changeFragment(2)
                     viewModel.changeState(MapState.END)
                 }
                 else -> {}
             }
         }
         //현재 위치로 줌 해주는 버튼
-        binding.setBtn.setOnClickListener {
+        binding.mapsSetLocationBtn.setOnClickListener {
             showShortToast("내 위치로 이동")
             moveNowLocation()
         }
         // 위치 고정 버튼
-        binding.followBtn.setOnClickListener {
+        binding.mapsFixingBtn.setOnClickListener {
             //미고정 시
             if(!isStatic) {
                 isStatic = !isStatic
@@ -89,7 +84,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
 
-        binding.weatherView.root.setOnClickListener {
+        binding.mapsWeatherBox.root.setOnClickListener {
             if(!viewModel.isWeatherLoading())
                 viewModel.getWeatherData()
         }
@@ -98,15 +93,15 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     override fun initObserver() {
         viewModel.loading.observe(viewLifecycleOwner){ loading ->
             if(loading){
-                binding.progressBar.root.visibility = View.VISIBLE
-                binding.setBtn.visibility = View.INVISIBLE
-                binding.btnStartStop.visibility = View.INVISIBLE
-                binding.followBtn.visibility = View.INVISIBLE
+                binding.mapsLoading.root.visibility = View.VISIBLE
+                binding.mapsSetLocationBtn.visibility = View.INVISIBLE
+                binding.mapsChangeBtn.visibility = View.INVISIBLE
+                binding.mapsFixingBtn.visibility = View.INVISIBLE
             }else{
-                binding.progressBar.root.visibility = View.INVISIBLE
-                binding.setBtn.visibility = View.VISIBLE
-                binding.btnStartStop.visibility = View.VISIBLE
-                binding.followBtn.visibility = View.VISIBLE
+                binding.mapsLoading.root.visibility = View.INVISIBLE
+                binding.mapsSetLocationBtn.visibility = View.VISIBLE
+                binding.mapsChangeBtn.visibility = View.VISIBLE
+                binding.mapsFixingBtn.visibility = View.VISIBLE
             }
         }
 
@@ -114,21 +109,21 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             Log.e("TAG", "mapState: $it", )
             when(it){
                 MapState.RESUME -> {
-                    binding.btnStartStop.text = "START"
+                    binding.mapsChangeBtn.text = "START"
                 }
                 MapState.RUNNING -> {
-                    binding.btnStartStop.text = "STOP"
-                    binding.runingBox.root.visibility = View.VISIBLE
+                    binding.mapsChangeBtn.text = "STOP"
+                    binding.mapsRunningBox.root.visibility = View.VISIBLE
                 }
                 MapState.END -> {
                     val result = RunningData(
                         0,
                         TimeHelper().getDay(),
                         TimeHelper().getTime(),
-                        binding.runingBox.runTimeText.text.toString(),
-                        binding.runingBox.runDistanceText.text.toString(),
-                        binding.runingBox.runCaloreText.text.toString(),
-                        binding.runingBox.runStepText.text.toString()
+                        binding.mapsRunningBox.runningBoxTimeTxt.text.toString(),
+                        binding.mapsRunningBox.runningBoxDistenceTxt.text.toString(),
+                        binding.mapsRunningBox.runningBoxCalorieTxt.text.toString(),
+                        binding.mapsRunningBox.runningBoxStepTxt.text.toString()
                     )
                     mainViewModel.insertDB(result)
                     (activity as MainActivity).changeFragment(2)
@@ -165,40 +160,40 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             Log.e("TAG", "viewModel.weatherData.observe: $weatherState", )
             when(weatherState){
                 is ResourceState.Success ->{
-                    binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-                    binding.weatherView.weatherLayout.visibility = View.VISIBLE
-                    binding.weatherView.txtClickRetry.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherLoading.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherLayout.visibility = View.VISIBLE
+                    binding.mapsWeatherBox.weatherClickTxt.visibility = View.INVISIBLE
                     changeWeather(weatherState.data)
                 }
                 is ResourceState.Error -> {
                     showShortToast("날씨 로딩 실패..")
-                    binding.weatherView.loadingIcon.visibility = View.INVISIBLE
-                    binding.weatherView.weatherLayout.visibility = View.INVISIBLE
-                    binding.weatherView.txtClickRetry.visibility = View.VISIBLE
+                    binding.mapsWeatherBox.weatherLoading.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherLayout.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherClickTxt.visibility = View.VISIBLE
                 }
                 is ResourceState.Loading -> {
-                    binding.weatherView.loadingIcon.visibility = View.VISIBLE
-                    binding.weatherView.weatherLayout.visibility = View.INVISIBLE
-                    binding.weatherView.txtClickRetry.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherLoading.visibility = View.VISIBLE
+                    binding.mapsWeatherBox.weatherLayout.visibility = View.INVISIBLE
+                    binding.mapsWeatherBox.weatherClickTxt.visibility = View.INVISIBLE
                 }
             }
         }
 
         viewModel.time.observe(viewLifecycleOwner) { time ->
-            if (time != null) binding.runingBox.runTimeText.text = time
+            if (time != null) binding.mapsRunningBox.runningBoxTimeTxt.text = time
         }
 
         viewModel.calorie.observe(viewLifecycleOwner) { calorie ->
-            if (calorie.toString().length > 4) binding.runingBox.runCaloreText.text = "${String.format("%.2f", calorie)} Kcal"
-            else binding.runingBox.runCaloreText.text = "$calorie Kcal"
+            if (calorie.toString().length > 4) binding.mapsRunningBox.runningBoxCalorieTxt.text = "${String.format("%.2f", calorie)} Kcal"
+            else binding.mapsRunningBox.runningBoxCalorieTxt.text = "$calorie Kcal"
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
-            if (distance != null) binding.runingBox.runDistanceText.text = "${String.format("%.2f", distance)} M"
+            if (distance != null) binding.mapsRunningBox.runningBoxDistenceTxt.text = "${String.format("%.2f", distance)} M"
         }
 
         viewModel.step.observe(viewLifecycleOwner) {
-            if (it != null) binding.runingBox.runStepText.text = "$it 걸음"
+            if (it != null) binding.mapsRunningBox.runningBoxStepTxt.text = "$it 걸음"
         }
     }
     override fun onStop() {
@@ -211,13 +206,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun changeWeather(data: DomainWeather){
-        binding.weatherView.weatherTem.text = "${data.temperatures.toDouble().let { it.roundToInt() }} ºc"
-        binding.weatherView.humidity.text = "${data.humidity} %"
-        binding.weatherView.weatherIcon.background = WeatherHelper.makeIcon(data.rainType.toDouble().toInt())
+        binding.mapsWeatherBox.weatherTemTxt.text = "${data.temperatures.toDouble().let { it.roundToInt() }} ºc"
+        binding.mapsWeatherBox.weatherHumidityTxt.text = "${data.humidity} %"
+        binding.mapsWeatherBox.weatherIcon.background = WeatherHelper.makeIcon(data.rainType.toDouble().toInt())
     }
 
     private fun changeStaticBtn(@DrawableRes icon: Int){
-        binding.followBtn.background = ContextCompat.getDrawable(requireContext(), icon)
+        binding.mapsFixingBtn.background = ContextCompat.getDrawable(requireContext(), icon)
     }
 
     private fun initMap(location: LatLng){

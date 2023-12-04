@@ -2,6 +2,7 @@ package com.running.runningmate2.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.running.domain.model.RunningData
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordBinding
@@ -22,28 +23,28 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
     override fun initUI() {
         parentFragmentManager
             .beginTransaction()
-            .replace(binding.graphFrameLayout.id, RecordGraphFragment(viewModel))
+            .replace(binding.recordGraphFrame.id, RecordGraphFragment(viewModel))
             .commit()
     }
 
     override fun initListener() {
-        binding.changeBotton.setOnClickListener {
-            if (binding.changeBotton.text == "기록보기") {
+        binding.recordChangeBtn.setOnClickListener {
+            if (binding.recordChangeBtn.text == "기록보기") {
                 parentFragmentManager
                     .beginTransaction()
-                    .replace(binding.recyclerFrameLayout.id, RecordRecyclerFragment(viewModel))
+                    .replace(binding.recordRecyclerFrame.id, RecordRecyclerFragment(viewModel))
                     .commit()
-                binding.changeBotton.text = "통계보기"
-                binding.recyclerFrameLayout.visibility = View.VISIBLE
-                binding.graphFrameLayout.visibility = View.INVISIBLE
+                binding.recordChangeBtn.text = "통계보기"
+                binding.recordRecyclerFrame.visibility = View.VISIBLE
+                binding.recordGraphFrame.visibility = View.INVISIBLE
             } else {
                 parentFragmentManager
                     .beginTransaction()
-                    .replace(binding.graphFrameLayout.id, RecordGraphFragment(viewModel))
+                    .replace(binding.recordGraphFrame.id, RecordGraphFragment(viewModel))
                     .commit()
-                binding.changeBotton.text = "기록보기"
-                binding.recyclerFrameLayout.visibility = View.INVISIBLE
-                binding.graphFrameLayout.visibility = View.VISIBLE
+                binding.recordChangeBtn.text = "기록보기"
+                binding.recordRecyclerFrame.visibility = View.INVISIBLE
+                binding.recordGraphFrame.visibility = View.VISIBLE
             }
         }
     }
@@ -95,17 +96,21 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
                 _hour = if(hour.toString().length == 1) "0$hour"
                 else hour.toString()
 
-                binding.include.recodeDistance.text = "${String.format("%.2f", distance)} M"
-                binding.include.recodeTime.text = "${_hour}시간 ${_minute}분 ${_seconde}초"
-                binding.include.recodeCalorie.text = "${String.format("%.2f", calorie)} Kcal"
-                binding.include.recodeDay.text = "${date}일"
-                binding.include.recodeStep.text = "${step}걸음"
+                binding.recordRecodeBox.data = RunningData(
+                    dayOfWeek = "${date}일",
+                    time = "${_hour}시간 ${_minute}분 ${_seconde}초",
+                    distance = "${String.format("%.2f", distance)} M",
+                    calorie = "${String.format("%.2f", calorie)} Kcal",
+                    step = "${step}걸음"
+                )
             }else{
-                binding.include.recodeDistance.text = "0.00 M"
-                binding.include.recodeTime.text = "00시간 00분 00초"
-                binding.include.recodeCalorie.text = "0.00 Kcal"
-                binding.include.recodeDay.text = "0일"
-                binding.include.recodeStep.text = "0걸음"
+                binding.recordRecodeBox.data = RunningData(
+                    dayOfWeek = "0일",
+                    time = "00시간 00분 00초",
+                    distance = "0.00 M",
+                    calorie = "0.00 Kcal",
+                    step = "0걸음"
+                )
             }
         }
     }

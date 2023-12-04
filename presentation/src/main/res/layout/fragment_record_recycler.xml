@@ -15,9 +15,9 @@
             android:background="#4DFFFFFF">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/record_recyclerView"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:id="@+id/myRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -27,7 +27,7 @@
                     tools:listitem="@layout/item_record" />
 
                 <TextView
-                    android:id="@+id/noData"
+                    android:id="@+id/record_recycler_emptyTxt"
                     style="@style/myHanFont"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

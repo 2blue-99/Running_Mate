@@ -6,7 +6,7 @@
     android:background="@drawable/shape_weather_view">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/weatherLayout"
+        android:id="@+id/weather_layout"
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
         <ImageView
-            android:id="@+id/weatherIcon"
+            android:id="@+id/weather_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
@@ -25,42 +25,39 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/weatherTem"
+            android:id="@+id/weather_temTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="loading.."
+            android:text="@string/weather_temperatureTxt"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weatherIcon" />
+            app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
 
         <LinearLayout
-            android:id="@+id/linearLayout9"
             android:layout_width="match_parent"
             android:layout_height="19dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weatherTem">
+            app:layout_constraintTop_toBottomOf="@+id/weather_temTxt">
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="습도 : "
+                android:text="@string/weather_humidityTxt"
                 android:textColor="#ffff"
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/humidity"
+                android:id="@+id/weather_humidityTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="loading.."
                 android:textColor="#BAD1FF"
                 android:textSize="14dp"
                 android:textStyle="bold" />
@@ -68,7 +65,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
-        android:id="@+id/loadingIcon"
+        android:id="@+id/weather_loading"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:indeterminateTint="@color/orange"
@@ -78,10 +75,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/weather_clickTxt"
         android:visibility="invisible"
-        android:id="@+id/txt_click_retry"
         android:gravity="center"
-        android:text="Click!"
+        android:text="@string/weather_inputTxt"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:layout_width="match_parent"

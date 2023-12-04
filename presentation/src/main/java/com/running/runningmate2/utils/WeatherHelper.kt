@@ -1,7 +1,6 @@
 package com.running.runningmate2.utils
 
 import android.location.Location
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.running.domain.SavedData.DomainWeather
 import com.running.runningmate2.R
@@ -96,7 +95,7 @@ object WeatherHelper {
             calendar.add(Calendar.DATE, -1)
             myDate.format(calendar.time).replace("/", "")
         }
-        val locate = myLocation?.let { TransLocationUtil.convertLocation(it) }
+        val locate = myLocation?.let { LocationHelper.convertLocation(it) }
 
         return HashMap<String, String>().apply {
             put("serviceKey", com.running.runningmate2.BuildConfig.SERVICE_KEY)

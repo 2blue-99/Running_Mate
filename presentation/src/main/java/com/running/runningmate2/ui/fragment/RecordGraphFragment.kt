@@ -35,9 +35,9 @@ class RecordGraphFragment(
     override fun initObserver() {
         mainViewModel.runningData.observe(viewLifecycleOwner){datas->
             if(datas.size>0){
-                binding.graphFrame.setBackgroundColor(Color.WHITE)
-                binding.noData.visibility = View.INVISIBLE
-                binding.chart.visibility = View.VISIBLE
+                binding.recordGraphFrame.setBackgroundColor(Color.WHITE)
+                binding.recordGraphEmptyTxt.visibility = View.INVISIBLE
+                binding.recordGraphChart.visibility = View.VISIBLE
                 var monday = 0F
                 var tuesday = 0F
                 var wednesday = 0F
@@ -67,7 +67,7 @@ class RecordGraphFragment(
                     entries.add(BarEntry(6F,saturday))
                     entries.add(BarEntry(7F,sunday))
 
-                    val myChart = binding.chart
+                    val myChart = binding.recordGraphChart
                     myChart.run {
                         description.isEnabled = false // 차트 옆에 별도로 표기되는 description을 안보이게 설정 (false)
                         setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 지정
@@ -112,10 +112,10 @@ class RecordGraphFragment(
                     Log.e("TAG", "Err")
                 }
             }else{
-                binding.graphFrame.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
-                binding.noData.visibility = View.VISIBLE
-                binding.noData.text = "통계 데이터가 없어요.."
-                binding.chart.visibility = View.INVISIBLE
+                binding.recordGraphFrame.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
+                binding.recordGraphEmptyTxt.visibility = View.VISIBLE
+                binding.recordGraphEmptyTxt.text = "통계 데이터가 없어요.."
+                binding.recordGraphChart.visibility = View.INVISIBLE
             }
         }
     }

@@ -36,8 +36,8 @@ class Adapter: RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
     inner class MyViewHolder(private val binding: ItemRecordBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: RunningData, position:Int){
-            binding.dateTxt.text= data.now
-            binding.dayCountTxt.text= "No.${position + 1}"
+            binding.recordRecyclerItemTimeTxt.text= data.now
+            binding.recordRecyclerItemNumberTxt.text= "No.${position + 1}"
         }
     }
 

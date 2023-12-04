@@ -20,23 +20,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/run_time"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Time"
+                android:text="@string/runningBox_timeTxt"
                 android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/run_distance"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Distance"
+                android:text="@string/runningBox_distenceTxt"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -44,7 +42,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="7dp"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,23 +51,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/run_timeText"
+                android:id="@+id/runningBox_timeTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="00:00:00"
                 android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/run_distanceText"
+                android:id="@+id/runningBox_distenceTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="0.00 M"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -90,23 +86,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/run_calorie"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Calorie"
+                android:text="@string/runningBox_calorieTxt"
                 android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/run_step"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Step"
+                android:text="@string/runningBox_stepTxt"
                 android:textColor="@color/white" />
 
         </LinearLayout>
@@ -114,7 +108,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="7dp"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,23 +118,21 @@
 
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/run_caloreText"
+                android:id="@+id/runningBox_calorieTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="0.0 Kcal" />
+                android:gravity="center" />
 
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/run_stepText"
+                android:id="@+id/runningBox_stepTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="0 걸음" />
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -155,16 +147,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/run_logo"
             style="@style/myEngFont"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#00FFFFFF"
             android:gravity="center"
-            android:text="Running\nStart"
+            android:text="@string/runningBox_titleTxt"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

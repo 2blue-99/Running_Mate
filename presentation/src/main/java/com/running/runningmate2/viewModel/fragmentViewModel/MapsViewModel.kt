@@ -22,6 +22,7 @@ import com.running.runningmate2.utils.Calorie
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
+import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -114,37 +115,10 @@ class MapsViewModel @Inject constructor(
         }
     }
     fun startTime() {
-        Log.e(javaClass.simpleName, "myTime")
         viewModelScope.launch {
             while (true) {
                 delay(1000L)
-                _second++
-                if (_second == 60) {
-                    _second = 0
-                    _minute++
-                } else if (_minute == 60) {
-                    _hour++
-                    _minute = 0
-                }
-
-                if (_second.toString().length == 1)
-                    second = "0$_second"
-                else
-                    second = "$_second"
-
-
-                if (_minute.toString().length == 1)
-                    minute = "0$_minute"
-                else
-                    minute = "$_minute"
-
-
-                if (_hour.toString().length == 1)
-                    hour = "0$_hour"
-                else
-                    hour = "$_hour"
-
-                _time.value = "$hour:$minute:$second"
+                _time.value = TimeHelper().getCustomTime()
             }
         }
     }
