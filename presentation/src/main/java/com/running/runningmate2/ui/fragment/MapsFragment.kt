@@ -61,8 +61,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 }
                 MapState.RUNNING -> {
                     // TODO 저장
-
-                    (activity as MainActivity).changeFragment(2)
+//                    (activity as MainActivity).changeFragment(2)
+                    viewModel.changeState(MapState.END)
                 }
                 else -> {}
             }
@@ -236,11 +236,12 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun addPolyline(beforeLocation: Location, nowLocation: Location){
+        Log.e("TAG", "addPolyline: $mMap", )
         mMap?.addPolyline {
             add(LatLng(beforeLocation.latitude, beforeLocation.longitude), LatLng(nowLocation.latitude, nowLocation.longitude))
             width(20F)
-            startCap(RoundCap())
-            endCap(RoundCap())
+//            startCap(RoundCap())
+//            endCap(RoundCap())
             color(Color.parseColor("#FA785F"))
         }
     }

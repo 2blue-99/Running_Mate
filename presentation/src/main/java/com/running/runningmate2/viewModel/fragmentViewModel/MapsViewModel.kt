@@ -147,16 +147,6 @@ class MapsViewModel @Inject constructor(
         }
     }
 
-    fun startStep() {
-        senSor(MyApplication.getApplication())
-//        step.observeForever {
-//            Log.e("TAG", "viewModel count: $it")
-//            _step.value?.let {
-//                Log.e("TAG", " _step.value : $it")
-//                _step.value = it + 1
-//            }
-//        }
-    }
     fun calculateDistance() {
         if(_location.size() > 1){
             var result = _location.getFirst().distanceTo(_location.getSecond()).toDouble()
@@ -202,10 +192,9 @@ class MapsViewModel @Inject constructor(
             _step.value = _step.value?.plus(1)
         }
     }
+    fun startStep() { senSor(MyApplication.getApplication()) }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-    private fun killSensor() {
-        sensorManager.unregisterListener(this)
-    }
+    private fun killSensor() { sensorManager.unregisterListener(this) }
     fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
     fun stepInit() { killSensor() }

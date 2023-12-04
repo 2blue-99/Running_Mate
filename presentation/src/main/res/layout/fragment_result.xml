@@ -17,206 +17,220 @@
         android:background="@drawable/base_backback">
 
 
-        <TextView
-            android:id="@+id/run_logo"
-            style="@style/myEngFont"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="55dp"
-            android:layout_weight="1"
-            android:background="#00FFFFFF"
-            android:gravity="center"
-            android:text="@string/result_title"
-            android:textColor="@color/white"
-            android:textSize="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.widget.Button
-            android:id="@+id/backBtn"
-            style="@style/myEngFont"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/my_button"
-            android:text="Back"
-            android:textColor="#FFFFFF"
-            android:textSize="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear4"
-            tools:ignore="MissingConstraints" />
-
-        <LinearLayout
-            android:id="@+id/linear1"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/run_logo">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/todayText"
-                style="@style/myHanFont"
+                android:id="@+id/run_logo"
+                style="@style/myEngFont"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="#00FFFFFF"
                 android:gravity="center"
-                android:text="오늘의 기록"
+                android:text="@string/result_title"
                 android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:textSize="22dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/todayData"
-                style="@style/myHanFont"
+            <android.widget.Button
+                android:id="@+id/backBtn"
+                style="@style/myEngFont"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/my_button"
+                android:text="Back"
+                android:textColor="#FFFFFF"
+                android:textSize="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear4"
+                tools:ignore="MissingConstraints" />
+
+            <LinearLayout
+                android:id="@+id/linear1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{dataList.now}"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/run_logo">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/todayText"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="오늘의 기록"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
 
-        <LinearLayout
-            android:id="@+id/linear2"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear1">
+                <TextView
+                    android:id="@+id/todayData"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{dataList.now}"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
 
-            <TextView
-                android:id="@+id/timeText"
-                style="@style/myHanFont"
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Time"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear1">
 
-            <TextView
-                android:id="@+id/timeData"
-                style="@style/myHanFont"
+                <TextView
+                    android:id="@+id/timeText"
+                    android:textStyle="bold"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Time"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:id="@+id/timeData"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{dataList.time}"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{dataList.time}"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear2">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/distanceText"
+                    android:textStyle="bold"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Distance"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
 
-        <LinearLayout
-            android:id="@+id/linear3"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear2">
+                <TextView
+                    android:id="@+id/distanceData"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{dataList.distance + ` M`}"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/distanceText"
-                style="@style/myHanFont"
+            <LinearLayout
+                android:id="@+id/linearLayout5"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Distance"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear3">
 
-            <TextView
-                android:id="@+id/distanceData"
-                style="@style/myHanFont"
+                <TextView
+                    android:id="@+id/calorieText"
+                    android:textStyle="bold"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Calorie"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:id="@+id/calorieData"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{dataList.calorie}"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear4"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{dataList.distance + ` M`}"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
-        </LinearLayout>
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
-        <LinearLayout
-            android:id="@+id/linearLayout5"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="3"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear3">
+                <TextView
+                    android:id="@+id/stepText"
+                    android:textStyle="bold"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Step"
+                    android:textColor="@color/white"
+                    android:textSize="17dp" />
 
-            <TextView
-                android:id="@+id/calorieText"
-                style="@style/myHanFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Calorie"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
+                <TextView
+                    android:id="@+id/stepData"
+                    style="@style/myHanFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{dataList.step}"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/calorieData"
-                style="@style/myHanFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{dataList.calorie}"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear4"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="3"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
-
-            <TextView
-                android:id="@+id/stepText"
-                style="@style/myHanFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Step"
-                android:textColor="@color/white"
-                android:textSize="17dp" />
-
-            <TextView
-                android:id="@+id/stepData"
-                style="@style/myHanFont"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@{dataList.step}"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
