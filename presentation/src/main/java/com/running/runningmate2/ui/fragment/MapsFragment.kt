@@ -38,7 +38,6 @@ import kotlin.math.roundToInt
 class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var marker: Marker? = null
-    private var nowPointMarker: Marker? = null
     private val viewModel: MapsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
     private var isStatic = false
@@ -48,6 +47,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         viewModel.changeState(MapState.RESUME)
     }
     override fun initUI() {
+        viewModel.startSteam()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
@@ -198,9 +198,12 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.step.observe(viewLifecycleOwner) {
-            Log.e("TAG", "initObserver step: $it", )
             if (it != null) binding.runingBox.runStepText.text = "$it 걸음"
         }
+    }
+    override fun onStop() {
+        super.onStop()
+        viewModel.removeSteam()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

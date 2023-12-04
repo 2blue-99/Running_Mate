@@ -1,6 +1,7 @@
 package com.running.runningmate2.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,6 @@ abstract class BaseFragment<T: ViewDataBinding>(
     abstract fun initUI()
     abstract fun initListener()
     abstract fun initObserver()
-
     fun showShortToast(message: String?){
         context?.let {
             Toast.makeText(it, message ?: "", Toast.LENGTH_SHORT).show()

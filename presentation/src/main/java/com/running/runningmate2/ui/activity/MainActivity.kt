@@ -88,9 +88,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     fun changeFragment(index: Int) {
         when (index) {
             // Map 로딩 + 런닝
-            1 -> {
-                binding.bottomBar.visibility = View.GONE
-            }
+            1 -> { binding.bottomBar.visibility = View.GONE }
             // 결과 페이지
             2 -> {
                 supportFragmentManager

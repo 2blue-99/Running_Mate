@@ -24,6 +24,7 @@ import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.WeatherHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -77,8 +78,9 @@ class MapsViewModel @Inject constructor(
     fun getNowLocation(): Location? = _location.value?.last()
     val loading: LiveData<Boolean> get() = isLoading
 
-    init {
-        locationUseCase.getLocationDataStream().onEach {
+    private var locationStream: Job? = null
+    fun startSteam(){
+        locationStream = locationUseCase.getLocationDataStream().onEach {
             when (it) {
                 is ResourceState.Success -> {
                     isLoading.value = false
@@ -198,4 +200,5 @@ class MapsViewModel @Inject constructor(
     fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
     fun stepInit() { killSensor() }
+    fun removeSteam() { locationStream?.cancel() }
 }
