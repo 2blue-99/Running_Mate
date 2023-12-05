@@ -2,9 +2,7 @@ package com.running.runningmate2.ui.fragment
 
 import android.graphics.Color
 import android.location.Location
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -29,6 +27,7 @@ import com.running.runningmate2.utils.MapState
 import com.running.runningmate2.utils.TimeHelper
 import com.running.runningmate2.utils.WeatherHelper
 import com.running.runningmate2.viewModel.activityViewModel.MainViewModel
+import com.running.runningmate2.viewModel.fragmentViewModel.RunningViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -36,23 +35,24 @@ import kotlin.math.roundToInt
 class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var marker: Marker? = null
-    private val viewModel: MapsViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val runningViewModel: RunningViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by viewModels()
     private var isStatic = false
     private var initMap = false
 
     override fun initData() {
-        viewModel.changeState(MapState.RESUME)
+        mapsViewModel.changeState(MapState.RESUME)
     }
     override fun initUI() {
-        viewModel.startLocationStream()
+        mapsViewModel.startLocationStream()
         val mapFragment = childFragmentManager.findFragmentById(R.id.maps_fragment) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
     override fun initListener() {
         // 스타트, 스탑 버튼
         binding.mapsChangeBtn.setOnClickListener {
-            viewModel.mapState.value?.let {
+            mapsViewModel.mapState.value?.let {
                 when(it){
                     MapState.RESUME -> {
                         showStartBottomSheet()
@@ -87,13 +87,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         binding.mapsWeatherBox.root.setOnClickListener {
-            if(!viewModel.isWeatherLoading())
-                viewModel.getWeatherData()
+            if(!mapsViewModel.isWeatherLoading())
+                mapsViewModel.getWeatherData()
         }
     }
 
     override fun initObserver() {
-        viewModel.loading.observe(viewLifecycleOwner){ loading ->
+        mapsViewModel.loading.observe(viewLifecycleOwner){ loading ->
             if(loading){
                 binding.mapsLoading.root.visibility = View.VISIBLE
                 binding.mapsSetLocationBtn.visibility = View.INVISIBLE
@@ -107,7 +107,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
 
-        viewModel.mapState.observe(viewLifecycleOwner){
+        mapsViewModel.mapState.observe(viewLifecycleOwner){
             when(it){
                 MapState.RESUME -> {
                     binding.mapsChangeBtn.text = "START"
@@ -119,10 +119,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
         //GPS 현 위치 옵져버 / 마커 찍기, 카메라 무빙
-        viewModel.location.observe(viewLifecycleOwner) { location ->
+        mapsViewModel.location.observe(viewLifecycleOwner) { location ->
             mMap?.let {
-                viewModel.getNowLatLng()?.let { LatLng ->
-                    when(viewModel.mapState.value){
+                mapsViewModel.getNowLatLng()?.let { LatLng ->
+                    when(mapsViewModel.mapState.value){
                         MapState.RESUME -> {
                             if(!initMap) initMap(LatLng)
                             if(isStatic) moveCamera(LatLng, 17F)
@@ -130,7 +130,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                         }
                         MapState.RUNNING -> {
                             marker = addMarker(LatLng)
-                            viewModel.calculateDistance()
+                            runningViewModel.calculateDistance(location)
                             if(isStatic) moveCamera(LatLng(LatLng.latitude-0.0006, LatLng.longitude), 17.5F)
                             addPolyline(location.first(), location.last())
                         }
@@ -140,7 +140,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
         // 날씨 정보 옵져버
-        viewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
+        mapsViewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
             when(weatherState){
                 is ResourceState.Success ->{
                     binding.mapsWeatherBox.weatherLoading.visibility = View.INVISIBLE
@@ -162,26 +162,26 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             }
         }
 
-        viewModel.time.observe(viewLifecycleOwner) { time ->
+        runningViewModel.time.observe(viewLifecycleOwner) { time ->
             if (time != null) binding.mapsRunningBox.runningBoxTimeTxt.text = time
         }
 
-        viewModel.calorie.observe(viewLifecycleOwner) { calorie ->
+        runningViewModel.calorie.observe(viewLifecycleOwner) { calorie ->
             if (calorie.toString().length > 4) binding.mapsRunningBox.runningBoxCalorieTxt.text = "${String.format("%.2f", calorie)} Kcal"
             else binding.mapsRunningBox.runningBoxCalorieTxt.text = "$calorie Kcal"
         }
 
-        viewModel.distance.observe(viewLifecycleOwner) { distance ->
+        runningViewModel.distance.observe(viewLifecycleOwner) { distance ->
             if (distance != null) binding.mapsRunningBox.runningBoxDistenceTxt.text = "${String.format("%.2f", distance)} M"
         }
 
-        viewModel.step.observe(viewLifecycleOwner) {
+        runningViewModel.step.observe(viewLifecycleOwner) {
             if (it != null) binding.mapsRunningBox.runningBoxStepTxt.text = "$it 걸음"
         }
     }
     override fun onStop() {
         super.onStop()
-        viewModel.stopLocationStream()
+        mapsViewModel.stopLocationStream()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -206,9 +206,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 binding.mapsRunningBox.runningBoxStepTxt.text.toString()
             )
         )
-        viewModel.resetTime()
-        viewModel.clearViewModel()
-        viewModel.stepInit()
+        runningViewModel.resetTime()
+        runningViewModel.stepInit()
         (activity as MainActivity).changeFragment(2)
     }
 
@@ -217,19 +216,19 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun initMap(location: LatLng){
-        viewModel.getWeatherData()
+        mapsViewModel.getWeatherData()
         moveCamera(location, 17F)
         initMap = true
     }
 
     private fun showStartBottomSheet(){
-        val startBottomSheet = StartBottomSheet(viewModel.getWeight()) {
-            viewModel.changeState(MapState.RUNNING)
-            viewModel.saveWeight(it)
+        val startBottomSheet = StartBottomSheet(mapsViewModel.getWeight()) {
+            mapsViewModel.changeState(MapState.RUNNING)
+            mapsViewModel.saveWeight(it)
             (activity as MainActivity).changeFragment(1)
             moveNowLocation()
-            viewModel.startTime()
-            viewModel.startStep()
+            runningViewModel.startTime()
+            runningViewModel.startStep()
         }
         startBottomSheet.show(parentFragmentManager, startBottomSheet.tag)
     }
@@ -245,8 +244,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun moveNowLocation(){
-        viewModel.getNowLocation()?.let { location ->
-            when(viewModel.mapState.value){
+        mapsViewModel.getNowLocation()?.let { location ->
+            when(mapsViewModel.mapState.value){
                 MapState.RESUME ->
                     moveCamera(LatLng(location.latitude, location.longitude), 17F)
                 MapState.RUNNING ->
