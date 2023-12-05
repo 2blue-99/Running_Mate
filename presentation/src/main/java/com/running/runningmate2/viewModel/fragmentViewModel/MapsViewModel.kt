@@ -40,6 +40,7 @@ class MapsViewModel @Inject constructor(
     val location: LiveData<ArrayList<Location>> get() = _location
     fun getNowLocation(): Location? = _location.value?.last()
     fun getNowLatLng(): LatLng? = _location.value?.last()?.let { LatLng(it.latitude, it.longitude) }
+
     val loading: LiveData<Boolean> get() = isLoading
 
     private var locationStream: Job? = null
