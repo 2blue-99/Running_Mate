@@ -57,19 +57,6 @@ class MapsViewModel @Inject constructor(
     val weatherData: LiveData<ResourceState<DomainWeather>> get() = _weatherData
     fun isWeatherLoading() = _weatherData.value is ResourceState.Loading
 
-    private var _second = 0
-    private var _minute = 0
-    private var _hour = 0
-    private var second = ""
-    private var minute = ""
-    private var hour = ""
-    private var accel: Float = 0.0f
-    private var accelCurrent: Float = 0.0f
-    private var accelLast: Float = 0.0f
-    lateinit var sensorManager: SensorManager
-    private var skip = 300L
-    private var myShakeTime = 0L
-
     private val _mapState = MutableLiveData<MapState>()
     val mapState: LiveData<MapState> get() = _mapState
     fun changeState(state: MapState){ _mapState.value = state }
@@ -79,7 +66,14 @@ class MapsViewModel @Inject constructor(
     fun getNowLocation(): Location? = _location.value?.last()
     val loading: LiveData<Boolean> get() = isLoading
 
+    private var accel: Float = 0.0f
+    private var accelCurrent: Float = 0.0f
+    private var accelLast: Float = 0.0f
+    private lateinit var sensorManager: SensorManager
+    private var skip = 300L
+    private var myShakeTime = 0L
     private var locationStream: Job? = null
+    private var timeSteam: Job? = null
     fun startSteam(){
         locationStream = locationUseCase.getLocationDataStream().onEach {
             when (it) {
@@ -115,10 +109,10 @@ class MapsViewModel @Inject constructor(
         }
     }
     fun startTime() {
-        viewModelScope.launch {
+        timeSteam = viewModelScope.launch {
             while (true) {
                 delay(1000L)
-                _time.value = TimeHelper().getCustomTime()
+                _time.value = TimeHelper.getCustomTime()
             }
         }
     }
@@ -136,9 +130,7 @@ class MapsViewModel @Inject constructor(
         val weight = sharedPreferences.getWeight()
         _calorie.value = _calorie.value?.plus(Calorie(weight).myCalorie())
     }
-
-    @SuppressLint("ServiceCast")
-    fun senSor(application: Application) {
+    private fun senSor(application: Application) {
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         accel = 10f
@@ -149,7 +141,6 @@ class MapsViewModel @Inject constructor(
             this, sensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME
         )
-
     }
     override fun onSensorChanged(event: SensorEvent?) {
         val x: Float = event?.values?.get(0) as Float
@@ -175,4 +166,9 @@ class MapsViewModel @Inject constructor(
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
     fun stepInit() { killSensor() }
     fun removeSteam() { locationStream?.cancel() }
+    fun resetTime(){
+        timeSteam?.cancel()
+        TimeHelper.resetTime()
+    }
+    fun clearViewModel(){ onCleared() }
 }

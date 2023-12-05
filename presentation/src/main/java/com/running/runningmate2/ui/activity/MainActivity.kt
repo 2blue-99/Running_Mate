@@ -25,7 +25,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun initData() {
-
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
@@ -57,8 +56,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         bottomNav.setOnItemSelectedListener {
-            if(presentLocation == it.itemId)
-                return@setOnItemSelectedListener true
+            if(presentLocation == it.itemId) return@setOnItemSelectedListener true
             when (it.itemId) {
                 R.id.home -> {
                     loadFragment(MapsFragment())
@@ -79,30 +77,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun initObserver() {}
     private fun loadFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.main_frameLayout, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.main_frameLayout, fragment)
+            addToBackStack(null)
+            commit()
+        }
     }
 
     fun changeFragment(index: Int) {
         when (index) {
             // Map 로딩 + 런닝
-            1 -> { binding.mainBottomBar.visibility = View.GONE }
+            1 -> {
+                binding.mainBottomBar.visibility = View.GONE
+            }
             // 결과 페이지
             2 -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_frameLayout, ResultFragment())
-                    .commit()
+                loadFragment(ResultFragment())
             }
             // 메인 페이지
             3 -> {
                 binding.mainBottomBar.visibility = View.VISIBLE
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.main_frameLayout, MapsFragment())
-                    .commit()
+                loadFragment(MapsFragment())
             }
         }
     }

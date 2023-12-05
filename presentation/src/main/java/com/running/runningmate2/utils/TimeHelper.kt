@@ -8,7 +8,8 @@ import java.util.Calendar
  * 2023-11-24
  * pureum
  */
-class TimeHelper {
+object TimeHelper {
+    private var start = false
     private var _second = 0
     private var _minute = 0
     private var _hour = 0
@@ -31,6 +32,7 @@ class TimeHelper {
         }
 
     fun getCustomTime():String{
+        start
         _second++
         if (_second == 60) {
             _second = 0
@@ -58,5 +60,14 @@ class TimeHelper {
             hour = "$_hour"
 
         return "$hour:$minute:$second"
+    }
+    fun resetTime(){
+        start = false
+        _second = 0
+        _minute = 0
+        _hour = 0
+        second = ""
+        minute = ""
+        hour = ""
     }
 }

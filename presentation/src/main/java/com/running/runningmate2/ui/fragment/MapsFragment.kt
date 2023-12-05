@@ -57,7 +57,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     showStartBottomSheet()
                 }
                 MapState.RUNNING -> {
+                    //종료
                     viewModel.changeState(MapState.END)
+                    viewModel.resetTime()
+                    viewModel.clearViewModel()
                 }
                 else -> {}
             }
@@ -118,8 +121,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 MapState.END -> {
                     val result = RunningData(
                         0,
-                        TimeHelper().getDay(),
-                        TimeHelper().getTime(),
+                        TimeHelper.getDay(),
+                        TimeHelper.getTime(),
                         binding.mapsRunningBox.runningBoxTimeTxt.text.toString(),
                         binding.mapsRunningBox.runningBoxDistenceTxt.text.toString(),
                         binding.mapsRunningBox.runningBoxCalorieTxt.text.toString(),
@@ -189,6 +192,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
+            Log.e("TAG", "initObserver distance: $distance", )
             if (distance != null) binding.mapsRunningBox.runningBoxDistenceTxt.text = "${String.format("%.2f", distance)} M"
         }
 
@@ -234,7 +238,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
 
     private fun addPolyline(beforeLocation: Location, nowLocation: Location){
-        Log.e("TAG", "addPolyline: $mMap", )
         mMap?.addPolyline {
             add(LatLng(beforeLocation.latitude, beforeLocation.longitude), LatLng(nowLocation.latitude, nowLocation.longitude))
             width(20F)
@@ -273,5 +276,10 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     )
                 )
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("TAG", "onDestroy: 삭제됨!!!!!!!!!!!!!!!", )
     }
 }

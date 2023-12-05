@@ -52,6 +52,7 @@
 
             <TextView
                 android:id="@+id/runningBox_timeTxt"
+                android:text="00:00:00"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +62,7 @@
 
             <TextView
                 android:id="@+id/runningBox_distenceTxt"
+                android:text="0.0 M"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,6 +120,7 @@
 
             <TextView
                 android:textColor="@color/white"
+                android:text="0.0 Kcal"
                 android:id="@+id/runningBox_calorieTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"
@@ -127,6 +130,7 @@
 
             <TextView
                 android:textColor="@color/white"
+                android:text="0 걸음"
                 android:id="@+id/runningBox_stepTxt"
                 style="@style/myHanFont"
                 android:layout_width="match_parent"

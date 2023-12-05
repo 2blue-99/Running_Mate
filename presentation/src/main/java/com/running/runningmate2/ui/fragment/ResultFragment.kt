@@ -16,7 +16,7 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(R.layout.fragment_res
     override fun initData() {}
     override fun initUI() {
         if(activityViewModel.savedData != null)
-            binding.datas = activityViewModel.savedData
+            binding.data = activityViewModel.savedData
     }
     override fun initListener() {
         binding.backBtn.setOnClickListener{

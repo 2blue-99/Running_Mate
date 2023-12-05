@@ -24,7 +24,7 @@ android {
         buildConfigField "String", "SERVICE_KEY", "\"${properties.getProperty("SERVICE_KEY")}\""
         buildConfigField "String", "BASE_URL", "\"${properties.getProperty("BASE_URL")}\""
 
-        manifestPlaceholders = [googleMapApiKey:properties.getProperty('MAP_KEY')]
+        manifestPlaceholders = [GoogleMapApiKey:properties.getProperty('MAP_KEY')]
 
     }
 
