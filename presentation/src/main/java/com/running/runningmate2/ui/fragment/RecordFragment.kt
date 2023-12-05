@@ -1,5 +1,6 @@
 package com.running.runningmate2.ui.fragment
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.running.domain.model.RunningData
@@ -50,9 +51,10 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
     }
 
     override fun initObserver() {
-        viewModel.runningData.observe(viewLifecycleOwner) { datas ->
-            adapter.datalist = datas
-            if (datas.isNotEmpty()) {
+        viewModel.runningData.observe(viewLifecycleOwner) { dataList ->
+            Log.e("TAG", "record initObserver: $dataList", )
+            adapter.datalist = dataList
+            if (dataList.isNotEmpty()) {
                 var seconde = 0
                 var minute = 0
                 var hour = 0
@@ -64,7 +66,8 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
                 var _minute = ""
                 var _seconde = ""
                 var _hour = ""
-                for (data in datas) {
+                for ( data in dataList) {
+                    Log.e("TAG", "record initObserver: $data", )
                     if (nowDay != data.now.split(" ")[0]) {
                         date++
                         nowDay = data.now.split(" ")[0]

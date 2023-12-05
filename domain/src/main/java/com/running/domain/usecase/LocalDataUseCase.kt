@@ -11,11 +11,8 @@ import com.running.domain.repo.LocalDataRepo
 class LocalDataUseCase(
     private val localDataRepo: LocalDataRepo
 ) {
-    suspend fun insertData(userData: RunningData) =
-        localDataRepo.insertData(userData)
-    fun readAllData() =
-        localDataRepo.readAllData()
-
+    suspend fun insertData(userData: RunningData) = localDataRepo.insertData(userData)
+    fun readAllData() = localDataRepo.readAllData()
     suspend fun deleteData(id: Int): Int = localDataRepo.deleteData(id)
 
 }
