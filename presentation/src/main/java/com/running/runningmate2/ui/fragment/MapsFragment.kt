@@ -75,13 +75,13 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
             if(!isStatic) {
                 isStatic = !isStatic
                 moveNowLocation()
-                Toast.makeText(requireContext(), "화면 고정 기능 ON", Toast.LENGTH_SHORT).show()
+                showShortToast("화면 고정 기능 ON")
                 changeStaticBtn(R.drawable.shape_click_btn)
             }
             // 고정 시
             else {
                 isStatic = !isStatic
-                Toast.makeText(requireContext(), "화면 고정 기능 OFF", Toast.LENGTH_SHORT).show()
+                showShortToast("화면 고정 기능 OFF")
                 changeStaticBtn(R.drawable.shape_set_btn)
             }
         }
@@ -131,7 +131,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                         MapState.RUNNING -> {
                             marker = addMarker(LatLng)
                             viewModel.calculateDistance()
-                            if(isStatic) moveCamera(LatLng, 17.5F)
+                            if(isStatic) moveCamera(LatLng(LatLng.latitude-0.0006, LatLng.longitude), 17.5F)
                             addPolyline(location.first(), location.last())
                         }
                         else -> {
@@ -275,10 +275,5 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     )
                 )
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("TAG", "onDestroy: 삭제됨!!!!!!!!!!!!!!!", )
     }
 }

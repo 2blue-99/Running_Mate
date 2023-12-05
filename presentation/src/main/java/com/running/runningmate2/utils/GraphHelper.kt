@@ -38,7 +38,7 @@ object GraphHelper {
                     "금" -> friday += data.distance.split(" ")[0].toFloat()
                     "토" -> saturday += data.distance.split(" ")[0].toFloat()
                     "일" -> sunday += data.distance.split(" ")[0].toFloat()
-                    else -> Log.e("TAG", "해당 요일이 없는데요?")
+                    else -> {}
                 }
                 count++
             }

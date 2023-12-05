@@ -53,7 +53,6 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>(R.layout.fragment_rec
 
     override fun initObserver() {
         viewModel.runningData.observe(viewLifecycleOwner) { dataList ->
-            Log.e("TAG", "initObserver: $dataList", )
             adapter.datalist = dataList
             if (dataList.isNotEmpty())
                 binding.recordRecordBox.data = RunningBoxHelper.makeRunningBox(dataList)

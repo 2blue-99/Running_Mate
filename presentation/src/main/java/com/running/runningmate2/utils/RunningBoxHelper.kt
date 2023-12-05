@@ -23,7 +23,6 @@ object RunningBoxHelper {
         var _seconde = ""
         var _hour = ""
         for ( data in dataList) {
-            Log.e("TAG", "record initObserver: $data", )
             if (nowDay != data.now.split(" ")[0]) {
                 date++
                 nowDay = data.now.split(" ")[0]

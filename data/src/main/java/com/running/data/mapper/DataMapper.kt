@@ -23,7 +23,6 @@ object DataMapper {
         )
 
     fun getCategory(response : WeatherData.Response): DomainWeather {
-        Log.e(javaClass.simpleName, "getCategory in, response : $response", )
         val temp = response.body.items.item.filter { it.category == "T1H" }.map { it.obsrValue }.first().toString()
         val rn1 = response.body.items.item.filter { it.category == "RN1" }.map { it.obsrValue }.first().toString()
         val eastWestWind = response.body.items.item.filter { it.category == "UUU" }.map { it.obsrValue }.first().toString()

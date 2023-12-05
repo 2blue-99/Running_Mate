@@ -10,8 +10,7 @@ abstract class BaseViewModel : ViewModel(){
 
     private val job = SupervisorJob()
 
-    protected val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.e("TAG", "$throwable: ", )
+    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         isLoading.postValue(false)
         coroutineContext.job.cancel()
     }
