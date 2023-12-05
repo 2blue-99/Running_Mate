@@ -5,5 +5,5 @@ package com.running.runningmate2.utils
  * pureum
  */
 enum class MapState {
-    RESUME, RUNNING, END
+    RESUME, RUNNING
 }

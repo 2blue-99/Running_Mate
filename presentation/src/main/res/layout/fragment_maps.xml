@@ -108,7 +108,6 @@
                 android:drawableEnd="@drawable/ic_baseline_control_camera_24"
                 android:paddingEnd="12dp"
                 tools:ignore="RtlSymmetry" />
-
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

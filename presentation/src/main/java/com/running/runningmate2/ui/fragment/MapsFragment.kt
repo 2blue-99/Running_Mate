@@ -45,24 +45,23 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         viewModel.changeState(MapState.RESUME)
     }
     override fun initUI() {
-        viewModel.startSteam()
+        viewModel.startLocationStream()
         val mapFragment = childFragmentManager.findFragmentById(R.id.maps_fragment) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
     override fun initListener() {
         // 스타트, 스탑 버튼
         binding.mapsChangeBtn.setOnClickListener {
-            when(viewModel.mapState.value){
-                MapState.RESUME -> {
-                    showStartBottomSheet()
+            viewModel.mapState.value?.let {
+                when(it){
+                    MapState.RESUME -> {
+                        showStartBottomSheet()
+
+                    }
+                    MapState.RUNNING -> {
+                        runningStop()
+                    }
                 }
-                MapState.RUNNING -> {
-                    //종료
-                    viewModel.changeState(MapState.END)
-                    viewModel.resetTime()
-                    viewModel.clearViewModel()
-                }
-                else -> {}
             }
         }
         //현재 위치로 줌 해주는 버튼
@@ -109,7 +108,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.mapState.observe(viewLifecycleOwner){
-            Log.e("TAG", "mapState: $it", )
             when(it){
                 MapState.RESUME -> {
                     binding.mapsChangeBtn.text = "START"
@@ -118,32 +116,17 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                     binding.mapsChangeBtn.text = "STOP"
                     binding.mapsRunningBox.root.visibility = View.VISIBLE
                 }
-                MapState.END -> {
-                    val result = RunningData(
-                        0,
-                        TimeHelper.getDay(),
-                        TimeHelper.getTime(),
-                        binding.mapsRunningBox.runningBoxTimeTxt.text.toString(),
-                        binding.mapsRunningBox.runningBoxDistenceTxt.text.toString(),
-                        binding.mapsRunningBox.runningBoxCalorieTxt.text.toString(),
-                        binding.mapsRunningBox.runningBoxStepTxt.text.toString()
-                    )
-                    mainViewModel.insertDB(result)
-                    (activity as MainActivity).changeFragment(2)
-                    viewModel.stepInit()
-                }
             }
         }
         //GPS 현 위치 옵져버 / 마커 찍기, 카메라 무빙
         viewModel.location.observe(viewLifecycleOwner) { location ->
             mMap?.let {
-                LatLng(location.last().latitude, location.last().longitude).let { LatLng ->
+                viewModel.getNowLatLng()?.let { LatLng ->
                     when(viewModel.mapState.value){
                         MapState.RESUME -> {
                             marker = addMarker(LatLng)
                             if(!initMap) initMap(LatLng)
                             if(isStatic) moveCamera(LatLng, 17F)
-
                         }
                         MapState.RUNNING -> {
                             marker = addMarker(LatLng)
@@ -160,7 +143,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
         // 날씨 정보 옵져버
         viewModel.weatherData.observe(viewLifecycleOwner) { weatherState ->
-            Log.e("TAG", "viewModel.weatherData.observe: $weatherState", )
             when(weatherState){
                 is ResourceState.Success ->{
                     binding.mapsWeatherBox.weatherLoading.visibility = View.INVISIBLE
@@ -192,7 +174,6 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         }
 
         viewModel.distance.observe(viewLifecycleOwner) { distance ->
-            Log.e("TAG", "initObserver distance: $distance", )
             if (distance != null) binding.mapsRunningBox.runningBoxDistenceTxt.text = "${String.format("%.2f", distance)} M"
         }
 
@@ -202,7 +183,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
     }
     override fun onStop() {
         super.onStop()
-        viewModel.removeSteam()
+        viewModel.stopLocationStream()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -213,6 +194,24 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         binding.mapsWeatherBox.weatherTemTxt.text = "${data.temperatures.toDouble().let { it.roundToInt() }} ºc"
         binding.mapsWeatherBox.weatherHumidityTxt.text = "${data.humidity} %"
         binding.mapsWeatherBox.weatherIcon.background = WeatherHelper.makeIcon(data.rainType.toDouble().toInt())
+    }
+
+    private fun runningStop(){
+        mainViewModel.insertDB(
+            RunningData(
+                0,
+                TimeHelper.getDay(),
+                TimeHelper.getTime(),
+                binding.mapsRunningBox.runningBoxTimeTxt.text.toString(),
+                binding.mapsRunningBox.runningBoxDistenceTxt.text.toString(),
+                binding.mapsRunningBox.runningBoxCalorieTxt.text.toString(),
+                binding.mapsRunningBox.runningBoxStepTxt.text.toString()
+            )
+        )
+        viewModel.resetTime()
+        viewModel.clearViewModel()
+        viewModel.stepInit()
+        (activity as MainActivity).changeFragment(2)
     }
 
     private fun changeStaticBtn(@DrawableRes icon: Int){
@@ -241,8 +240,8 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
         mMap?.addPolyline {
             add(LatLng(beforeLocation.latitude, beforeLocation.longitude), LatLng(nowLocation.latitude, nowLocation.longitude))
             width(20F)
-//            startCap(RoundCap())
-//            endCap(RoundCap())
+            startCap(RoundCap())
+            endCap(RoundCap())
             color(Color.parseColor("#FA785F"))
         }
     }

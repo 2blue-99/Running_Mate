@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,21 +54,16 @@ class LocationDataHelperImpl @Inject constructor(
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled) {
+        if(!hasAccessCoarseLocationPermission || !hasAccessFineLocationPermission || !isGpsEnabled)
             return null
-        }
 
         return suspendCancellableCoroutine { cont ->
-            fusedLocationClient.lastLocation.apply {
+            fusedLocationClient.getCurrentLocation(PRIORITY_HIGH_ACCURACY, null).apply {
                 addOnCompleteListener {
                     cont.resume(result)
                 }
                 addOnFailureListener {
                     cont.resume(null)
-                }
-
-                addOnCanceledListener {
-                    cont.cancel()
                 }
             }
         }

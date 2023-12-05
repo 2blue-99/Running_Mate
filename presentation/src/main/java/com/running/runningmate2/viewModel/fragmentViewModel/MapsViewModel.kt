@@ -1,6 +1,5 @@
 package com.running.runningmate2.viewModel.fragmentViewModel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.hardware.Sensor
@@ -12,6 +11,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import com.running.domain.SavedData.DomainWeather
 import com.running.domain.state.ResourceState
@@ -41,10 +41,10 @@ class MapsViewModel @Inject constructor(
         private val sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
 ) : BaseViewModel(), SensorEventListener {
 
-    private val _distance = MutableLiveData<Double>()
+    private val _distance = MutableLiveData(0.0)
     val distance: LiveData<Double> get() = _distance
 
-    private val _calorie = MutableLiveData<Double>()
+    private val _calorie = MutableLiveData(0.0)
     val calorie: LiveData<Double> get() = _calorie
 
     private val _time = MutableLiveData<String>()
@@ -64,6 +64,7 @@ class MapsViewModel @Inject constructor(
     private val _location = ListLiveData<Location>()
     val location: LiveData<ArrayList<Location>> get() = _location
     fun getNowLocation(): Location? = _location.value?.last()
+    fun getNowLatLng(): LatLng? = _location.value?.last()?.let { LatLng(it.latitude, it.longitude) }
     val loading: LiveData<Boolean> get() = isLoading
 
     private var accel: Float = 0.0f
@@ -74,7 +75,7 @@ class MapsViewModel @Inject constructor(
     private var myShakeTime = 0L
     private var locationStream: Job? = null
     private var timeSteam: Job? = null
-    fun startSteam(){
+    fun startLocationStream(){
         locationStream = locationUseCase.getLocationDataStream().onEach {
             when (it) {
                 is ResourceState.Success -> {
@@ -88,7 +89,7 @@ class MapsViewModel @Inject constructor(
             }
         }.launchIn(modelScope)
     }
-
+    fun stopLocationStream() { locationStream?.cancel() }
     fun getWeatherData() {
         modelScope.launch {
             WeatherHelper.makeRequest(_location.value?.last()).let { request ->
@@ -115,7 +116,6 @@ class MapsViewModel @Inject constructor(
             }
         }
     }
-
     fun calculateDistance() {
         if(_location.size() > 1){
             var result = _location.getFirst().distanceTo(_location.getSecond()).toDouble()
@@ -124,18 +124,15 @@ class MapsViewModel @Inject constructor(
             if (result != 0.0) calculateCalorie()
         }
     }
-
     private fun calculateCalorie(){
         val weight = sharedPreferences.getWeight()
         _calorie.value = _calorie.value?.plus(Calorie(weight).myCalorie())
     }
     private fun senSor(application: Application) {
         sensorManager = application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
         accel = 10f
         accelCurrent = SensorManager.GRAVITY_EARTH
         accelLast = SensorManager.GRAVITY_EARTH
-
         sensorManager.registerListener(
             this, sensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME
@@ -164,7 +161,6 @@ class MapsViewModel @Inject constructor(
     fun saveWeight(weight: String) = sharedPreferenceHelperImpl.saveWeight(weight.toInt())
     fun getWeight(): Int = sharedPreferenceHelperImpl.getWeight()
     fun stepInit() { killSensor() }
-    fun removeSteam() { locationStream?.cancel() }
     fun resetTime(){
         timeSteam?.cancel()
         TimeHelper.resetTime()
