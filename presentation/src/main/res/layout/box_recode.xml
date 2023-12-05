@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="5dp"
-            android:text="@string/record_box_distenceTxt"
+            android:text="@{data.distance}"
             android:textColor="@color/white"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"

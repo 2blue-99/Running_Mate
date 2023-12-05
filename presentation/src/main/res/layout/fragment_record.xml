@@ -19,7 +19,7 @@
             android:gravity="center">
 
             <include
-                android:id="@+id/record_recodeBox"
+                android:id="@+id/record_recordBox"
                 layout="@layout/box_recode"
                 android:layout_width="350dp"
                 android:layout_height="190dp"
@@ -36,7 +36,7 @@
                 android:background="@drawable/shape_recycler_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/record_recodeBox" />
+                app:layout_constraintTop_toBottomOf="@+id/record_recordBox" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/record_changeBtn"

@@ -86,7 +86,6 @@ class MapsViewModel @Inject constructor(
                     _location.add(Location(null))
                 }
             }
-            Log.e("TAG", "${_location.value}: ", )
         }.launchIn(modelScope)
     }
 
