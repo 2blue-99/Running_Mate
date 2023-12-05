@@ -51,12 +51,12 @@ object GraphHelper {
             entries.add(BarEntry(7F, sunday))
 
             barChart.run {
-                description.isEnabled = false // 차트 옆에 별도로 표기되는 description을 안보이게 설정 (false)
-                setMaxVisibleValueCount(7) // 최대 보이는 그래프 개수를 7개로 지정
-                setPinchZoom(false) // 핀치줌(두손가락으로 줌인 줌 아웃하는것) 설정
-                setDrawBarShadow(false) //그래프의 그림자
-                setDrawGridBackground(false)//격자구조 넣을건지
-                axisLeft.run { //왼쪽 축. 즉 Y방향 축을 뜻한다.
+                description.isEnabled = false
+                setMaxVisibleValueCount(7)
+                setPinchZoom(false)
+                setDrawBarShadow(false)
+                setDrawGridBackground(false)
+                axisLeft.run {
                     axisMaximum = maxOf(
                         monday,
                         tuesday,
@@ -65,37 +65,37 @@ object GraphHelper {
                         friday,
                         saturday,
                         sunday
-                    ) + 1 //100 위치에 선을 그리기 위해 101f로 맥시멈값 설정
-                    axisMinimum = 0f // 최소값 0
-                    granularity = 1f //  단위마다 선을 그리려고 설정.
-                    setDrawLabels(true) // 값 적는거 허용 (0, 50, 100)
-                    setDrawGridLines(true) //격자 라인 활용
-                    setDrawAxisLine(false) // 축 그리기 설정
-                    textSize = 13f //라벨 텍스트 크기
+                    ) + 1
+                    axisMinimum = 0f
+                    granularity = 1f
+                    setDrawLabels(true)
+                    setDrawGridLines(true)
+                    setDrawAxisLine(false)
+                    textSize = 13f
                 }
                 xAxis.run {
-                    position = XAxis.XAxisPosition.BOTTOM // X축을 아래에다가 둔다.
-                    granularity = 1f // 1 단위만큼 간격 두기
-                    setDrawAxisLine(true) // 축 그림
-                    setDrawGridLines(false) // 격자
-                    textSize = 11f // 텍스트 크기
-                    valueFormatter = MyXAxisFormatter() // X축 라벨값(밑에 표시되는 글자) 바꿔주기 위해 설정
+                    position = XAxis.XAxisPosition.BOTTOM
+                    granularity = 1f
+                    setDrawAxisLine(true)
+                    setDrawGridLines(false)
+                    textSize = 11f
+                    valueFormatter = MyXAxisFormatter()
                 }
-                axisRight.isEnabled = false // 오른쪽 Y축을 안보이게 해줌.
-                setTouchEnabled(false) // 그래프 터치해도 아무 변화없게 막음
-                animateY(1000) // 밑에서부터 올라오는 애니매이션 적용
-                legend.isEnabled = false //차트 범례 설정
+                axisRight.isEnabled = false
+                setTouchEnabled(false)
+                animateY(1000)
+                legend.isEnabled = false
             }
 
-            val set = BarDataSet(entries, "DataSet") // 데이터셋 초기화
+            val set = BarDataSet(entries, "DataSet")
             set.color =
-                ContextCompat.getColor(MyApplication.getApplication(), R.color.orange) // 바 그래프 색 설정
+                ContextCompat.getColor(MyApplication.getApplication(), R.color.orange)
             val dataSet: ArrayList<IBarDataSet> = ArrayList()
             dataSet.add(set)
             val data = BarData(dataSet)
-            data.barWidth = 0.7f //막대 너비 설정
+            data.barWidth = 0.7f
             barChart.run {
-                this.data = data //차트의 데이터를 data로 설정해줌.
+                this.data = data
                 setFitBars(true)
                 invalidate()
             }

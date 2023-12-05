@@ -124,9 +124,9 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                 viewModel.getNowLatLng()?.let { LatLng ->
                     when(viewModel.mapState.value){
                         MapState.RESUME -> {
-                            marker = addMarker(LatLng)
                             if(!initMap) initMap(LatLng)
                             if(isStatic) moveCamera(LatLng, 17F)
+                            marker = addMarker(LatLng)
                         }
                         MapState.RUNNING -> {
                             marker = addMarker(LatLng)
@@ -134,9 +134,7 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(R.layout.fragment_maps), 
                             if(isStatic) moveCamera(LatLng(LatLng.latitude-0.0006, LatLng.longitude), 17.5F)
                             addPolyline(location.first(), location.last())
                         }
-                        else -> {
-                            showShortToast("위치를 불러올 수 없습니다.")
-                        }
+                        else -> showShortToast("위치를 불러올 수 없습니다.")
                     }
                 }
             }

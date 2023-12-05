@@ -94,14 +94,7 @@ class MapsViewModel @Inject constructor(
         modelScope.launch {
             WeatherHelper.makeRequest(_location.value?.last()).let { request ->
                 getWeatherUseCase(request).onEach {
-                    when(it){
-                        is ResourceState.Success -> {
-                            _weatherData.postValue(it)
-                        }
-                        else -> {
-                            _weatherData.postValue(it)
-                        }
-                    }
+                    _weatherData.postValue(it)
                 }.catch {
                     _weatherData.postValue(ResourceState.Error(message = "UnHandle Err"))
                 }.launchIn(modelScope)
