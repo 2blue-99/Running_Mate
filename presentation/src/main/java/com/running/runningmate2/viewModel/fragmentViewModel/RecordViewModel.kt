@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.running.domain.model.RunningData
 import com.running.domain.usecase.LocalDataUseCase
 import com.running.runningmate2.base.BaseViewModel
-import com.running.runningmate2.utils.ListLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

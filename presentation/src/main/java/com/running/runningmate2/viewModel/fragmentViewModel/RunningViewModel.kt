@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import com.running.data.local.sharedPreference.SharedPreferenceHelperImpl
 import com.running.runningmate2.base.BaseViewModel
 import com.running.runningmate2.utils.Calorie
-import com.running.runningmate2.utils.ListLiveData
 import com.running.runningmate2.utils.MyApplication
 import com.running.runningmate2.utils.TimeHelper
 import dagger.hilt.android.lifecycle.HiltViewModel

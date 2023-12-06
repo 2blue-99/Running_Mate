@@ -15,8 +15,8 @@ android {
         applicationId "com.running.runningmate2"
         minSdk 29
         targetSdk 34
-        versionCode 3
-        versionName "1.3"
+        versionCode 4
+        versionName "1.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         Properties properties = new Properties()
@@ -67,13 +67,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     //activity, fragment viewModels, activityViewModels을 메인엑티비티에서 쓸수있게해줌
-    def  activity_version = "1.5.1"
-    implementation "androidx.activity:activity-ktx:$activity_version"
-    implementation "androidx.fragment:fragment-ktx:$activity_version"
+    implementation "androidx.activity:activity-ktx:1.8.1"
+    implementation "androidx.fragment:fragment-ktx:1.6.2"
 
     //fragment google map
     implementation 'com.google.android.gms:play-services-location:21.0.1'
@@ -81,7 +80,7 @@ dependencies {
     implementation 'com.google.maps.android:maps-ktx:3.2.1'
     implementation 'com.google.maps.android:maps-utils-ktx:3.2.1'
 
-    def  lifecycle_version = "2.5.1"
+    def  lifecycle_version = "2.6.2"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
@@ -89,23 +88,23 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
     //시간
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     //room
-    def room_version = "2.4.3"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation("androidx.room:room-ktx:$room_version")
 
     //구글오픈라이선스
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
 
     //그래프
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     //workmanage
-    implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.2.1'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.5.4'
     implementation "io.coil-kt:coil-compose:1.4.0"
 
     //Dagger Hilt

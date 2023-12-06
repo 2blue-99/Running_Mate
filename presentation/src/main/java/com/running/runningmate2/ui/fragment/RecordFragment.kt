@@ -1,9 +1,7 @@
 package com.running.runningmate2.ui.fragment
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
-import com.running.domain.model.RunningData
 import com.running.runningmate2.R
 import com.running.runningmate2.base.BaseFragment
 import com.running.runningmate2.databinding.FragmentRecordBinding

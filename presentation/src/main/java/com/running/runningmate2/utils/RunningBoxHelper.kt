@@ -1,9 +1,6 @@
 package com.running.runningmate2.utils
 
-import android.util.Log
 import com.running.domain.model.RunningData
-import com.running.runningmate2.databinding.BoxRecodeBinding
-import com.running.runningmate2.databinding.FragmentRecordBinding
 
 /**
  * 2023-12-05

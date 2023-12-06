@@ -108,18 +108,4 @@ object WeatherHelper {
             put("ny", locate?.ny?.toInt().toString() ?: "127")
         }
     }
-
-    fun makeFakeData(): DomainWeather {
-        return DomainWeather(
-            temperatures = 0.0.toString(),
-            rn1 = 0.0.toString(),
-            eastWestWind = 0.0.toString(),
-            southNorthWind = 0.0.toString(),
-            humidity = 0.0.toString(),
-            rainType = 0.0.toString(),
-            windDirection = 0.0.toString(),
-            windSpeed = 0.0.toString()
-        )
-    }
-
 }

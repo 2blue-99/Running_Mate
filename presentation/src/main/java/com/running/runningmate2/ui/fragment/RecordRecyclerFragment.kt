@@ -11,8 +11,6 @@ import com.running.runningmate2.databinding.FragmentRecordRecyclerBinding
 import com.running.runningmate2.recyclerView.Adapter
 import com.running.runningmate2.viewModel.fragmentViewModel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-
 @AndroidEntryPoint
 class RecordRecyclerFragment(
     recordViewModel: RecordViewModel
@@ -20,17 +18,13 @@ class RecordRecyclerFragment(
     private val viewModel = recordViewModel
     private val adapter by lazy { Adapter() }
 
-    override fun initData() {
-        viewModel.readDB()
-    }
-
+    override fun initData() { viewModel.readDB() }
     override fun initUI() {
         binding.recordRecyclerView.apply {
             this.adapter = this@RecordRecyclerFragment.adapter
             this.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
     }
-
     override fun initListener() {
         adapter.setItemClickListener(object: Adapter.OnItemClickListener{
             override fun onClick(data: RunningData) {
@@ -39,14 +33,12 @@ class RecordRecyclerFragment(
             }
         })
     }
-
     override fun initObserver() {
         viewModel.runningData.observe(viewLifecycleOwner) { data ->
             if(data.isNotEmpty()){
                 binding.recordRecyclerView.minimumHeight = 875
                 binding.recordRecyclerEmptyTxt.visibility=View.INVISIBLE
                 adapter.datalist = data
-
             }
             else{
                 binding.recyclerConstrain.setBackgroundColor(Color.parseColor("#4DFFFFFF"))
